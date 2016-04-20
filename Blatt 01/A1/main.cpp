@@ -1,5 +1,6 @@
 /* ----------------------------------------------------------------------------- 
  *        Computational Physics 2016 Blatt 01 Aufgabe 1: Drehmomente
+ *                            !!! C++11 Standard !!!
  * -----------------------------------------------------------------------------          
  *        2N+1 x 2N+1 fixierte Magnetische Momente. Berechnet wird das 
  *        Drehmoment auf das Moment in der Mitte in Abhängigkeit zu dessen
@@ -22,34 +23,102 @@ double energy(double theta, int k, int l, bool anti = false)
 {
     /*
      * Berechnet die Energie von n_00 im Feld von n_kl
-     * theta: Winkel zwischen m_00 und y-achse
+     * theta: Winkel zwischen m=n_00 und y-achse
      * k, l: Position von m_kl
      * anti: false für ferro- true für antiferromagnetischen Fall
      */
-    int af = anti ? -1 : 1;
+    // Energie im eigenen Feld ist 0
     if ( k==l && k==0 )
         return 0;
-    // Vorfaktor
-    double factor = pow(10,-7)/( pow(pow(k, 2) + pow(l, 2),3/2)*pow(a, 3) );
-    // Winkel zwischen y-Achse und R
-    double phi=0;
-    if ( k>0 )
-        phi = M_PI/2 - atan(l/k);
-    else if ( k<0 && l>0 )
-        phi = 1.5*M_PI - atan(l/k);
-    else if ( k<0 && l<=0 )
-        phi = - M_PI/2 - atan(l/k);
-    else if ( k==0 && l>0 )
-        phi = 0;
-    else 
-        phi = M_PI;
+    // ferro/antiferro wert für n_kl
+    int af = anti ? -1 : 1;
+    // R Betrag
+    double R = a*sqrt(pow(k, 2) + pow(l, 2));
+    // m in kartesischen Koordinaten
+    double m_x = M*sin(theta);
+    double m_y = M*cos(theta);
+
     // Skalarprodukt R_norm*m berechnen
-    double Rm = M*cos(theta - phi);
+    double Rm = a*( m_x*k + m_y*l )/R;
     // Skalarprodukt R_norm*n berechnen
-    double Rn = af*M*cos(phi);
+    double Rn = M*af*a*l/R;
     // Skalarprodukt n*m
-    double mn = af*pow(M, 2)*cos(theta);
-    return factor*( -3*Rm*Rn + mn );
+    double mn = af*M*m_y;
+
+    return 1e-7*pow(R, -3)*( -3*Rm*Rn + mn );
+}
+
+double sumE(double theta, int N, bool anti)
+{
+    /*
+     * Berechnet die Gesamtenergie von m_00
+     */
+    double E = 0;
+    if ( !anti )
+    {
+        for ( int k = -N; k <= N; k++ ) 
+            for ( int l = -N; l <= N; l++ ) 
+                E += energy(theta, k, l);
+    } else
+    {
+        for ( int k = -N; k <= N; k++ ) 
+            for ( int l = -N; l <= N; l++ ) 
+                E += energy(theta, k, l, (bool)( ( l + k ) % 2 ));
+    }
+    return E;
+}
+
+double dE_dTheta(double h, double (*E)(double, int, bool), double theta,  int N, bool anti)
+{
+   /* 
+    * Berechnet die numerische Ableitung von E nach theta
+    */
+   return ( E(theta + h, N, anti) - E(theta - h, N, anti) )/( 2*h ); 
+}
+
+double T(double theta, int N, bool anti)
+{
+    /* 
+     * Berechnet T = m x B(0)
+     */
+    // m_00 in kartesischen Koordinaten
+    double m_x = M*sin(theta);
+    double m_y = M*cos(theta);
+    // Variablen initiallisieren
+    double B_x, B_y, factor;
+    B_x = B_y = 0;
+    int af = 1;
+
+    // alle durchgehen
+    for ( int k = -N; k<=N; k++ )
+        for ( int l = -N; l<=N; l++ )
+        {
+            // Fallunterscheidung
+            if (anti && ( ( l + k ) % 2 )==0)
+                af = -1;
+            else
+                af = 1;
+            // es wirkt kein Drehmoment durch das eigene Feld
+            if ( k==0 && k==l )
+                continue;
+            // Abstandsbetrag
+            double R = a*sqrt(pow(k, 2) + pow(l, 2));
+            // Skalarprodukt R*n berechnen
+            double Rn = a*l*af*M;
+            /* Drehmomente aufsummieren, dabei ist
+             * n = (0, af*M)^T 
+             * R = a*(k, l)^T
+             */
+            factor = 1e-7*pow(R, -5);
+            B_x += factor*( 3*a*k*Rn /* - 0 */ );
+            B_y += factor*( 3*a*l*Rn - af*M*pow(R, 2) );
+        }
+    /* T zeig in z-Richtung. Man könnte die Berechnung von T auch
+     * direkt in die Schleife einarbeiten und B_x, B_y nicht getrennt speichern
+     * aber ich finde es so übersichtlicher hier spielt Effizienz jetzt keine
+     * große Rolle.
+     */
+    return m_x*B_y-m_y*B_x; 
 }
 
 int main() 
@@ -61,34 +130,21 @@ int main()
     {
         // output file vorbereiten
         ofstream datafile;
-        datafile.open("a1_N="+to_string(N)+".dat");
-        datafile << "Theta\tE_f\tT_f_abl\tT_f_dreh\tE_af\tT_af_abl\tT_af_dreh" << endl;
-        // Gesamtenergie initiallisieren
-        double E = 0; 
+        datafile.open("N="+to_string(N)+".dat");
+        datafile << "Theta\tE_f\tT_f_abl\tT_f_kreuz\tE_af\tT_af_abl\tT_af_kreuz" << endl;
         // gesamten Raumwinkel für theta mit Schrittweite h durchgehen 
         for ( double theta = 0; theta<2*M_PI; theta += h )
         {
-            E = 0;
-            /*
-             * ferromagnetischer Fall 
-             * Ja man könnte beides in eine Doppelschleife packen,
-             * so war es aber einfacher zu entwickeln und ist überischtlicher
-             * wenn auch etwas ineffizienter.
-             */
-            for ( int k = -N; k <= N; k++ ) 
-                for ( int l = -N; l <= N; l++ ) 
-                    E += energy(theta, k, l);
-            datafile << 180/M_PI*theta << "\t" << E << "\t\t\t";  
-            /*
-             * antiferromagnetischer Fall
-             */
-            E = 0;
-            for ( int k = -N; k <= N; k++ ) 
-                for ( int l = -N; l <= N; l++ ) 
-                        E += energy(theta, k, l, (bool)( l+k % 2 ));
-            datafile  << E;     
-
-            datafile << endl;
+            // ferromagnetischer Fall
+            datafile << 180/M_PI*theta << "\t" 
+                     << sumE(theta, N, false) << "\t"
+                     << abs(dE_dTheta(1e-7, &sumE, theta, N, false)) << "\t" 
+                     << abs(T(theta, N, false)) << "\t";
+            // antiferromagnetischer Fall
+            datafile << sumE(theta, N, true) << "\t"
+                     << abs(dE_dTheta(1e-7, &sumE, theta, N, true)) << "\t" 
+                     << abs(T(theta, N, true)) 
+                     << endl;
         }
         datafile.close();
     }
