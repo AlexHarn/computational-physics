@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from tabulate import tabulate
-
+plt.rcParams['figure.figsize'] = (20, 10)
 Ns = [ 2, 5, 10 ]
 fig = plt.figure()
 for i, N in enumerate(Ns):
@@ -22,11 +22,6 @@ for i, N in enumerate(Ns):
     f = open("N="+str(N)+".tex", "w")
     f.write(tabulate(np.loadtxt("N="+str(N)+".dat", skiprows=1),
                      tablefmt="latex"))
-       # {"$\theta$" : theta,
-                      # "$"},
-                     # tablefmt="latex"))
 
 plt.show();
-# fig.savefig('Aufgabe 1a.pdf') # sieht in dem Format nicht gut aus habe keine
-# Zeit mehr das zu fixen also einfach manuell speichern
-
+fig.savefig('Aufgabe1a.pdf')

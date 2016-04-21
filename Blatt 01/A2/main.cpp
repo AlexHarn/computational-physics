@@ -15,7 +15,7 @@ using namespace std;
 double trapezregel(double (*f)(double x), double a, double b, int N) {
     double sum = 0;     // Summenwert sum und
     double h;           // Abstand h initialisieren
-    h = abs(a-b) / N;   // h berechnen
+    h = (b-a) / N;   // h berechnen
     for (int i = 1; i < N; i++)     // Mittelteil
         sum += f(a+i*h);
     sum += 0.5 * (f(a)+f(b));       // Anfang und Ende
@@ -25,7 +25,7 @@ double trapezregel(double (*f)(double x), double a, double b, int N) {
 double mittelpunktsregel(double (*f)(double x), double a, double b, int N) {
     double sum = 0;
     double h;
-    h = abs(a-b) / N;
+    h = (b-a) / N;
     sum += f(a+h/2);    // Anfang
     for (int i = 1; i < N-1; i++)   // Mittelteil
         sum += f(a+h/2+i*h);
@@ -35,12 +35,12 @@ double mittelpunktsregel(double (*f)(double x), double a, double b, int N) {
 
 double simpsonregel(double (*f)(double x), double a, double b, int N) {
     if(N % 2){      // Die Schrittzahl muss gerade sein.
-        cout << "N ist nicht gerade! N wird jetzt um 1 erhöht." << endl;
+        cout << "N ist nicht gerade! N wird jetzt um 1 erhoeht." << endl;
         N+=1;
     }
     double sum = 0;
     double h;
-    h = abs(a-b) / N;
+    h = (b-a) / N;
     sum += 1.0/3.0 * f(a);        // Anfang
     for (int i = 1; i < N-1; i+=2)      // Mittelteil
         sum += 4.0/3.0 * f(a+i*h);      // dabei werden die Elemente abwechselnd mit 4/3 und 2/3 gewichtet
