@@ -20,7 +20,9 @@ for i, N in enumerate(Ns):
     ax.set_ylabel(r"$E({}, \theta)$".format(N))
     ax.grid()
     f = open("N="+str(N)+".tex", "w")
-    # f.write(tabulate({"$\theta$" : theta,
+    f.write(tabulate(np.loadtxt("N="+str(N)+".dat", skiprows=1),
+                     tablefmt="latex"))
+       # {"$\theta$" : theta,
                       # "$"},
                      # tablefmt="latex"))
 
