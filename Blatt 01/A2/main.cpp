@@ -42,9 +42,9 @@ double simpsonregel(double (*f)(double x), double a, double b, int N) {
     double h;
     h = (b-a) / N;
     sum += 1.0/3.0 * f(a);        // Anfang
-    for (int i = 1; i < N-1; i+=2)      // Mittelteil
+    for (int i = 1; i < N; i+=2)      // Mittelteil
         sum += 4.0/3.0 * f(a+i*h);      // dabei werden die Elemente abwechselnd mit 4/3 und 2/3 gewichtet
-    for (int i = 2; i < N-1; i+=2)
+    for (int i = 2; i < N; i+=2)
         sum += 2.0/3.0 * f(a+i*h);
     sum += 1.0/3.0 * f(b);      // Ende
     return h * sum;
