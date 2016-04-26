@@ -1,18 +1,11 @@
 \input{../../header.tex}
-
-\subject{Blatt 01}
-\title{Drehmomente und Integrationsroutine}
-\date{
-  Abgabe: 22.04.2016
-}
-
-\setlength\LTleft{-2cm}
-\setlength\LTright{0pt}
-
-
-
 \begin{document}
-\maketitle
+\noindent
+\centerline{\small{\textsc{Technische Universität Dortmund}}} \\
+\large\textbf{Übungsblatt 01} \hfill \footnotesize\textbf{Sebastian Bange, Alexander Harnisch, Alexander Knodel} \\
+\normalsize Computational Physics \hfill \today \\
+Prof. Dr. Jan Kierfeld \hfill Abgabefrist: 22.04.2016\\
+\noindent\makebox[\linewidth]{\rule{\textwidth}{0.4pt}}
 \section{Aufgabe 1 - Drehmomente}
 Alle Berechnungen sind in SI-Einheiten durchgeführt worden.
 M ist der Betrag der Drehmomente der Spins, a ist die Gitterkonstante.
@@ -58,15 +51,23 @@ Falls ihr das Paket nicht runterladen wollt, bitte die Zeilen 3 und 23/24 auskom
 Hier werden drei Integrationsroutinen implementiert.
 Die Schrittweite $h$ wird jeweils mit $\frac{b-a}{N}$ berechnet.
 Die Summen wurden aus dem Skript übernommen und mit Schleifen implementiert.
-
-Bei der Simpsonregel wird mit $N \mathup{mod} 2$ abgefragt ob die Schrittweite gerade ist, wenn nicht wird die Schrittweite um 1 erhöht und eine Warnung ausgegeben.
+Bei der Simpsonregel wird mit $N\,\text{mod}\,2$ abgefragt, ob die Schrittweite gerade ist, wenn nicht wird die Schrittweite um 1 erhöht und eine Warnung ausgegeben.
 Die abwechselnden Gewichtungsfaktoren wurden implementiert, in dem 2 Schleifen geschrieben wurden, wobei der Laufindex jeweils um 2 erhöht wird.
-
 Die beiden Integrale aus Aufgabe 3 wurden ebenfalls mit implementiert, um keinen ungetesteten Code abzuschicken.
 \begin{landscape}
 \thispagestyle{empty}
 \hspace{-5cm}
 \includegraphics[width=29cm]{../A1/Aufgabe1a.pdf}
+\end{landscape}
+\begin{landscape}
+\thispagestyle{empty}
+\hspace{-5cm}
+\includegraphics[width=29cm]{../A1/Aufgabe1b1.pdf}
+\end{landscape}
+\begin{landscape}
+\thispagestyle{empty}
+\hspace{-5cm}
+\includegraphics[width=29cm]{../A1/Aufgabe1b2.pdf}
 \end{landscape}
 
 \begin{longtable}{l|lll|lll}
