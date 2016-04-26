@@ -8,7 +8,7 @@
 Prof. Dr. Jan Kierfeld \hfill Abgabefrist: 29.04.2016\\
 \noindent\makebox[\linewidth]{\rule{\textwidth}{0.4pt}}
 Zur Kontrolle haben wir in der Ausgabe die Anzahl der Nachkommastellen in der Konsolenausgabe mittels der precision-Methode erhöht.\\
-In der Main-Methode werden die untigen Methoden aufgerufen und die Daten werden in eine ".dat"-Datei geschrieben. \\
+In der Main-Methode werden die unnötigen Methoden aufgerufen und die Daten werden in eine ".dat"-Datei geschrieben. \\
 \underline{results.py:}
 Hier werden die Daten geplottet. In der Konsole "ipython results.py" ausführen.
 \section*{Aufgabe 1 - Integrale}
@@ -20,7 +20,7 @@ Das Hauptwertintegral wird berechnet, indem es in mehrere Teilintegrale aufgespl
 
 \underline{Substitution:}
 \begin{equation*}
-s(t) = \frac{s}{\Delta} \qquad ds = \frac{dt}{\Delta}
+s(t) = \frac{t}{\Delta} \qquad ds = \frac{dt}{\Delta}
 \end{equation*}
 
 Sodass
@@ -30,7 +30,7 @@ I_{\Delta}(0) = \text{CH} \int_{-1}^{1} \frac{\mathup{e}^{\Delta s}}{s} ds - \te
 \end{equation*}
 Nun wird die e-Funktion für kleine $\Delta$ nach Taylor entwickelt:
 \begin{equation*}
-I_{\Delta}(0) \approx \int_{-1}^{1} \frac{1+\Delta s + 1/2 \left(\Delta \cdot s\right)^2 + \ddots -1}{s} .
+I_{\Delta}(0) \approx \int_{-1}^{1} \frac{1+\Delta s + 1/2 \left(\Delta \cdot s\right)^2 -1}{s} ds.
 \end{equation*}
 Diese Funktion ist in der Methode I11 implementiert.
 
@@ -54,7 +54,7 @@ wobei wir auf den letzten Summanden erneut die Substitution aus Gl. \eqref{subs}
 \approx \int_{\epsilon}^1 \frac{\mathup{e}^{-t}}{\sqrt{t}} dt+ \int_{\epsilon}^1 \frac{\sqrt{u}}{u^2} \mathup{e}^{-1/u} du = \int_{\epsilon}^1 \left(\frac{\mathup{e}^{-x}}{\sqrt{x}}+ \frac{\sqrt{x}}{x^2} \mathup{e}^{-1/x}\right) dx
 \end{equation*}
 Diese Annäherung an 0 bis auf einen relativen Fehler von $\epsilon = 2 \cdot 10^{-6} < 10^{-5}$ erfordert eine Art iterative Simpson-Regel (iterativSimpson), die in einer do-while-Schleife die Simpson-Regel aufruft und für kleinere Integralgrenzen das entstehende Integral berechnet. Dabei wird die untere Grenze des Integrationsintervalls immer auf die Mitte des Gesamtintervalls $c = \frac{a+b}{2}$ mal Schrittweite $h$ gesetzt, wenn $a$ die untere und $b$ die (dynamische) obere Grenze der Integration ist. Dynamisch meint in diesem Fall, dass die Grenze jeweils an das Teilintegral angepasst wird. Somit wird das Problem in immer kleiner werdende Integrationen aufgeteilt, die dann aufsummiert werden und sich dem exakten Wert annähern.
-Die Abbruchbedingung ist erfüllt, wenn der relative Fehler $\epsilon < \frac{|\text{simpsonNeu}-\text{simpsonAlt}|}{|\text{simpsonNeu}|} \approx 10^{-6}$ ist.
+Die Abbruchbedingung ist erfüllt, wenn der relative Fehler $\epsilon = \frac{|\text{simpsonNeu}-\text{simpsonAlt}|}{|\text{simpsonNeu}|} < 10^{-6}$ ist.
 
 Das Integral sollte nun noch analytisch bestimmt werden. Dazu substituiert man zunächst und wendet dann das Gauß-Integral (Wiki: $\href{https://en.wikipedia.org/wiki/List_of_integrals_of_exponential_functions#Definite_integrals}{\text{List of integrals of exponential functions}}$) an.\\
 \underline{Substitution:}
@@ -70,15 +70,15 @@ Sodass
 
 
 \section*{Aufgabe 2 - Elektrostatik}
-Die Kantenlänge $a$ wird global gesetzt, um das Aufrufen in mehreren Methoden zu vereinfachen. Die Methode \enquote{mittelWurfel} ist eine 3D-Integrations-Routine der Mittelpunktsregel, in der 3 (3D Integration)+1(Laufindex für verschiedene $n$ innerhalb/außerhablb d. Würfels) Parameter, sowie Integrationsgrenzen ($a$ und $b$), sowie die Anzahl der Stützstellen $N$ übergeben werden. In der Methode wird das Integrationsgebiet in kleine Würfel unterteilt. Dies haben wir durch eine Dreifachschleife (Integrationreihenfolge: $dz$,$dy$,$dx$) implementiert, die bis $N$-1 alle Stützstellen rastert und aufsummiert, wie von der 1D-Mittelpunktsregel bekannt. Wichtig ist allerdings, dass h in dritter Potenz an die Summe multipliziert wird (return pow(h,3)*sum), was durch die 3D-Integration herrührt (vgl (3.7), S.32, für 3D).
+Die Kantenlänge $a$ wird global gesetzt, um das Aufrufen in mehreren Methoden zu vereinfachen. Die Methode \enquote{mittelWuerfel} ist eine 3D-Integrations-Routine der Mittelpunktsregel, in der 3 (3D Integration)+1(Laufindex für verschiedene $n$ innerhalb/außerhalb d. Würfels) Parameter, sowie Integrationsgrenzen ($a$ und $b$), sowie die Anzahl der Stützstellen $N$ übergeben werden. In der Methode wird das Integrationsgebiet in kleine Würfel unterteilt. Dies haben wir durch eine Dreifachschleife (Integrationreihenfolge: $dz$,$dy$,$dx$) implementiert, die bis $N$-1 alle Stützstellen rastert und aufsummiert, wie von der 1D-Mittelpunktsregel bekannt. Wichtig ist allerdings, dass h in dritter Potenz an die Summe multipliziert wird (return pow(h,3)*sum), was durch die 3D-Integration herrührt (vgl (3.7), S.32, für 3D).
 Wir haben den Sonderfall der Singularität (\enquote{durch 0 teilen}) ausgelagert, bei dem $x$ gleich ($x'$), mit $y$=$z$=0 entspricht. Dadurch entsteht eine Ungenauigkeit, die sich im Plot an der leichten, negativen Verschiebung an der Ordinate kennzeichnet.
 
 Wichtig zu erwähnen ist, dass die Ausführung von mehr als 100 Stützstellen enorme Laufzeiten mit sich bringt. Bei 10000 Stützstellen in 3D Integration würde das numerische Berechnen bereits knapp 4 Tage dauern. Eventuell lassen sich mit den -o-Parametern die Laufzeiten verkürzen, das wurde nicht weiter getestet. Zur besseren Beobachtung wurde eine Fortschrittsanzeige implementiert, die aufzeigen kann, wie weit die Berechnung ist und ob der Rechner noch arbeitet. Das erschien uns angesichts der Überlegungen zur Laufzeit sinnvoll, wenn auch nicht explizit gefordert.
 \subsection*{Aufgabenteil 2a+2b}
-Die Ladungsverteilung ist $\rho_0$ (=konstant) für |$x$| < $a$,|$y$| < $a$,|$z$| < $a$, ansonsten 0. Dadurch integrieren wir lediglich im Intervall [$-a$,$a$] und ziehen $rho_0$ heraus. Zusammen mit dem Vorfaktor machen wir damit das elektrostatische Potential $phi$ dimensionslos. Für die Abzissenwerte wird $x$/$a$ gewählt, da ebenfalls dimensionslos. Im Plot (linkes Bild) sind die Werte von $x/a$=$0.1\cdot n$, mit $n$=[0,10] (grauer Bereich), sowie mit $n$=[11,80] geplottet. Der graue Bereich stellt daher das Innere des Würfels dar. \\
+Die Ladungsverteilung ist $\rho_0$ (=konstant) für |$x$| < $a$,|$y$| < $a$,|$z$| < $a$, ansonsten 0. Dadurch integrieren wir lediglich im Intervall [$-a$,$a$] und ziehen $\rho_0$ heraus. Zusammen mit dem Vorfaktor machen wir damit das elektrostatische Potential $\phi$ dimensionslos. Für die Abzissenwerte wird $x$/$a$ gewählt, da dieser Wert ebenfalls dimensionslos ist. Im Plot (linkes Bild) sind die Werte von $x/a$=$0.1\cdot n$, mit $n$=[0,10] (grauer Bereich), sowie mit $n$=[11,80] geplottet. Der graue Bereich stellt daher das Innere des Würfels dar. \\
 Unsere Erwartungen sind ein 1/$x$-Abfall (elektr. Potential einer Punktladung) für den Bereich außerhalb des Würfels, was gut erfüllt wird, da die Werte für große $x/a$ gegen 0 laufen. Die Ergebnisse finden sich in der Datei "data2a+b.dat".
 \subsection*{Aufgabenteil 2c}
-Nun wird die Ladungsverteilung mit einer $x'$-Abhängigkeit betrachtet. Unsere vorigen Überlegungen zur Dimensionslosigkeit sind hier analog anzuwenden, der Zusatz $x/a$ ist ansich dimensionslos. Die Funktion wurde in der Methode $f2$ an das neue Problem angepasst.
+Nun wird die Ladungsverteilung mit einer $x'$-Abhängigkeit betrachtet. Unsere vorigen Überlegungen zur Dimensionslosigkeit sind hier analog anzuwenden, der Zusatz $x/a$ ist an sich dimensionslos. Die Funktion wurde in der Methode $f2$ an das neue Problem angepasst.
 Die Ergebnisse finden sich in der Datei "data2c.dat".
 
 \begin{landscape}

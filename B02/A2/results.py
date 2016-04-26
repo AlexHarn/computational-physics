@@ -8,12 +8,17 @@ x,y = np.genfromtxt("data2a+b.dat", unpack = True)
 
 plt.subplot(121)
 plt.title('Blatt 02, Aufgabe 2a, 2b')
-plt.plot(x,y, 'bx')
+plt.plot(x,y, 'bx', label='Simulationsdaten')
 plt.xlabel(r'$x/a$')
 plt.ylabel(r'$\phi\cdot 4\pi\epsilon_0 / \rho$')
 
 plt.axvspan(0, 1, color = 'grey')
 
+def f(x, a):
+	return a/x
+xline = np.linspace(1, 8)
+plt.plot(xline, f(xline, y[50]*x[50]), 'r-', label='1/r Asymptotik')
+plt.legend()
 plt.grid()
 
 
