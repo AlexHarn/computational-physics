@@ -1,3 +1,11 @@
+//-------------------------------------------------------------------------------
+//                          Computational Physics 2016
+//                           Blatt 3 Aufgaben 1 und 2
+//-------------------------------------------------------------------------------
+//        Implementierung des Runge-Kutta Verfahrens 4. Ordnung und Test
+//        am Beispiel des harmonischen Oszillators.
+//-------------------------------------------------------------------------------
+
 #include <fstream>
 #include <sstream>
 #include <iostream>
@@ -37,8 +45,17 @@ void doWork(double h, int Ts, vector<double> r_0, vector<double> v_0, string fna
 
 int main()
 {
-    // Zuerst verschiedene Schrittweiten in 1D testen
-    double h = 1;
+    #pragma omp parallel
+    double h = 1e-4;
+
+    // 3D v_0 = 0
+    doWork(h, 2, {1, 1, 1}, {0, 0, 0}, "v_0=0.dat");
+
+    // v nicht parallel zu r
+    doWork(h, 2, {1, 0} , {0, 1}, "v_senkrecht_r.dat");
+
+    // Verschiedene Schrittweiten testen
+    //h = 1;
     //while ( h > 1e-5 )
     //{
         //stringstream ss;
@@ -47,13 +64,6 @@ int main()
         //doWork(h, 5, {1}, {0}, "h="+ss.str()+".dat");
         //h *= 0.1;
     //}
-
-    // 3D v_0 = 0
-    h = 1e-4;
-    doWork(h, 2, {1, 1, 1}, {0, 0, 0}, "v_0=0.dat");
-
-    // v nicht parallel zu r
-    doWork(h, 2, {1, 0} , {0, 1}, "v_senkrecht_r.dat");
     return 0;
 }
 
@@ -107,6 +117,7 @@ void savedat(string dest, double h, vector<vector<double>> &r, vector<vector<dou
         }
         out << U[t] << "\t" << T[t] << endl;
     }
+    out.close();
 }
 
 void doWork(double h, int Ts, vector<double> r_0, vector<double> v_0, string fname)

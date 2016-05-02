@@ -1,6 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import os
+from pylab import rcParams
+rcParams['figure.figsize'] = 15, 15
 
 for file in os.listdir():
     if file.endswith(".dat"):

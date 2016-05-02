@@ -1,4 +1,5 @@
 CXXFLAGS=-std=c++11 -fopenmp -g
+LDLIBS=-fopenmp
 CC=g++
 CXX=g++
 
