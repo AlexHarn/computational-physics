@@ -49,12 +49,12 @@ for file in os.listdir():
         fig.savefig(file[:-4]+"_zeitachse.pdf")
         plt.clf()
 
-        f.writeline(file)
-        f.writeline("Delta E: "+str(E[-1] - E[0]))
-        f.writeline("Delta L: "+str(data[-4][-1] - data[-4][0]))
-        f.writeline("Delta LR_x: "+str(data[-7][-1] - data[-7][0]))
-        f.writeline("Delta LR_y: "+str(data[-6][-1] - data[-6][0]))
-        f.writeline("Delta LR_z: "+str(data[-5][-1] - data[-5][0]))
+        f.write(file+"\n")
+        f.write("Delta E: "+str(E[-1] - E[0])+"\n")
+        f.write("Delta L: "+str(data[-4][-1] - data[-4][0])+"\n")
+        f.write("Delta LR_x: "+str(data[-7][-1] - data[-7][0])+"\n")
+        f.write("Delta LR_y: "+str(data[-6][-1] - data[-6][0])+"\n")
+        f.write("Delta LR_z: "+str(data[-5][-1] - data[-5][0])+"\n")
 
         # Ein 2D Plott der Bahn darf hier natürlich nicht fehlen
         sun = plt.Circle((0,0), 0.1, color='y')
