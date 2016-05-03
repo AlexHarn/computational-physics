@@ -35,7 +35,7 @@ Nun wird die e-Funktion für kleine $\Delta$ nach Taylor entwickelt:
 \begin{equation*}
 I_{\Delta}(0) \approx \int_{-1}^{1} \frac{1+\Delta s + 1/2 \left(\Delta \cdot s\right)^2 -1}{s} ds.
 \end{equation*}
-Diese Funktion ist in der Methode I11 implementiert.
+Diese Funktion ist in der Methode I11 implementiert. Die Methode liefert den Wert 2.114501751.
 
 \subsection*{Aufgabenteil 1b}
 Das zweite Integral besitzt eine obere unendliche Grenze, sowie einen singulären Integranden für die untere Grenze.
@@ -57,7 +57,7 @@ wobei wir auf den letzten Summanden erneut die Substitution aus Gl. \eqref{subs}
 \approx \int_{\epsilon}^1 \frac{\mathup{e}^{-t}}{\sqrt{t}} dt+ \int_{\epsilon}^1 \frac{\sqrt{u}}{u^2} \mathup{e}^{-1/u} du = \int_{\epsilon}^1 \left(\frac{\mathup{e}^{-x}}{\sqrt{x}}+ \frac{\sqrt{x}}{x^2} \mathup{e}^{-1/x}\right) dx
 \end{equation*}
 Diese Annäherung an 0 bis auf einen relativen Fehler von $\epsilon = 2 \cdot 10^{-6} < 10^{-5}$ erfordert eine Art iterative Simpson-Regel (iterativSimpson), die in einer do-while-Schleife die Simpson-Regel aufruft und für kleinere Integralgrenzen das entstehende Integral berechnet. Dabei wird die untere Grenze des Integrationsintervalls immer auf die Mitte des Gesamtintervalls $c = \frac{a+b}{2}$ mal Schrittweite $h$ gesetzt, wenn $a$ die untere und $b$ die (dynamische) obere Grenze der Integration ist. Dynamisch meint in diesem Fall, dass die Grenze jeweils an das Teilintegral angepasst wird. Somit wird das Problem in immer kleiner werdende Integrationen aufgeteilt, die dann aufsummiert werden und sich dem exakten Wert annähern.
-Die Abbruchbedingung ist erfüllt, wenn der relative Fehler $\epsilon = \frac{|\text{simpsonNeu}-\text{simpsonAlt}|}{|\text{simpsonNeu}|} < 10^{-6}$ ist.
+Die Abbruchbedingung ist erfüllt, wenn der relative Fehler $\epsilon = \frac{|\text{simpsonNeu}-\text{simpsonAlt}|}{|\text{simpsonNeu}|} < 10^{-6}$ ist. Die Methode liefert den Wert 1.772450036.
 
 Das Integral sollte nun noch analytisch bestimmt werden. Dazu substituiert man zunächst und wendet
 dann das Gauß-Integral (Vgl. \cite{wiki}) an.\\
@@ -70,7 +70,7 @@ Sodass
 \int_0^{\infty} \frac{\mathup{e}^{-t}}{\sqrt{t}} dt = \int_0^{\infty} \frac{\mathup{e}^{-u^2}\cdot 2u}{u} du = 2 \int_0^{\infty} \mathup{e}^{-u^2} du = \sqrt{\pi}, \qquad a=1>0
 \end{equation*}
 
-
+Alternativ hätte die obere Grenze mit einem endlichen Wert abgeschätzt werden können, da die Funktion sehr schnell abfällt. Mit der aus dem analytischen Part substituierten Funktion hätte das Problem ebenfalls gelöst werden können.
 
 
 \section*{Aufgabe 2 - Elektrostatik}
@@ -85,7 +85,7 @@ allerdings, dass h in dritter Potenz an die Summe multipliziert wird (\textit{re
 was sich auf die 3D-Integration zurückführen lässt (vgl (3.7)\cite[32]{script}, für 3D).  Wir haben
 den Sonderfall der Singularität (\enquote{durch 0 teilen}) ausgelagert, bei dem $x$ gleich ($x'$),
 mit $y$=$z$=0 entspricht. Dadurch entsteht eine Ungenauigkeit, die sich im Plot an der leichten,
-negativen Verschiebung an der Ordinate kennzeichnet.
+negativen Verschiebung an der Ordinate kennzeichnet. Diese Ungenauigkeit durch Verwerfen des Stützpunktes kann durch Verschiebung der Stützstellen bei entsprechenden Integrationsroutinen (bei entspr. Schrittweite) behoben werden (z.B. bei Mittelpunktsregel über die Singularität hinaus). Generell ist es nicht empfehlenswert double-Typen miteinander zu vergleichen (da nicht jeder Wert exakt darstellbar ist,z.B. 1/3).
 
 Wichtig zu erwähnen ist, dass für eine große Anzahl von Stützstellen viel Rechenkapazität benötigt
 wird. Um das Problem zu minimieren haben wir daher für die Schleifen der Integration einfaches
@@ -107,8 +107,13 @@ n$, mit $n$=[0,10] (grauer Bereich), sowie mit $n$=[11,80] geplottet. Der graue 
 das Innere des Würfels dar.
 
 Unsere Erwartungen sind ein 1/$x$-Abfall (elektr. Potential einer Punktladung, bzw. Monopolmoment
-der Verteilung) für den Bereich außerhalb des Würfels, was gut erfüllt wird, wie in
-Abbildung~\ref{fig:a2} gut zu sehen ist. Die Ergebnisse finden sich in der Datei "data2a+b.dat".
+der Verteilung über die Multipolentwicklung (vgl. 2c)) für den Bereich außerhalb des Würfels, was gut erfüllt wird, wie in
+Abbildung~\ref{fig:a2} gut zu sehen ist. 
+Die Ergebnisse finden sich in der Datei "data2a+b.dat".
+
+\begin{equation*}
+\varphi (x) \approx \frac{a^3 \rho_0}{4\pi \epsilon_0}
+\end{equation*}
 
 \subsection*{Aufgabenteil 2c} Nun wird die Ladungsverteilung mit einer $x'$-Abhängigkeit betrachtet.
 Unsere vorigen Überlegungen zur Dimensionslosigkeit sind hier analog anzuwenden, der Zusatz $x/a$
@@ -116,20 +121,20 @@ ist an sich dimensionslos. Die Funktion wurde in der Methode $f2$ an das neue Pr
 Die Ergebnisse finden sich in der Datei "data2c.dat".
 
 Zur Verifizierung des Ergebnisses geben wir eine analytische Abschätzung der Asymptotik an. Das
-Mono- sowie das Quadropolmoment der Verteilung verschwinden, daher sollte das Dipolmoment eine sehr
+Mono- sowie das Quadropolmoment der Verteilung verschwinden (Monopolmoment wg. Integration über ungeraden Integranden mit betraglich gleichen Grenzen), daher sollte das Dipolmoment eine sehr
 gute Näherung des Fernfeldes liefern. Da wir nur die $x$-Abhängigkeit betrachten ist die Rechnung
-sehr einfach:
+sehr einfach (da $r$=$x$, und $y$=$z$=0):
 \begin{equation}
 	\begin{split}
-		\phi (x) &\approx \frac{x}{r^3}\int x \rho(\textbf{r}')\textup{d}^3\textbf{r}' \\
-		&=\frac{1}{ax^2} \int_{-a}^{a} \int_{-a}^{a} \int_{-a}^{a}
-		\textup{d}x\textup{d}y\textup{d}z\, x \\
+		\phi (x) &\approx \frac{x}{r^3}\int x' \rho(\textbf{r}')\textup{d}^3\textbf{r}' \\
+		&=\frac{1}{x^2} \int_{-a}^{a} \textup{d}x'\, \frac{x'^2}{a} \int_{-a}^{a} \textup{d}z' \int_{-a}^{a} \textup{d}y' \\
+		&= \frac{1}{x^2 a} \left[ \frac{x'^3}{3} \right]_{-a}^a \cdot 4a^2 \\
 		&= \frac{8}{3}\frac{a^4}{x^2}\,. \\
  	\end{split}
 	\label{eqn:dipol}
 \end{equation}
 Es sollte also eine $\frac{1}{x^2}$ Asymoptotik zu beobachten sein. Dies ist, wie sehr schon in
-Abbildung~\ref{fig:a2} erkennbar, der Fall.
+Abbildung~\ref{fig:a2} erkennbar, der Fall. Der Faktor $a$ (zur Anpassung an die Messpunkte im Plot) wurde über die numerischen Messdaten bestimmt.
 \begin{landscape}
 	\begin{figure}
 		\includegraphics[width=25cm]{../A2/Aufgabe2.pdf}
