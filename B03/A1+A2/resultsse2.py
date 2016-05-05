@@ -4,9 +4,9 @@ import numpy as np
 
 plt.rcParams['figure.figsize'] = (20, 10)
 
-t,x,y,z,vx,vy,vz, Ek, Ep = np.genfromtxt("data2a1.dat", unpack = True)
+t,x,y,z,vx,vy,vz, Ek, Ep = np.genfromtxt("data2a2.dat", unpack = True)
 
-plt.title('Blatt 03, Aufgabe 2a1')
+plt.title('Blatt 03, Aufgabe 2a2')
 plt.subplot(411)
 plt.plot(t,x, 'bx', label = 'Ort')
 plt.plot(t,vx, 'rx', label = 'Geschwindigkeit')
@@ -37,4 +37,4 @@ plt.ylabel(r'E')
 plt.grid() #
 plt.legend()
 plt.show()
-plt.savefig('Aufgabe2a1.pdf')
+plt.savefig('Aufgabe2a2.pdf')

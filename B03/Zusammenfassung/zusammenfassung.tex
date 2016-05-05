@@ -1,0 +1,378 @@
+\input{../../header.tex}
+\newcommand\OverfullCenter[1]{\noindent\makebox[\linewidth]{#1}}
+\begin{document}
+\noindent
+\centerline{\small{\textsc{Technische Universität Dortmund}}} \\
+\large\textbf{Übungsblatt 03} \hfill \footnotesize\textbf{Sebastian Bange, Alexander Harnisch, Alexander Knodel} \\
+\normalsize Computational Physics \hfill \today \\
+Prof. Dr. Jan Kierfeld \hfill Abgabefrist: 06.05.2016\\
+\noindent\makebox[\linewidth]{\rule{\textwidth}{0.4pt}}
+In der Main-Methode werden die untigen Methoden aufgerufen und die Daten werden in die Datei "data2.dat" geschrieben. \\
+\underline{results.py:}
+Hier werden die Daten geplottet. In der Konsole "ipython results.py" ausführen.
+\section*{Aufgabe 1 \& 2 - Runge-Kutta 4. Ordnung \& harmonischer Oszillator}
+\subsection*{Aufgabe 1 - Runge-Kutta 4. Ordnung}
+Ziel war es zunächst die Newtonschen Bewegungsgleichungen für ein Teilchen im Kraftfeld $\textbf{F(r)}$ mit Hilfe des Runge-Kutta-Verfahrens 4. Ordnung mit fester Schrittweite umzusetzen.
+\begin{equation}
+	\begin{split}
+ 		&\begin{pmatrix}
+			y[0] \\
+			y[1] \\
+		\end{pmatrix} =	
+		\vec{y} = 
+		\begin{pmatrix}
+			r \\
+			\dot{r} \\
+		\end{pmatrix} \stackrel{1\mathup{D}}{=}
+		\begin{pmatrix}
+			x \\
+			v \\
+		\end{pmatrix} \\	
+		& \vec{f} = \dot{y} =
+		\begin{pmatrix}
+			\dot{r} \\
+			\ddot{r} \\
+		\end{pmatrix} = 
+		\begin{pmatrix}
+			v \\
+			\frac{1}{m} \cdot \textbf{F(r)} \\
+		\end{pmatrix} \text{(Euler\cite[48]{script}, (4.7))} \\
+		& \Rightarrow \vec{f(\vec{y})} = 
+		\begin{pmatrix}
+			y[1] \\
+			\frac{1}{m} \cdot \textbf{F(y[0])} \\
+		\end{pmatrix}
+	\end{split}
+	\label{rk4}
+\end{equation}
+
+Beide Aufgaben wurden in der Datei "a1a2.cpp" implementiert.  Die Methode $\texttt{double*** rk4}$ enthält die Anzahl der Stützstellen $N$, sowie die Anfangswerte für Ort $x0$ und Geschwindigkeit $v0$ als Array (für drei Dimensionen), sowie das Kraftfeld $\textbf{F(r)}$, das Intervall von $t_0$ bis $t_{\text{max}}$ und die Anzahl der Dimensionen $d$. Dabei wird eine geschachtelte Matrix in Form von Arrays, bzw. Pointern für $y_n$ eingesetzt. Zur Vereinfachung wurde $m = 1$ gesetzt. Damit ergibt sich aus Gleichung \eqref{rk4} für drei Dimensionen:
+\begin{equation*}
+	y_n = 
+	\begin{pmatrix}
+		\begin{pmatrix}
+			\begin{pmatrix}
+				x\\
+				y\\
+				z\\
+			\end{pmatrix} 
+			\begin{pmatrix}
+				v_x\\
+				v_y\\
+				v_z\\
+			\end{pmatrix}
+		\end{pmatrix}_0
+		\begin{pmatrix}
+			\begin{pmatrix}
+				x\\
+				y\\
+				z\\
+			\end{pmatrix} 
+			\begin{pmatrix}
+				v_x\\
+				v_y\\
+				v_z\\
+			\end{pmatrix}
+		\end{pmatrix}_1
+		\ldots
+	\end{pmatrix}
+\end{equation*}
+$\textit{double*** y}$ ist also die äußere Matrix, in der 2 ($r$ und $v$) weitere Spalten initialisiert werden. Über eine $\textit{for}$-Schleife werden dann für $r$,$v$,$E_{\text{kin}}$ und $E_{\text{pot}}$ $d$ Komponenten generiert und als dritten Pointer die übergebene Stützstellenanzahl für jede Dimension festgesetzt.
+Die Schrittweite ergibt sich (wie schon in früheren Übungen) als $h = \frac{t_{\text{max}}-t_0}{N}$. In Zeile 23-26 werden die Anfangswerte für $x0$ und $v0$ gesetzt.
+Nach \cite[52]{script}), bzw. Gleichung \eqref{rk4} werden dann (in gleicher Dimension) alle $\vec{k_i}$ ($i \in \{1,2,3,4\}$) berechnet (vierschrittige Approximation der Werte $\vec{y_{n+1/2}}$ und $\vec{y_{n+1}}$ auf der rechten Seite, nach Gleichung (4.15) bis (4.17) in \cite[52]{script}).
+Dazu läuft die erste Schleife bis $y_n$, während die Schleifen für die $\vec{k_i}$ über alle Dimensionen gehen. Dabei muss natürlich jede Spalte einzeln in $\vec{k_i}$ berechnet werden. Beispielhaft an der Schleife von $\vec{k_2}$ wird deutlich, dass $\vec{k_1}$ und $\vec{k_2}$ in derselben Dimension sein müssen.
+Im letzten Schritt wird dann für alle Dimensionen der Integrationsschritt nach Gleichung (4.18) in \cite[52]{script} vervollständigt. In der letzten $\textit{for}$-Schleife werden dann $E_{\text{kin}}$ = $\frac{m\cdot v^2}{2}$ und $E_{\text{pot}} = \frac{k \cdot x^2}{2}$ (mit $m$=1, $k$=1) berechnet.
+\subsection*{Aufgabe 2 - Harmonischer Oszillator}
+Für den Harmonischen Oszillator aus Aufgabe 2 wird (wieder mit $m$ = 1) nun eine Funktion $\textbf{F(r)} = -r$ implementiert. Dabei gehen wir davon aus, dass die Kraftkomponente in einer Dimension nur von der Auslenkung in dieser Dimension abhängt, also keine Mischterme zwischen unterschiedlichen Richtungen in den Summanden des Potentials auftreten (wodurch das Problem mit $n$ eindimensionalen Oszillatoren behandelt werden kann). Die Anfangsbedingungen haben wir in der $\texttt{main}$-Methode wie folgt gesetzt:
+\begin{equation*}
+	\begin{split}
+		&x0 =
+		 \begin{pmatrix}
+			1\\
+			1\\
+			1 \\
+		\end{pmatrix} \\
+		& v0 = 
+		\begin{pmatrix}
+		0 \\
+		0 \\
+		0 \\
+		\end{pmatrix} \,.
+	\end{split}
+\end{equation*}
+
+Damit rufen wir dann die Methode $\texttt{rk4}$-Methode auf, mit entsprechend hoher Anzahl an Stützstellen, um die Schrittweite zu verkleinern und die Amplitude in mehreren Oszillationen zu überprüfen. Außerdem werden die kinetische Energie $E_{\text{kin}}$, die potentielle Energie $E_{\text{pot}}$, sowie die Gesamtenergie $E_{\text{ges}}$ dargestellt.
+\begin{landscape}
+	\begin{figure}
+		%\OverfullCenter{\includegraphics[width=\textwidth]{../A1+A2/Aufgabe2a1.pdf}}}
+		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 2a ( $\vec{\textbf{r}}(0)$ bel, $v(0) = \vec{0}$).}
+		\label{fig:a21}
+	\end{figure}
+\end{landscape}
+
+Für $\vec{\textbf{r}}(0) \nparallel \vec{\textbf{v}}(0)$ und $v(0) \neq \vec{0}$ wählten wir
+\begin{equation*}
+	\begin{split}
+		&x0 =
+		 \begin{pmatrix}
+			1\\
+			0.5\\
+			0 \\
+		\end{pmatrix} \\
+		& v0 = 
+		\begin{pmatrix}
+		1 \\
+		1 \\
+		1 \\
+		\end{pmatrix} \, .
+	\end{split}
+\end{equation*}
+Damit ergab sich
+\begin{landscape}
+	\begin{figure}
+		%\OverfullCenter{\includegraphics[width=\textwidth]{../A1+A2/Aufgabe2a2.pdf}}
+		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 2a ( $\vec{\textbf{r}}(0) \nparallel \vec{\textbf{v}}(0)$ und $v(0) \neq \vec{0}$).}
+		\label{fig:a22}
+	\end{figure}
+\end{landscape}
+
+%\subsection*{Aufgabe 3 - Fußball}
+%In dieser Aufgabe wird die Bewegung eines Fußballs im dreidimensionalen Raum betrachtet. Dabei wirkenden %verschiedene Kräfte auf den Ball. Diese sind:
+
+%\begin{equation*}
+%	\begin{split}
+%		\textbf{F}_{\text{Luftreibung}} &= - \frac{ c_w \cdot \rho \cdot A \cdot v^2 \cdot \textbf{v} }{2 \cdot %| \textbf{v} | } \\
+%		\textbf{F}_g &= -m \cdot g \cdot \textbf{e}_z  \, . \\
+%	\end{split}
+%\end{equation*}
+%Folgende Werte waren angegeben:
+%\begin{equation*}
+%c_w = 0.2 \qquad R = 11\,\mathup{cm}\,\,(A = 0.038\,\mathup{m^2}) \qquad m = 0.43\,\mathup{kg} \qquad %\rho_{\text{Luft}} = 1.3\,\mathup{kgm^{-3}} \qquad g = 9.81\,\mathup{ms^{-2}} \,.
+%\end{equation*}
+
+
+
+\subsection*{Aufgabe 4 - Kepler Ellipsen}
+In dieser Aufgabe wird das Kepler-Problem im $\frac{1}{r}$-Potential ($V(r) = -\frac{m \cdot G}{r}$, $G$ = 1) in drei Raumdimensionen behandelt.
+	\begin{itemize}
+		\item  $\textit{\#pragma omp parallel}$ : OpenMP parallelisiert Programme in verschiedenen Threads
+		\item  $\textit{\#pragma omp for}$ : Parallelisiert die $\textit{for}$-Schleife
+		\item $\textit{precision(10);}$ erhöht die Nachkommastellen in der Konsole -Cave: Zu viel ist aber auch nicht gut sonst braucht Python ewig
+	\end{itemize}
+
+	$\underline{\textsc{keppler.cpp}}$ \\
+	$\texttt{energy}$ empfängt das Potential $V(\vec{r})$, den Ort $\vec{r}$ und die Geschwindigkeit $\vec{v}$ (mehrdimensional, bzw. Matrix), sowie potentielle und kinetische Energie $U$, bzw. $T$. \\
+	$\textsl{s}$ beschreibt die Kapazität / Größe der gesamten $r$-Matrix, während $\textsl{d}$ die Dimension eines "Paketes" der Matrix darstellt (vgl. Aufg. 1 zur grundlegenden Idee). Kinetische und potentielle Energie werden auf diese Dimension angepasst (und bei Hochskalierung ggf. mit Nullen aufgefüllt). Die potentielle Energie (innerhalb der gesamten Matrix) wird auf das Potential in der jeweiligen Spalte gesetzt, sowie die kinetische Energie mittels $E_{\text{kin}} = \frac{v_{it}^2}{2}$ ($m$ = 1, $v_{it}$ ist das jeweilige Matrixelement) aufsummiert.\\
+	
+	$\texttt{savedat}$ ist eine Speicherroutine, welche an einem Zielort $\textit{dest}$ das Potential $\vec{V(\vec{r}}$, Ort $\vec{r}$ und Geschwindigkeit $\vec{v}$, sowie die Schrittweite $h$ speichert.
+	Dabei werden zunächst die Variablen $\vec{LR}$ (Lenz-Runge-Vektor, mehrdimensional), der Drehimpuls $\vec{L}$, sowie die potentielle und kinetische Energie $\vec{U}$ und $\vec{T}$ und $A(t)$ als Trajektorie.
+	Folgend werden folgend die Energie $\texttt{energy}$, der Drehimpuls $\texttt{angm}$, die Trajektorie $\texttt{area}$, sowie der Lenz-Runge-Vektor $\texttt{lenzrunge}$ berechnet. Diese Größen werden dann in einer Datei in der Reihenfolge "Drehimpuls, Trajektorie, $E_{\text{pot}}$, $E_{\text{kin}}$" gespeichert.\\
+	
+	$\texttt{doWork}$ (Aufgabe 4a) enthält als Parameter $\alpha$ (Exponent des $1/r$-Potentials für $\alpha \neq 1$), die Schrittweite $h$, die obere Intervallgrenze $t$, die Startwerte $x0$ und $v0$, sowie den Pfad $\textit{fname}$ als Zielort für die Methode $\texttt{savedat}$. Zunächst werden die Anfangswerte in den Vektor geschrieben. Sodann wird $\alpha$ an die Funktion gebunden, also als fester Parameter bei Aufruf mitgeliefert. $\textsf{placeholders::\_i}, i \in \mathbb{Z}$ stehen für variable Parameter der Funktion. Mit $Fa$ wird dann das Runge-Kutter-Verfahren im Intervall von [0,t] bei Schrittweite $h$ und Ortsvektor $r$, bzw. Geschwindigkeitsvektor $v$ durchgeführt. Danach werden die Ergebnisse mittels $\texttt{savedat}$ gespeichert.
+\begin{landscape}
+	\begin{figure}
+		\OverfullCenter{\OverfullCenter{\includegraphics[width=\textwidth]{../A4/h=0.1_bahn.png}}}
+		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 4a ($h = 0.1$, Trajektorie).}
+		\label{fig:4a0.1Bahn}
+	\end{figure}
+\end{landscape} 	
+
+\begin{landscape}
+	\begin{figure}
+		\OverfullCenter{\includegraphics[width=\textwidth]{../A4/h=0.1_zeitachse.pdf}}
+		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 4a ($h = 0.1$, Zeitachse).}
+		\label{fig:4a0.1Zeit}
+	\end{figure}
+\end{landscape} 	
+
+\begin{landscape}
+	\begin{figure}
+		\OverfullCenter{\includegraphics[width=\textwidth]{../A4/h=0.001_bahn.png}}
+		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 4a ($h = 0.001$, Trajektorie).}
+		\label{fig:4a0.001Bahn}
+	\end{figure}
+\end{landscape} 	
+
+\begin{landscape}
+	\begin{figure}
+		\OverfullCenter{\includegraphics[width=\textwidth]{../A4/h=0.001_zeitachse.pdf}}
+		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 4a ($h = 0.001$, Zeitachse).}
+		\label{fig:4a0.001Zeit}
+	\end{figure}
+\end{landscape} 
+
+\begin{landscape}
+	\begin{figure}
+		\OverfullCenter{\includegraphics[width=\textwidth]{../A4/h=0.0001_bahn.png}}
+		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 4a ($h = 0.0001$, Trajektorie).}
+		\label{fig:4a0.0001Bahn}
+	\end{figure}
+\end{landscape} 	
+
+\begin{landscape}
+	\begin{figure}
+		\OverfullCenter{\includegraphics[width=\textwidth]{../A4/h=0.0001_zeitachse.pdf}}
+		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 4a ($h = 0.0001$, Zeitachse).}
+		\label{fig:4a0.0001Zeit}
+	\end{figure}
+\end{landscape} 
+
+\begin{landscape}
+	\begin{figure}
+		\OverfullCenter{\includegraphics[width=\textwidth]{../A4/h=1e-05_bahn.png}}
+		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 4a ($h = 10^{-5}$, Trajektorie).}
+		\label{fig:4ae-5Bahn}
+	\end{figure}
+\end{landscape} 	
+
+\begin{landscape}
+	\begin{figure}
+		\OverfullCenter{\includegraphics[width=\textwidth]{../A4/h=1e-05_zeitachse.pdf}}
+		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 4a ($h = 10^{-5}$, Zeitachse).}
+		\label{fig:4ae-5Zeit}
+	\end{figure}
+\end{landscape} 
+
+Zum exakten Abschluss der Ellipse sind Schrittweiten von $10^{-5}$ bis $10^{-6}$ nötig. 
+\begin{landscape}
+	\begin{figure}
+		\OverfullCenter{\includegraphics[width=\textwidth]{../A4/kreis_bahn.png}}
+		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 4a ($h = 10^{-5}$, Trajektorie).}
+		\label{fig:4ae-51Bahn}
+	\end{figure}
+\end{landscape} 	
+
+\begin{landscape}
+	\begin{figure}
+		\OverfullCenter{\includegraphics[width=\textwidth]{../A4/kreis_zeitachse.pdf}}
+		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 4a ($h = 10^{-5}$, Zeitachse).}
+		\label{fig:4ae-51Zeit}
+	\end{figure}
+\end{landscape} 
+
+Bei kleinen Geschwindigkeiten stellt sich keine Kreisbewegung, sondern eine geradlinige Bewegung ein, problematisch ist die Divergenz im Ursprung.
+
+\begin{landscape}
+	\begin{figure}
+		\OverfullCenter{\includegraphics[width=\textwidth]{../A4/kleines_v_bahn.png}}
+		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 4a (kleine Geschwindigkeit, Bahn).}
+		\label{fig:4aklvBahn}
+	\end{figure}
+\end{landscape} 
+
+\begin{landscape}
+	\begin{figure}
+		\OverfullCenter{\includegraphics[width=\textwidth]{../A4/kleines_v_zeitachse.pdf}}
+		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 4a (kleine Geschwindigkeit, Zeitachse).}
+		\label{fig:4aklvZeit}
+	\end{figure}
+\end{landscape} 
+	
+	$\texttt{inverse}$\\
+Diese Methode invertiert den Eingangsvektor in einer $\textit{for}$-Schleife, in dem das Vorzeichen aller Komponenten geändert wird und in einen neuen Vektor $r$ geschrieben wird.\\
+	
+	$\texttt{forwNback}$ (Aufgabe 4d)\\
+Die Parameter $\alpha$, $h$, $N$ (Anzahl der Runge-Kutta-Schritte, mindestens 1000 (vgl. Aufgabe)), die Anfangswerte $r0$ und $v0$, sowie der Pfad $\textit{fname}$ werden mitgeliefert. $dr$ ist dabei zur Differenzberechnung zwischen Start- und Endpunkt (nach Invertierung) gedacht. $\alpha$ wird an die Funktion gebunden. Sodann werden in einer $\textit{for}$-Schleife die Anfangsbedingungen gesetzt, und RK in 4. Ordnung (zu je 1000 RK-Schritten) auf $r$ und $v$ ausgeführt. Nach jedem Schritt werden $r$ und $v$ bis auf das erste Element gelöscht und $v$ invertiert, also der Geschwindigkeitsvektor des Teilchens umgekehrt (Zeitumkehr). Dann wird erneut das RK-Verfahren auf $r$ und $v$ angewendet (integriert). In den Vektor $\vec{dr}$ wird dann das letzte Element aus $r$ gespeichert. Dies dient zur Fehlerberechnung, genauer zur Differenzberechnung vom Ausgangspunkt $r_0$ zum Zielpunkt $r_1$ nach Invertierung, was durch eine $\textit{for}$-Schleife implementiert wurde. Die betragliche Differenz wird dann für jedes Element gespeichert.\\
+
+\begin{landscape}
+	\begin{figure}
+		\OverfullCenter{\includegraphics[width=\textwidth]{../A4/forwback.pdf}}
+		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 4c (Invertierung der Zeit).}
+		\label{fig:4c}
+	\end{figure}
+\end{landscape} 	
+	
+	$\texttt{vabs}$\\
+Bildet den Betrag eines Parameters $v$ und speichert ihn in $R$.\\
+	
+	$\texttt{V}$ (Aufgabe 4e)\\
+Mit $\vec{r}$ und $\alpha$ wird ein allgemeines $\frac{1}{r^{\alpha}}$-Potential gebildet.\\	
+	
+	$\texttt{F}$ (Aufgabe 4e)\\
+ Zum Potential aus $\texttt{V}$ wird die Kraft mit $F(r_i)=\frac{-G\cdot r_i}{|r|^{\alpha+2}}$ gebildet. Durch das $\frac{1}{r^{\alpha}}$-Potential ergibt sich ein Auffächern der Ellipsenchar. Durch die fehlende Isotropie ist der LR-Vektor nicht erhalten.\\
+ 	
+\begin{landscape}
+	\begin{figure}
+		\OverfullCenter{\includegraphics[width=\textwidth]{../A4/alpha=0.9_bahn.png}}
+		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 4e ($\alpha = 0.9$, Trajektorie).}
+		\label{fig:4e0.9Bahn}
+	\end{figure}
+\end{landscape} 	
+
+\begin{landscape}
+	\begin{figure}
+		\OverfullCenter{\includegraphics[width=\textwidth]{../A4/alpha=0.9_zeitachse.pdf}}
+		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 4e ($\alpha = 0.9$, Zeitachse).}
+		\label{fig:4e0.9Zeit}
+	\end{figure}
+\end{landscape} 	
+
+\begin{landscape}
+	\begin{figure}
+		\OverfullCenter{\includegraphics[width=\textwidth]{../A4/alpha=1.1_bahn.png}}
+		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 4e ($\alpha = 1.1$, Trajektorie).}
+		\label{fig:4e1.1Bahn}
+	\end{figure}
+\end{landscape} 	
+
+\begin{landscape}
+	\begin{figure}
+		\OverfullCenter{\includegraphics[width=\textwidth]{../A4/alpha=1.1_zeitachse.pdf}}
+		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 4e ($\alpha = 1.1$, Zeitachse).}
+		\label{fig:4e1.1Zeit}
+	\end{figure}
+\end{landscape} 	
+ 			
+	$\texttt{cross}$ (Aufgabe 4c)\\
+Mittels $a$ und $b$ wird das Kreuzprodukt bestimmt. Dabei werden die Komponenten einzeln in einen Ergebnis-Vektor $\textit{result}$ geschrieben
+	\begin{equation*}
+		\vec{a} \times \vec{b} =
+		\begin{pmatrix}
+			a_2 \cdot b_3 - a_3 \cdot b_2 \\
+			a_3 \cdot b_1 - a_1 \cdot b_3 \\
+			a_1 \cdot b_2 - a_2 \cdot b_1 \\
+		\end{pmatrix} \,.
+	\end{equation*}
+	\\ 		
+	
+	$\texttt{angm}$ (Aufgabe 4c)\\
+Mittels $\vec{r}$ und $\vec{v}$ wird der Drehimpuls bestimmt. Dabei wird zunächst der Drehimpulsvektor auf die Dimension von $\vec{r}$ angepasst und für alle Drehimpulse für die Größe von $r$ bestimmt
+	\begin{equation*}
+		\vec{L} = \vec{r} \times \vec{p} = \vec{r} \times (m\vec{v}) \,.
+	\end{equation*}	
+Die Masse $m$ wird am Ende multipliziert (wobei $m = 1$).
+	 \\
+	 
+ 	$\texttt{area}$ (Aufgabe 4b)\\
+Hier soll numerisch die Energieerhaltung und das zweite Kepler Gesetz (Drehimpulserhaltung, \enquote{Ein von der Sonne zum Planeten gezogener Fahrstrahl überstreicht in gleichen Zeiten gleich große Flächen}), sowie das dritte Keppler Gesetz (\enquote{Die Quadrate der Umlaufzeiten $T_1$ und $T_2$ je zweier Trabanten um ein gemeinsames Zentrum sind proportional zu den dritten Potenzen der großen Halbachsen $a_1$ und $a_2$ ihrer Ellipsenbahnen}) verifiziert werden. Die Methode erhält $\vec{r}$ und $\vec{A}$. $\vec{\textit{av}}$ ist ein Vektor, der die letzte Position der Trajektorie des $\vec{r(t)}$-Vektors speichert. Mit dem Satz des Heron ergibt sich mit den Seitenlängen $a$ (=$|\vec{\textit{av}}|$),$b$ (=$|\vec{r(t)}|$),$c$ (=$|r_0|$):\\
+\begin{equation*}
+	\begin{split}
+		s &= \frac{a+b+c}{2} \\
+		F_{\Delta} &= \sqrt{s \cdot (s-a)\cdot (s-b) \cdot (s-c)} \\
+	\end{split}
+\end{equation*}
+$
+	A(t)= A(t-1) + \sqrt{\left( \frac{|\vec{\textit{av}}| + |\vec{r(t)}| + |r_0|}{2} - |\vec{\textit{av}}|\right)\cdot \left(\frac{|\vec{\textit{av}}| + |\vec{r(t)}| + |r_0|}{2}-|\vec{r}(t)|\right) \cdot \left( \frac{|\vec{\textit{av}}| + |\vec{r(t)}| + |r_0|}{2} - |r_0| \right)}\,. 
+$\\
+
+	$\texttt{lenzrunge}$ (Aufgabe 4c)\\
+Zur Berechnung des Lenz-Runge-Vektors
+\begin{equation*}
+	\begin{split}
+		\Lambda &= \frac{1}{G \cdot m} \textbf{p} \times \textbf{L} - \frac{\textbf{r}}{r} \\
+		\Lambda &= \frac{m}{G} \textbf{v} \times (\textbf{r} \times \textbf{v}) - \frac{\textbf{r}}{r} \\
+	\end{split}
+\end{equation*}
+wird zunächst das eingeklammerte Kreuzprodukt und dann $\vec{v} \times \textit{vrv}$ mittels $\texttt{cross}$ berechnet. Schließlich wird der gesamte Vektor in einer $\textit{for}$-Schleife zusammen gesteckt.
+Der LR-Vektor zeigt vom Brennpunkt der Bahn (Kraftzentrum) zum nächstgelegenen Bahnpunkt (Perihel bei der Erdbahn) und hat somit eine Richtung parallel zur großen Bahnachse. 
+Zunächst wird das Kreuzprodukt berechnet und in $\textit{vrv}$ gespeichert. $\textit{pre}$ ist der Vorfaktor.\\
+
+	
+	$\underline{\textsc{rungkutt.cpp}}$ \\
+ Funktioniert (fast) wie die Runge-Kutta-Implementation aus Aufgabe 1 \& 2, allerdings wird hier die Anzahl der Stützstellen aus dem Intervall und der übergebenen Schrittweite bestimmt. Dabei kommt es zum Zaunpfahlproblem\cite{zaun}, weshalb um 1 erhöht wird. Die Methode $\texttt{ceil()}$ rundet dabei auf ganze Zahlen ab. Von unserer Seite muss nicht doppelt korrigiert werden, im Zweifel zählt das RK von Aufgabe 1+2. $d$ sind wieder die Anzahl der Dimensionen. $\vec{r}$ und $\vec{v}$ werden auf die Anzahl der Stützstellen angepasst. Analog zur Aufgabe 1 und 2 werden die $k_i$ berechnet, wobei die durch die Geschwindigkeits- und Ortsbestimmung "zweifach dimensioniert" wird. Der Unterschied in der Implementation liegt schließlich in der Auslagerung des Kraftfeldes $\vec{F}(\vec{r})$, was performanter ist und sich angesichts der Laufzeit bei dieser Aufgabe auszahlt.\\	
+	
+	$\underline{\textsc{A4.cpp}}$ \\
+In einer $\textit{for}$-Schleife werden verschiedene Schrittweiten an der Ellipse getestet. Für jede dieser Schrittweiten wird in eine h=*.dat geschrieben. Je nach Hardware empfiehlt sich nicht unbedingt h = $10^{-6}$ (Größe ca. 1,5$\,$GB) zu setzen. Die Bahn des Teilchens soll für $\textbf{r}$ = (1, 0, 0) numerisch bestimmt werden. Als Geschwindigkeitsvektor wurde $\textbf{v}$ = (0, 0.5, 0) gewählt. Anschließend wurden noch Kreis und Bahn für kleine Geschwindigkeiten numerisch bestimmt. Für Aufgabenteil 4d wurde die Zeitumkehr aufgerufen. Außerdem wurde das Potential für $\alpha$ = 0.9 und $\alpha$ = 1.1 getestet.
+
+\printbibliography
+\end{document}
