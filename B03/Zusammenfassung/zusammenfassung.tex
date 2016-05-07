@@ -15,7 +15,7 @@ Hier werden die Daten geplottet. In der Konsole "ipython results.py" ausführen.
 Ziel war es zunächst die Newtonschen Bewegungsgleichungen für ein Teilchen im Kraftfeld $\textbf{F(r)}$ mit Hilfe des Runge-Kutta-Verfahrens 4. Ordnung mit fester Schrittweite umzusetzen.
 \begin{equation}
 	\begin{split}
- 		&\begin{pmatrix}
+ k		&\begin{pmatrix}
 			y[0] \\
 			y[1] \\
 		\end{pmatrix} =	
@@ -104,7 +104,7 @@ Für den Harmonischen Oszillator aus Aufgabe 2 wird (wieder mit $m$ = 1) nun ein
 Damit rufen wir dann die Methode $\texttt{rk4}$-Methode auf, mit entsprechend hoher Anzahl an Stützstellen, um die Schrittweite zu verkleinern und die Amplitude in mehreren Oszillationen zu überprüfen. Außerdem werden die kinetische Energie $E_{\text{kin}}$, die potentielle Energie $E_{\text{pot}}$, sowie die Gesamtenergie $E_{\text{ges}}$ dargestellt.
 \begin{landscape}
 	\begin{figure}
-		%\OverfullCenter{\includegraphics[width=\textwidth]{../A1+A2/Aufgabe2a1.pdf}}}
+		\includegraphics[width=\textwidth]{../A1+A2/Aufgabe2a1.pdf}}
 		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 2a ( $\vec{\textbf{r}}(0)$ bel, $v(0) = \vec{0}$).}
 		\label{fig:a21}
 	\end{figure}
@@ -124,13 +124,13 @@ Für $\vec{\textbf{r}}(0) \nparallel \vec{\textbf{v}}(0)$ und $v(0) \neq \vec{0}
 		1 \\
 		1 \\
 		1 \\
-		\end{pmatrix} \, .
+		\end{pmatrix}\,.
 	\end{split}
 \end{equation*}
 Damit ergab sich
 \begin{landscape}
 	\begin{figure}
-		%\OverfullCenter{\includegraphics[width=\textwidth]{../A1+A2/Aufgabe2a2.pdf}}
+		\includegraphics[width=\textwidth]{../A1+A2/Aufgabe2a2.pdf}
 		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 2a ( $\vec{\textbf{r}}(0) \nparallel \vec{\textbf{v}}(0)$ und $v(0) \neq \vec{0}$).}
 		\label{fig:a22}
 	\end{figure}
@@ -233,7 +233,7 @@ In dieser Aufgabe wird das Kepler-Problem im $\frac{1}{r}$-Potential ($V(r) = -\
 	\end{figure}
 \end{landscape} 
 
-Zum exakten Abschluss der Ellipse sind Schrittweiten von $10^{-5}$ bis $10^{-6}$ nötig. 
+Zum exakten Abschluss der Ellipse sind Schrittweiten von $10^{-5}$ bis $10^{-6}$ nötig.  
 \begin{landscape}
 	\begin{figure}
 		\OverfullCenter{\includegraphics[width=\textwidth]{../A4/kreis_bahn.png}}
@@ -250,7 +250,11 @@ Zum exakten Abschluss der Ellipse sind Schrittweiten von $10^{-5}$ bis $10^{-6}$
 	\end{figure}
 \end{landscape} 
 
-Bei kleinen Geschwindigkeiten stellt sich keine Kreisbewegung, sondern eine geradlinige Bewegung ein, problematisch ist die Divergenz im Ursprung.
+Bei kleinen Anfangsgeschwindigkeiten wird die Divergenz des Potentials im Ursprung besonders
+kritisch. Dabei ist egal, ob die Bahn nun genau durch den Ursprung, oder nur sehr nah an ihn
+heranführt. In einem Berechnungschritt wirkt so eine starke Kraft, dass die Geschwindigkeit
+schlagartig so groß wird, dass das Teilchen aus dem Ursprung heruasgeschossen wird, ohne jemals die
+bremsende Beschleunigung zu erfahren, wie es in der Realität eigentlich passieren würde. 
 
 \begin{landscape}
 	\begin{figure}
@@ -373,6 +377,19 @@ Zunächst wird das Kreuzprodukt berechnet und in $\textit{vrv}$ gespeichert. $\t
 	
 	$\underline{\textsc{A4.cpp}}$ \\
 In einer $\textit{for}$-Schleife werden verschiedene Schrittweiten an der Ellipse getestet. Für jede dieser Schrittweiten wird in eine h=*.dat geschrieben. Je nach Hardware empfiehlt sich nicht unbedingt h = $10^{-6}$ (Größe ca. 1,5$\,$GB) zu setzen. Die Bahn des Teilchens soll für $\textbf{r}$ = (1, 0, 0) numerisch bestimmt werden. Als Geschwindigkeitsvektor wurde $\textbf{v}$ = (0, 0.5, 0) gewählt. Anschließend wurden noch Kreis und Bahn für kleine Geschwindigkeiten numerisch bestimmt. Für Aufgabenteil 4d wurde die Zeitumkehr aufgerufen. Außerdem wurde das Potential für $\alpha$ = 0.9 und $\alpha$ = 1.1 getestet.
+
+\subsection*{Diskussion}
+Die Ergebnisse entsprechen ziemlich gut der Erwartung. Drehimpuls, Energie und
+\textsc{Laplace-Runge-Lenz}-Vektor sind gut erhalten. Kleine Ungenauigkeiten enstehen immer dann,
+wenn die Bahnen dem Ursprung nahe kommen, hier wäre dynamische Schrittweitenanpassung vermutlich
+sehr hilfreich. In Den Zeitachsenplots stellen wir nur repräsentativ die $x$-Komponente des
+\textsc{Laplace-Runge-Lenz}-Vektors da, da sonst die Fehler kaum sichtbar wären und alle 3
+Komponenten nicht in den Plott passen. Bei Interesse an den anderen Komponenten einfach die
+entsprechende Zeile im Auswertungsskript auskommentieren. Der \textsc{Laplace-Runge-Lenz}-Vektor
+zeigt wie erwartet auf den Perihel. Die Einhaltung des 3. \textsc{Keplerschen}-Gesetzes ist anhand
+der guten Geraden $A(t)$, die auch nur in der Nähe des Ursprungs knicken, zu erkennen. 
+Für $alpha = 1.1$ bzw. $alpha = 0.9$ liegen keine geschlossenen Bahnen mehr vor. Stattdessen kommt
+es zur Bildung von Rosettenbahnen.
 
 \printbibliography
 \end{document}
