@@ -43,6 +43,12 @@ class Dpendulum
         void doEverything(double theta1, double theta2, double ddtTheta1, double ddtTheta2, double h, double t, std::string fname);
         /* Macht alles in einem Aufruf
          */
+		void teilC(double Energie, double h, double t, std::string fname);
+		/* Geändertes save, mehrere Aufrufe mit anderen Startwerten aber gleicher Energie
+		*/
+		void saveC(std::string fname);
+		/* siehe oben
+		*/
 };
 
 #endif
