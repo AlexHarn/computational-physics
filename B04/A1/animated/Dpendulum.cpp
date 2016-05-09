@@ -2,6 +2,7 @@
 #include <cmath>
 #include <string>
 #include <fstream>
+#include <iostream>
 #include "rungkutt.h"
 #include "Dpendulum.h"
 
@@ -143,13 +144,15 @@ void Dpendulum::swing(double h, int n)
 
     if ( tN > 0 )
     {
-        double** ny = new double*[N+n];
-        copy(y, y + N, ny);
-        delete[] y;
-        y = ny;
-        for ( int i = N; i<N+n; i++ )
-            y[i] = new double[4];
-        rungkutt(bind(Dpendulum::f, _1, _2, _3, g), n, h, tN, y+N-1, 4);
+        //double** ny = new double*[N+n];
+        //copy(y, y + N, ny);
+        //delete[] y;
+        //y = ny;
+        //for ( int i = N; i<N+n; i++ )
+            //y[i] = new double[4];
+        for ( int i = 0; i<4; i++ )
+            y[0][i] = y[n-1][i];
+        rungkutt(bind(Dpendulum::f, _1, _2, _3, g), n, h, tN, y, 4);
     }
     else
     {
@@ -159,7 +162,8 @@ void Dpendulum::swing(double h, int n)
         y[0] = y0;
         rungkutt(bind(Dpendulum::f, _1, _2, _3, g), n, h, 0, y, 4);
     }
-    N += n;
+    //N += n;
+    N = n;
     tN += h*n;
     lh = h;
     active = true;
