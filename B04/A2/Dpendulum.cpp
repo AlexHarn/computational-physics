@@ -2,6 +2,9 @@
 #include <cmath>
 #include <string>
 #include <fstream>
+#include <string>
+#include <iostream>
+#include <stdlib.h>
 #include "rungkutt.h"
 #include "Dpendulum.h"
 
@@ -187,8 +190,7 @@ void Dpendulum::doEverything(double theta1, double theta2, double ddtTheta1, dou
 
 void Dpendulum::teilC(double E, double h, double t, std::string fname)
 {
-	remove(fname.c_str());
-	this->reset();
+/*	this->reset();
     this->setInitial(acos((2*g-E)/(2*g)), 0, 0, 0);
     this->swing(h, t);
     this->saveC(fname+"_1.dat");
@@ -206,5 +208,26 @@ void Dpendulum::teilC(double E, double h, double t, std::string fname)
 	this->reset();
     this->setInitial(0, 0, 0, sqrt(2*E));
     this->swing(h, t);
-    this->saveC(fname+"_4.dat");
+    this->saveC(fname+"_4.dat");*/
+    ofstream fout;
+    fout.open(fname/*, ios_base::app*/);
+    srand(time(NULL));
+    for(int i = 0; i < 80; i++){
+        this->reset();
+        double Etest = 0;
+        double start[4] = {0, 0, 0, 0};
+        do {
+            start[0] = rand() % 5;
+            start[1] = rand() % 5;
+            start[2] = rand() % 5;
+            start[3] = 0;
+            Etest = 0.5*start[2]*start[2] + 2*g*(1-cos(start[0])) + 0.5*start[2]*start[2] + g*(1-cos(start[1]));
+        } while(Etest > E);
+        // start 0 ist immer 0, start1 auch, start2 ist 0 oder 1, 0 bei rand ausschließen
+        cout << start[0] << start[1] << start[2] << endl;
+        start[3] = sqrt(start[2]*start[2]*cos(start[0]-start[1])*cos(start[0]-start[1]) + 2*(E-Etest) ) - start[2] * cos(start[0]-start[1]);
+        this->setInitial(start[0], start[1], start[2], start[3]);
+        this->swing(h, t);
+        this->saveC(fname+"_"+to_string(i)+".dat");
+    }
 }
