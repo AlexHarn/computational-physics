@@ -22,10 +22,10 @@ int main()
     pendulum.doEverything(eps, 0, 0, 11.832, 1e-5, 3, "b3.dat");
 	
 	cout << "Erstelle c1.dat" << endl;
-	pendulum.teilC(3, 1e-5, 30, "c1.dat");
+	pendulum.teilC(3, 1e-5, 30, "c1");
 	cout << "Erstelle c2.dat" << endl;
-	pendulum.teilC(10, 1e-5, 30, "c2.dat");
+	pendulum.teilC(10, 1e-5, 30, "c2");
 	cout << "Erstelle c3.dat" << endl;
-	pendulum.teilC(20, 1e-5, 30, "c3.dat");
+	pendulum.teilC(20, 1e-5, 30, "c3");
     return 0;
 }

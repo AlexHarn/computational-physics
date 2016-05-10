@@ -166,7 +166,7 @@ void Dpendulum::saveC(string fname)
         throw "Noch nichts berechnet!";
 
     ofstream fout;
-    fout.open(fname, ios_base::app);
+    fout.open(fname/*, ios_base::app*/);
     for ( int i = 1; i<N; i++ )
     {
 		if ( (y[i][1] * y[i-1][1] < 0) && (y[i][2] * cos(y[i][0]) + y[i][3] * cos(y[i][1]) > 0) ) {			// Aufgabe 2c
@@ -189,22 +189,22 @@ void Dpendulum::teilC(double E, double h, double t, std::string fname)
 {
 	remove(fname.c_str());
 	this->reset();
-    this->setInitial(acos((2*g-E)/2*g), 0, 0, 0);
+    this->setInitial(acos((2*g-E)/(2*g)), 0, 0, 0);
     this->swing(h, t);
-    this->saveC(fname);
+    this->saveC(fname+"_1.dat");
 	
 	this->reset();
     this->setInitial(0, acos((g-E)/g), 0, 0);
     this->swing(h, t);
-    this->saveC(fname);
+    this->saveC(fname+"_2.dat");
 	
 	this->reset();
     this->setInitial(0, 0, sqrt(E), 0);
     this->swing(h, t);
-    this->saveC(fname);
+    this->saveC(fname+"_3.dat");
 	
 	this->reset();
     this->setInitial(0, 0, 0, sqrt(2*E));
     this->swing(h, t);
-    this->saveC(fname);
+    this->saveC(fname+"_4.dat");
 }

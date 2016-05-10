@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 from pylab import rcParams
+import os
 rcParams['figure.figsize'] = 15, 15
 
 #########################
@@ -67,25 +68,67 @@ plt.clf()
 # Teilaufgabe c
 #########################
 
-c1th1, c1tp1 = np.genfromtxt("c1.dat", unpack = True)
-c2th1, c2tp1 = np.genfromtxt("c2.dat", unpack = True)
-c3th1, c3tp1 = np.genfromtxt("c3.dat", unpack = True)
+if(os.stat("c1_1.dat").st_size != 0):
+    c11th1, c11tp1 = np.genfromtxt("c1_1.dat", unpack = True)
+if(os.stat("c1_2.dat").st_size != 0):
+    c12th1, c12tp1 = np.genfromtxt("c1_2.dat", unpack = True)
+if(os.stat("c1_3.dat").st_size != 0):
+    c13th1, c13tp1 = np.genfromtxt("c1_3.dat", unpack = True)
+if(os.stat("c1_4.dat").st_size != 0):
+    c14th1, c14tp1 = np.genfromtxt("c1_4.dat", unpack = True)
+if(os.stat("c2_1.dat").st_size != 0):
+    c21th1, c21tp1 = np.genfromtxt("c2_1.dat", unpack = True)
+if(os.stat("c2_2.dat").st_size != 0):
+    c22th1, c22tp1 = np.genfromtxt("c2_2.dat", unpack = True)
+if(os.stat("c2_3.dat").st_size != 0):
+    c23th1, c23tp1 = np.genfromtxt("c2_3.dat", unpack = True)
+if(os.stat("c2_4.dat").st_size != 0):
+    c24th1, c24tp1 = np.genfromtxt("c2_4.dat", unpack = True)
+if(os.stat("c3_1.dat").st_size != 0):
+    c31th1, c31tp1 = np.genfromtxt("c3_1.dat", unpack = True)
+if(os.stat("c3_2.dat").st_size != 0):
+    c32th1, c32tp1 = np.genfromtxt("c3_2.dat", unpack = True)
+if(os.stat("c3_3.dat").st_size != 0):
+    c33th1, c33tp1 = np.genfromtxt("c3_3.dat", unpack = True)
+if(os.stat("c3_4.dat").st_size != 0):
+    c34th1, c34tp1 = np.genfromtxt("c3_4.dat", unpack = True)
 
 plt.subplot(311)
 plt.title('3 Joule')
 plt.xlabel(r'$\theta_1$')
 plt.ylabel(r'$\dot{\theta_1}$')
-plt.plot(c1th1, c1tp1, 'b.')
+if(os.stat("c1_1.dat").st_size != 0):
+    plt.plot(c11th1, c11tp1, 'r.')
+if(os.stat("c1_2.dat").st_size != 0):
+    plt.plot(c12th1, c12tp1, 'g.')
+if(os.stat("c1_3.dat").st_size != 0):
+    plt.plot(c13th1, c13tp1, 'b.')
+if(os.stat("c1_4.dat").st_size != 0):
+    plt.plot(c14th1, c14tp1, 'y.')
 plt.subplot(312)
 plt.title('10 Joule')
 plt.xlabel(r'$\theta_1$')
 plt.ylabel(r'$\dot{\theta_1}$')
-plt.plot(c2th1, c2tp1, 'b.')
+if(os.stat("c2_1.dat").st_size != 0):
+    plt.plot(c21th1, c21tp1, 'r.')
+if(os.stat("c2_2.dat").st_size != 0):
+    plt.plot(c22th1, c22tp1, 'g.')
+if(os.stat("c2_3.dat").st_size != 0):
+    plt.plot(c23th1, c23tp1, 'b.')
+if(os.stat("c2_4.dat").st_size != 0):
+    plt.plot(c24th1, c24tp1, 'y.')
 plt.subplot(313)
 plt.title('20 Joule')
 plt.xlabel(r'$\theta_1$')
 plt.ylabel(r'$\dot{\theta_1}$')
-plt.plot(c3th1, c3tp1, 'b.')
+if(os.stat("c3_1.dat").st_size != 0):
+    plt.plot(c31th1, c31tp1, 'r.')
+if(os.stat("c3_2.dat").st_size != 0):
+    plt.plot(c32th1, c32tp1, 'g.')
+if(os.stat("c3_3.dat").st_size != 0):
+    plt.plot(c33th1, c33tp1, 'b.')
+if(os.stat("c3_4.dat").st_size != 0):
+    plt.plot(c34th1, c34tp1, 'y.')
 plt.tight_layout()
 plt.savefig("teilc.pdf")
 plt.clf()
