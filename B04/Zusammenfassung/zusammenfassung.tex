@@ -219,7 +219,7 @@ Es folgen die Plots für $Theta_i$ (und ihre Geschwindigkeiten), sowie die Energ
 
 \section*{Poincar\'{e} Schnitt}
 \subsection*{Aufgabenteil a}
-Unter der Annahme, dass die Geschwindigkeiten auf dem Zettel im unteren mittleren Block für den chaotischen Fall gelten, haben wir wie in Graphik \ref{fig:OsziC1} zu erkennende Phasenraumbilder geplottet. In der $\textsf{Dpendulum.cpp}$ haben wir die Berechnung der Energien rausgeworfen, da nicht explizit gefragt.
+Unter der Annahme, dass die Geschwindigkeiten auf dem Zettel im unteren mittleren Block für den chaotischen Fall gelten, haben wir wie in Graphik \ref{fig:OsziC1} zu erkennende Phasenraumbilder geplottet. In der $\textsf{Dpendulum.cpp}$ haben wir die Berechnung der Energien rausgeworfen, da nicht explizit gefragt. Für den periodischen Fall haben wir nur die AB für die positive Wurzel implementiert, da nur 3 Startbedingungen gefragt waren. Für die Definition der Energie, also bei $\Theta_i = 0, \dot{\Theta_i} = 0$ E=0, haben wir $-m\,g\,\cos(\Theta)$ wird $m\,g\,(1-\cos(\Theta))$ (Achsenverschiebung).
 
 \begin{landscape}
 	\begin{figure}
@@ -229,7 +229,7 @@ Unter der Annahme, dass die Geschwindigkeiten auf dem Zettel im unteren mittlere
 	\end{figure}
 \end{landscape} 
 \subsection*{Aufgabenteil b}
-Die Störung haben wir in der Größenordnung $O(10^{-2})$ implementiert. %Abstand wo?
+Die Störung haben wir in der Größenordnung $O(10^{-2})$ implementiert. Der euklidische Abstand ist der Betrag der Differenzen von ungestört und gestört. Deswegen haben wir die Werte, die wir in Aufgabe A2a) verwendet haben, recycelt und haben die Differenz in der Pythondatei gemacht.
 \begin{landscape}
 	\begin{figure}
 		\OverfullCenter{\includegraphics[width=\textwidth]{../A2/gestLoesung.pdf}}
@@ -239,7 +239,7 @@ Die Störung haben wir in der Größenordnung $O(10^{-2})$ implementiert. %Absta
 \end{landscape} 
  
 \subsection*{Aufgabenteil c}
-In der $\textsf{Dpendulum.cpp}$ haben wir den Nulldurchgang dahingehend überprüft, dass wir eine Gerade durch den Durchgang legen und die Punkte vor und hinter dem Nulldurchgang multipliziert ein negatives Vorzeichen besitzen müssen. Über die Ableitung von $x_2$ aus \ref{eq:kartKords} erhält man die zweite Massenbewegung. %x pukt = v und so
+In der $\textsf{Dpendulum.cpp}$ haben wir den Nulldurchgang dahingehend überprüft, dass wir eine Gerade durch den Durchgang legen und die Punkte vor und hinter dem Nulldurchgang multipliziert ein negatives Vorzeichen besitzen müssen. Über die Ableitung von $x_2$ aus \ref{eq:kartKords} erhält man die zweite Massenbewegung. 
 Zur Generierung der AB unter konstanter Energie haben wir zufällige Startwerte generiert, mit welchen die Energieerhaltung $\textsc{Etest}$ getestet wird. 
 \begin{landscape}
 	\begin{figure}
