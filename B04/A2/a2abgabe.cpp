@@ -18,7 +18,7 @@ rungkutt(std::function<void(double t, double* y, double* out)> f, const double N
      *      y: y Vektoren zu allen Zeiten. Bei Aufruf müssen Starbedingungen gesetzt sein
      *      d: Länge der y Vektoren (!!! Nicht Anzahl der Raumdimensionen !!!)
      */
-}
+};
 // Header Dpendulum.h
 class Dpendulum
 {
