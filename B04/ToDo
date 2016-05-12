@@ -1,0 +1,13 @@
+-Code aufräumen
+-Interpolation (s.unten)
+-1d
+-1b:  Welche Arten von Schwingungen werden in den Fällen angeregt? Sind doch harm Schwingungen, was ist hier gefragt?
+Schwingen denn die korrekten Schwingungszustände?
+Energieerhaltung nicht zu 100% erfüllt. Evtl nochmal schauen
+Plots richtig?
+zusammenfassung.tex: bitte durchschauen, Kommentare beachten
+
+http://pages.physics.cornell.edu/~myers/teaching/ComputationalMethods/ComputerExercises/DoublePendulum/doublependulum.html Da steht was über die lineare Interpolation, aber ich versteh nicht ganz wie die da drauf kommen:
+
+"A simpler approach is to interpolate. Suppose that s1=sin(theta1) at time slice i and s2=sin(theta1) at time slice i+1, and that one of s1,s2 is positive and the other is negative. Suppose the values of theta2 at these two slices are θ1,θ2. If we assume a linear relation between s and θ then we should have θ=[(s-s1)θ2-(s-s2)θ1]/(s2-s1). In particular the value of θ when s=0 will be θ0=(s2θ1-s1θ2)/(s2-s1)."
+
