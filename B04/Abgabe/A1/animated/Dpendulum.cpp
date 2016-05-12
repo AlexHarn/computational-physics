@@ -2,6 +2,7 @@
 #include <cmath>
 #include <string>
 #include <fstream>
+#include <iostream>
 #include "rungkutt.h"
 #include "Dpendulum.h"
 
@@ -45,10 +46,10 @@ void Dpendulum::calcE()
         U[i] = new double[2];
 
         T[i][0] = 0.5*m*y[i][2]*y[i][2];
-        U[i][0] = 2*m*g*(1-cos(y[i][0])); // Ursprung so verschoben, dass U = 0 für theta = 0
+        U[i][0] = -2*m*g*cos(y[i][0]);
 
         T[i][1] = 0.5*m*( y[i][2]*y[i][2] + y[i][3]*y[i][3] + 2*y[i][2]*y[i][3]*cos(y[i][0] - y[i][1]) );
-        U[i][1] = m*g*(1-cos(y[i][1]));
+        U[i][1] = -m*g*cos(y[i][1]);
     }
     energy = true;
 }
@@ -64,7 +65,7 @@ void Dpendulum::calcCartesian()
     for ( int i = 0; i<N; i++ )
     {
         xy[i] = new double[4];
-        cartesian(i, xy[i]);
+        this->cartesian(i, xy[i]);
     }
     cart = true;
 }
@@ -118,7 +119,7 @@ void Dpendulum::reset()
 // PUBLIC:
 Dpendulum::~Dpendulum()
 {
-    reset();
+    this->reset();
 }
 
 void Dpendulum::setInitial(double theta1, double theta2, double ddtTheta1, double ddtTheta2)
@@ -131,7 +132,7 @@ void Dpendulum::setInitial(double theta1, double theta2, double ddtTheta1, doubl
 
 void Dpendulum::swing(double h, double t)
 {
-    swing(h, (int) ceil( t/h )+1);
+    this->swing(h, (int) ceil( t/h )+1);
 }
 
 void Dpendulum::swing(double h, int n)
@@ -143,13 +144,15 @@ void Dpendulum::swing(double h, int n)
 
     if ( tN > 0 )
     {
-        double** ny = new double*[N+n];
-        copy(y, y + N, ny);
-        delete[] y;
-        y = ny;
-        for ( int i = N; i<N+n; i++ )
-            y[i] = new double[4];
-        rungkutt(bind(Dpendulum::f, _1, _2, _3, g), n, h, tN, y+N-1, 4);
+        //double** ny = new double*[N+n];
+        //copy(y, y + N, ny);
+        //delete[] y;
+        //y = ny;
+        //for ( int i = N; i<N+n; i++ )
+            //y[i] = new double[4];
+        for ( int i = 0; i<4; i++ )
+            y[0][i] = y[n-1][i];
+        rungkutt(bind(Dpendulum::f, _1, _2, _3, g), n, h, tN, y, 4);
     }
     else
     {
@@ -159,7 +162,8 @@ void Dpendulum::swing(double h, int n)
         y[0] = y0;
         rungkutt(bind(Dpendulum::f, _1, _2, _3, g), n, h, 0, y, 4);
     }
-    N += n;
+    //N += n;
+    N = n;
     tN += h*n;
     lh = h;
     active = true;
@@ -167,15 +171,15 @@ void Dpendulum::swing(double h, int n)
 
 void Dpendulum::getXY(double *xy)
 {
-    cartesian(N-1, xy);
+    this->cartesian(N-1, xy);
 }
 
 void Dpendulum::save(string fname)
 {
     if ( !active )
         throw "Noch nichts berechnet!";
-    calcE();
-    calcCartesian();
+    this->calcE();
+    this->calcCartesian();
     ofstream fout;
     fout.open(fname);
     for ( int i = 0; i<N; i++ )
@@ -195,8 +199,8 @@ void Dpendulum::save(string fname)
 
 void Dpendulum::doEverything(double theta1, double theta2, double ddtTheta1, double ddtTheta2, double h, double t, std::string fname)
 {
-    reset();
-    setInitial(theta1, theta2, ddtTheta1, ddtTheta2);
-    swing(h, t);
-    save(fname);
+    this->reset();
+    this->setInitial(theta1, theta2, ddtTheta1, ddtTheta2);
+    this->swing(h, t);
+    this->save(fname);
 }

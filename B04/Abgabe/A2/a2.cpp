@@ -1,15 +1,13 @@
+#include <iostream>
 #include <cmath>
 #include <functional>
 #include <string>
 #include <fstream>
-
-
+#include <iostream>
+#include <stdlib.h>
 using namespace std;
-
-
-//header rungkutt.h
-class rungkutt {
-    rungkutt(std::function<void(double t, double* y, double* out)> f, const double N, const double h, const double t_0, double** y, const int d);
+// rungkutt.h
+void rungkutt(std::function<void(double t, double* y, double* out)> f, const double N, const double h, const double t_0, double** y, const int d);
     /* Führt das Runge-Kutta-Verfahren 4. Ordnung durch. Neue Implementierung ohne std:vector und in
      * allgemeiner Formulierung wie in der Vorlesung.
      *      DGL: y'(t) = f(t, y(t))
@@ -19,9 +17,7 @@ class rungkutt {
      *      y: y Vektoren zu allen Zeiten. Bei Aufruf müssen Starbedingungen gesetzt sein
      *      d: Länge der y Vektoren (!!! Nicht Anzahl der Raumdimensionen !!!)
      */
-};
-
-//Header Dpendulum.h
+// Header Dpendulum.h
 class Dpendulum
 {
         void static f(double /*t*/, double* y, double* dy, double g);
@@ -30,14 +26,8 @@ class Dpendulum
          *      dy: y' vektor (output)
          *      g: Gravitationskonstante (wird später gebunden)
          */
-        void calcE();
+        //void calcE();
         /* Berechnet U und T aus y
-         */
-        void calcCartesian();
-        /* Berechnet die kartesischen Koordinaten für alle y
-         */
-        void cartesian(int n, double* xy);
-        /* Berechnet die kartesischen Koordinaten für y_n
          */
         void reset();
         /* Setzt das Pendel zurück (löscht die aktuellen Daten)
@@ -46,8 +36,8 @@ class Dpendulum
         int N = 0;
         double tN = 0, lh = 0;
         double* y0;
-        double** y, ** xy, ** T, ** U;
-        bool ready = false, energy = false, cart = false, active = false;
+        double** y, ** T, ** U;
+        bool ready = false, active = false; //energy = false
 
     public:
         ~Dpendulum();
@@ -62,15 +52,18 @@ class Dpendulum
         void swing(double h, int n);
         /* Berechnet Schwingung mit Schrittweite h und Schrittzahl n
          */
-        void getXY(double *xy);
-        /* Gibt die aktuellen XY-Koordinaten aus
-         */
         void save(std::string fname);
         /* Speichert die Daten in Datei fname
          */
         void doEverything(double theta1, double theta2, double ddtTheta1, double ddtTheta2, double h, double t, std::string fname);
         /* Macht alles in einem Aufruf
          */
+		void teilC(double Energie, double h, double t, std::string fname);
+		/* Geändertes save, mehrere Aufrufe mit anderen Startwerten aber gleicher Energie
+		*/
+		void saveC(std::string fname);
+		/* siehe oben
+		*/
 };
 
 //rungkutt.cpp
@@ -117,8 +110,7 @@ void rungkutt(function<void(double t, double* y, double* out)> f, const double N
 	delete []temp;
 }
 
-//dependulum.cpp
-// PRIVATE:
+// dependulum.cpp
 void Dpendulum::f(double /*t*/, double* y, double* dy, double g)
 {
     // einige mehrfach benötigten Terme vorher berechnen um Rechenzeit zu sparen
@@ -139,54 +131,7 @@ void Dpendulum::f(double /*t*/, double* y, double* dy, double g)
     //dy[3] = 2*g*(y[0] - y[1]);
 }
 
-void Dpendulum::calcE()
-{
-    if ( energy )
-        throw "Energie bereits berechnet!";
-
-    const double m = 1;
-
-    T = new double*[N];
-    U = new double*[N];
-
-    #pragma omp parallel for
-    for ( int i = 0; i<N; i++ )
-    {
-        T[i] = new double[2];
-        U[i] = new double[2];
-
-        T[i][0] = 0.5*m*y[i][2]*y[i][2];
-        U[i][0] = -2*m*g*cos(y[i][0]);
-
-        T[i][1] = 0.5*m*( y[i][2]*y[i][2] + y[i][3]*y[i][3] + 2*y[i][2]*y[i][3]*cos(y[i][0] - y[i][1]) );
-        U[i][1] = -m*g*cos(y[i][1]);
-    }
-    energy = true;
-}
-
-void Dpendulum::calcCartesian()
-{
-    if ( cart )
-        throw "Kartesische Koordinaten bereits berechnet!";
-
-    xy = new double*[N];
-
-    #pragma omp parallel for
-    for ( int i = 0; i<N; i++ )
-    {
-        xy[i] = new double[4];
-        this->cartesian(i, xy[i]);
-    }
-    cart = true;
-}
-
-void Dpendulum::cartesian(int n, double* xy)
-{
-    xy[0] = sin(y[n][0]);
-    xy[1] = cos(y[n][0]);
-    xy[2] = xy[0] + sin(y[n][1]);
-    xy[3] = xy[1] + cos(y[n][1]);
-}
+/*void Dpendulum::calcE()*/			// Energieberechnung bei Aufgabe 2 nicht nötig
 
 void Dpendulum::reset()
 {
@@ -202,28 +147,12 @@ void Dpendulum::reset()
     for ( int i = 0; i<N; i++ )
     {
         delete[] y[i];
-        if ( energy )
-        {
-            delete[] T[i];
-            delete[] U[i];
-        }
-        if ( cart )
-            delete[] xy[i];
     }
     delete[] y;
-    if ( energy )
-    {
-        delete[] T;
-        delete[] U;
-    }
-    if ( cart )
-       delete[] xy;
     N = 0;
     tN = 0;
     active = false;
     ready = false;
-    energy = false;
-    cart = false;
 }
 
 // PUBLIC:
@@ -255,12 +184,12 @@ void Dpendulum::swing(double h, int n)
     if ( tN > 0 )
     {
         double** ny = new double*[N+n];
-        copy(y, y + N, ny);
+        std::copy(y, y + N, ny);
         delete[] y;
         y = ny;
         for ( int i = N; i<N+n; i++ )
             y[i] = new double[4];
-        rungkutt(bind(Dpendulum::f, _1, _2, _3, g), n, h, tN, y+N-1, 4);
+        rungkutt(std::bind(Dpendulum::f, _1, _2, _3, g), n, h, tN, y+N-1, 4);
     }
     else
     {
@@ -268,7 +197,7 @@ void Dpendulum::swing(double h, int n)
         for ( int i = 1; i<n; i++ )
             y[i] = new double[4];
         y[0] = y0;
-        rungkutt(bind(Dpendulum::f, _1, _2, _3, g), n, h, 0, y, 4);
+        rungkutt(std::bind(Dpendulum::f, _1, _2, _3, g), n, h, 0, y, 4);
     }
     N += n;
     tN += h*n;
@@ -276,30 +205,43 @@ void Dpendulum::swing(double h, int n)
     active = true;
 }
 
-void Dpendulum::getXY(double *xy)
-{
-    this->cartesian(N-1, xy);
-}
-
 void Dpendulum::save(string fname)
 {
     if ( !active )
         throw "Noch nichts berechnet!";
-    this->calcE();
-    this->calcCartesian();
+
+    //this->calcE();
     ofstream fout;
     fout.open(fname);
     for ( int i = 0; i<N; i++ )
     {
         fout << i*lh << "\t";
-        for ( int j = 0; j<4; j++ )
+        for ( int j = 0; j<4; j++ ) {
             fout << y[i][j] << "\t";
-        for ( int j = 0; j<4; j++ )
-            fout << xy[i][j] << "\t";
-        fout << T[i][0] << "\t" << T[i][1] << "\t";
-        fout << U[i][0] << "\t" << U[i][1] << "\t";
-        fout << T[i][0]+T[i][1]+U[i][0]+U[i][1] << endl;
-    }
+		}
+        fout << endl;
+        //fout << T[i][0] << "\t" << T[i][1] << "\t";	//	Energieberechnung bei Aufgabe 2 nicht nötig
+        //fout << U[i][0] << "\t" << U[i][1] << "\t";
+        //fout << T[i][0]+T[i][1]+U[i][0]+U[i][1] << endl;
+	}
+    fout.close();
+    return;
+}
+
+
+void Dpendulum::saveC(string fname)
+{
+    if ( !active )
+        throw "Noch nichts berechnet!";
+
+    ofstream fout;
+    fout.open(fname/*, ios_base::app*/);
+    for ( int i = 1; i<N; i++ )
+    {
+		if ( (y[i][1] * y[i-1][1] < 0) && (y[i][2] * cos(y[i][0]) + y[i][3] * cos(y[i][1]) > 0) ) {			// Aufgabe 2c
+			fout << (y[i][2] + y[i-1][2])/2 << "\t" << (y[i][0] + y[i-1][0])/2 << endl;
+		}
+	}
     fout.close();
     return;
 }
@@ -312,10 +254,53 @@ void Dpendulum::doEverything(double theta1, double theta2, double ddtTheta1, dou
     this->save(fname);
 }
 
-//a1.cpp
+void Dpendulum::teilC(double E, double h, double t, std::string fname)
+{
+/*	this->reset();		*/									// Das war die usprüngliche Implementierung mit nur 4 Startwerten
+
+    ofstream fout;
+    srand(time(NULL));
+    for(int i = 0; i < 80; i++){
+        this->reset();
+        double Etest = 0;
+        double start[4] = {0, 0, 0, 0};
+        do {
+            start[0] = (rand() % 10000)/10000.0;
+            start[1] = (rand() % 10000)/10000.0;
+            start[2] = (rand() % 10000)/10000.0;
+            start[3] = 0;
+            Etest = 0.5*start[2]*start[2] + 2*g*(1-cos(start[0])) + 0.5*start[2]*start[2] + g*(1-cos(start[1]));
+        } while(Etest > E);
+        start[3] = sqrt(start[2]*start[2]*cos(start[0]-start[1])*cos(start[0]-start[1]) + 2*(E-Etest) ) - start[2] * cos(start[0]-start[1]);
+        this->setInitial(start[0], start[1], start[2], start[3]);
+        this->swing(h, t);
+        this->saveC(fname+"_"+to_string(i)+".dat");
+		cout << (i+1)/80.0 * 100 << "%" << endl;
+    }
+}
+//a2.cpp mit main
 int main()
 {
     Dpendulum pendulum;
-    pendulum.doEverything(0.1, sqrt(2)*0.1, 0, 0, 1e-5, 3, "testp1.dat");
-    pendulum.doEverything(0.1, -sqrt(2)*0.1, 0, 0, 1e-5, 3, "testp2.dat");
+	cout << "Erstelle a1.dat" << endl;
+    pendulum.doEverything(0.1, sqrt(2)*0.1, 0, 0, 1e-5, 3, "a1.dat");
+	cout << "Erstelle a2.dat" << endl;
+    pendulum.doEverything(0, 0, 0, 4.472, 1e-5, 3, "a2.dat");
+	cout << "Erstelle a3.dat" << endl;
+    pendulum.doEverything(0, 0, 0, 11.832, 1e-5, 3, "a3.dat");
+
+    double eps = pow(10,-2);
+
+	cout << "Erstelle b2.dat" << endl;
+    pendulum.doEverything(eps, 0, 0, 4.472, 1e-5, 3, "b2.dat");
+	cout << "Erstelle b3.dat" << endl;
+    pendulum.doEverything(eps, 0, 0, 11.832, 1e-5, 3, "b3.dat");
+
+	cout << "Erstelle c1.dat" << endl;
+	pendulum.teilC(3, 1e-5, 50, "c1");
+	cout << "Erstelle c2.dat" << endl;
+	pendulum.teilC(10, 1e-5, 50, "c2");
+	cout << "Erstelle c3.dat" << endl;
+	pendulum.teilC(20, 1e-5, 50, "c3");
+    return 0;
 }

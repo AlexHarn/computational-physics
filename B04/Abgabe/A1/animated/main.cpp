@@ -12,6 +12,11 @@ double** cords = NULL;
 double* offset = new double[2] {250, 250};
 double scale = 100;
 
+//   Hinweis: Weil ich keine Zeit hatte vernünftige Zeitdarstellung zu implementieren, muss je nach
+//   CPU die Schrittweite so eingestellt werden, dass die Animation in einer vernünftigen
+//   Geschwindigkeit läuft. Das ist natürlich unnötig genau für
+//   schnellere CPUs...
+
 void work()
 {
     // Zwei pointer, die immer umgebogen werden, um zu vermeiden, dass der mainthread "unfertige"
@@ -43,9 +48,9 @@ void work()
 int main()
 {
     // Pendel initiallisieren
-    //pendulum.setInitial(3.141, 3.141, 0, 0); // Chaotisch
+    pendulum.setInitial(3.141, 3.141, 0, 0); // Chaotisch
     //pendulum.setInitial(0.1, sqrt(2)*0.1, 0, 0); // Paralele Mode
-    pendulum.setInitial(0.1, -sqrt(2)*0.1, 0, 0); // Antiparalele Mode
+    //pendulum.setInitial(0.1, -sqrt(2)*0.1, 0, 0); // Antiparalele Mode
 
     // Fenster vorbereiten
     RenderWindow window(VideoMode(500, 500), "Doppelpendel");
