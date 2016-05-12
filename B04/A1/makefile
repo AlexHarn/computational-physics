@@ -5,14 +5,18 @@ LDLIBS=-fopenmp
 
 all: a1show
 
-a1abgabe.o: a1abgabe.cpp
+rungkutt.o: rungkutt.cpp rungkutt.h
 
-a1abgabe: a1abgabe.o
+a1.o: a1.cpp Dpendulum.h 
 
-a1abgabe.dat: a1abgabe
-	./a1abgabe
+Dpendulum.o: Dpendulum.cpp Dpendulum.h rungkutt.h
 
-a1show: a1abgabe.dat
+a1: a1.o Dpendulum.o rungkutt.o
+
+a1.dat: a1
+	./a1
+
+a1show: a1.dat
 	python a1.py
 
 clean:
