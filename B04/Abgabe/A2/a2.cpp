@@ -1,3 +1,13 @@
+//-------------------------------------------------------------------------------
+//                      Computational Physics 2016 Blatt 4
+//                           Aufgabe 2: Poincaré Schnitt
+//-------------------------------------------------------------------------------
+//              Anwendung des Runge-Kutta-Verfahren 4. Ordnung auf das
+//              nicht lineare, chaotische Problem des Doppelpendels.
+//-------------------------------------------------------------------------------
+
+
+
 #include <iostream>
 #include <cmath>
 #include <functional>
@@ -6,7 +16,11 @@
 #include <iostream>
 #include <stdlib.h>
 using namespace std;
-// rungkutt.h
+
+//-------------------------------------------------------------------------------
+//                               FILE: rungkutt.h
+//-------------------------------------------------------------------------------
+
 void rungkutt(std::function<void(double t, double* y, double* out)> f, const double N, const double h, const double t_0, double** y, const int d);
     /* Führt das Runge-Kutta-Verfahren 4. Ordnung durch. Neue Implementierung ohne std:vector und in
      * allgemeiner Formulierung wie in der Vorlesung.
@@ -17,7 +31,10 @@ void rungkutt(std::function<void(double t, double* y, double* out)> f, const dou
      *      y: y Vektoren zu allen Zeiten. Bei Aufruf müssen Starbedingungen gesetzt sein
      *      d: Länge der y Vektoren (!!! Nicht Anzahl der Raumdimensionen !!!)
      */
-// Header Dpendulum.h
+	 
+//-------------------------------------------------------------------------------
+//                              FILE: Dpendulum.h
+//-------------------------------------------------------------------------------
 class Dpendulum
 {
         void static f(double /*t*/, double* y, double* dy, double g);
@@ -66,7 +83,9 @@ class Dpendulum
 		*/
 };
 
-//rungkutt.cpp
+//-------------------------------------------------------------------------------
+//                              FILE: rungkutt.cpp
+//-------------------------------------------------------------------------------
 void rungkutt(function<void(double t, double* y, double* out)> f, const double N, const double h, const double t_0, double** y, const int d)
 {
 	double* k1 = new double[d];
@@ -110,7 +129,9 @@ void rungkutt(function<void(double t, double* y, double* out)> f, const double N
 	delete []temp;
 }
 
-// dependulum.cpp
+//-------------------------------------------------------------------------------
+//                             FILE: Dpendulum.cpp
+//-------------------------------------------------------------------------------
 void Dpendulum::f(double /*t*/, double* y, double* dy, double g)
 {
     // einige mehrfach benötigten Terme vorher berechnen um Rechenzeit zu sparen
@@ -278,7 +299,9 @@ void Dpendulum::teilC(double E, double h, double t, std::string fname)
 		cout << (i+1)/80.0 * 100 << "%" << endl;
     }
 }
-//a2.cpp mit main
+//-------------------------------------------------------------------------------
+//                                FILE: a2.cpp
+//-------------------------------------------------------------------------------
 int main()
 {
     Dpendulum pendulum;

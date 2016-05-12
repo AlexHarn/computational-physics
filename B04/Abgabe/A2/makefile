@@ -3,16 +3,16 @@ CXX=g++
 CXXFLAGS=-std=c++11 -fopenmp -g
 LDLIBS=-fopenmp
 
-all: a2abgabeshow
+all: a2show
 
-a2abgabe.o: a2abgabe.cpp
+a2.o: a2.cpp
 
-a2abgabe: a2abgabe.o
+a2: a2.o
 
-a2abgabe.dat: a2abgabe
-	./a2abgabe
+a2.dat: a2
+	./a2
 
-a2abgabeshow: a2abgabe.dat
+a2show: a2.dat
 	python a2.py
 
 clean:
