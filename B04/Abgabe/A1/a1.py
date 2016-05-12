@@ -32,7 +32,7 @@ for file in os.listdir():
         fig.savefig(file[:-4]+"_zeitachse.pdf")
         plt.clf()
         f.write(file+"\n")
-        f.write("Delta E: "+str(data[-1][-1] - data[-1][0])+"\n")
+        f.write("Delta E: "+str(np.max(abs(data[-1] - data[-1][0])))+"\n")
 
         # Trajektorien Plot (die Animation ist viel schönr)
         plt.plot(data[5], -data[6]-1, "g--", label=r"$(x,y-1)_1$")

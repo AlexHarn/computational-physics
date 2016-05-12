@@ -10,13 +10,14 @@ Prof. Dr. Jan Kierfeld \hfill Abgabefrist: 13.05.2016\\
 \section*{Aufgabe 1 - Das Doppelpendel}
 In Aufgabe 1 wird ein Doppelpendel mit den zwei Massen $m_1$ und $m_2$ an den Stäben der Länge $L_1$, bzw. $L_2$ betrachtet, wie in Abb. \ref{fig:pendel} skizziert.
 \begin{figure}
+	\centering
 	\includegraphics{./blatt.pdf}
 	\caption{Doppelpendel aus zwei Massen $m_1$ und $m_2$ an den Stäben der Länge $L_1$, bzw. $L_2$.}
 	\label{fig:pendel}
 \end{figure}
-\\Für die reduzierte Masse $\mu$ gilt mit $m_1 = m_2 = m$:
+Für die reduzierte Masse $\mu$ gilt mit $m_1 = m_2 = m$:
 \begin{equation}
-\mu = \frac{m_2}{m_1 + m_2} = \frac{1}{2}
+\mu = \frac{m_1m_2}{m_1 + m_2} = \frac{1}{2}
 \label{eq:redMasse}
 \end{equation}
 Die Bewegungsgleichungen für die Winkel $\Theta_i$ ergeben sich zu
@@ -36,8 +37,8 @@ Weiter gilt $L_1 = L_2 = 1\,\mathup{m}$ und folgende Abkürzungen
 		 g_i &:= \frac{g}{L_i} = 9.81 \frac{1}{\mathup{s}^2} = g \,.
 	\end{split}
 \end{equation*}
-\subsection*{Aufgabenteil a}
-Für das System soll die kinetische $T_i$ und potentielle Energie $U_i$ als Funktion der Winkel $\Theta$ und Winkelgeschwindigkeiten $\dot{\Theta}$ aufgestellt werden.\\
+\subsection*{a)}
+Für das System soll die kinetische $T_i$ und potentielle Energie $U_i$ als Funktion der Winkel $\Theta$ und Winkelgeschwindigkeiten $\dot{\Theta}$ aufgestellt werden.
 Aus den trigonometrischen Winkelbeziehungen und der Überlegung, dass die $x_2$- und $y_2$-Bewegung von der $x_1$- und $y_1$-Bewegung abhängen, folgen
 
 \begin{equation*}
@@ -62,7 +63,7 @@ Damit können nun die Energiebeiträge aufgestellt werden. Es muss beachtet werd
 	 \label{eq:Energiebetraege}
 \end{equation}
 
-\subsection*{Aufgabenteil b}
+\subsection*{b)}
 Mit den Kleinwinkelnäherungen $\sin(\alpha) \approx \alpha, \cos(\alpha) \approx 1, \cos^2(\alpha) \approx 1$, sowie der Vernachlässigung der $\dot{\Theta_i}^2$-Terme ergibt sich mit Gl. \eqref{eq:redMasse} in Gl. \eqref{eq:DGL}
 \begin{equation}
 	\begin{split}
@@ -73,7 +74,6 @@ Mit den Kleinwinkelnäherungen $\sin(\alpha) \approx \alpha, \cos(\alpha) \appro
 	\end{split}
 	\label{eq:DGLTheta}
 \end{equation}
-
 Diese beiden DGLs können nun in die Matrixschreibweise überführt werden:
 \begin{equation*}
 	\begin{split}
@@ -97,7 +97,7 @@ Daraus ergeben sich über das charakteristische Polynom die Eigenwerte
  \lambda_{\pm} = -2 \pm \sqrt{2}
 \end{equation*}
 und die Eigenvektoren (mit zugehöriger Matrix $T$ und inverser Matrix $T^{-1}$)
-\begin{equation*}
+\begin{equation}
 	\begin{split}
 		v_+ &=
 		\begin{pmatrix}
@@ -121,13 +121,15 @@ und die Eigenvektoren (mit zugehöriger Matrix $T$ und inverser Matrix $T^{-1}$)
 				-\sqrt{2} & 1 \\
 		\end{pmatrix}\, . \\
 	\end{split}
-\end{equation*}
-Damit kann nun entkoppelt werden:\\
+	\label{eqn:T}
+\end{equation}
+Damit kann nun entkoppelt werden:
 \begin{equation*}
 	\begin{split}
 		\vec{\Theta} &:= T \tilde{\Theta} \\
 		\Rightarrow \ddot{\Theta} &= T \ddot{\tilde{\Theta}} = A\,T\,\tilde{\theta} \\
-		\Rightarrow \ddot{\tilde{\Theta}} &= \underbrace{T^{-1} A T}_{:=L} \tilde{\Theta} \qquad L =\frac{\Theta}{2}
+		\Rightarrow \ddot{\tilde{\Theta}} &= \underbrace{T^{-1} A T}_{:=L} \tilde{\Theta}
+		\qquad L =\frac{\textup{g}}{2}
 		\begin{pmatrix}
 			-4+\sqrt{2} & 0 \\
 			0 & -4-\sqrt{2} \,. \\		
@@ -162,7 +164,8 @@ Aus den vier Gleichungen ergibt sich nach Lösen des LGS:
 		D &= \frac{\dot{\Theta}_0^1}{2\,\omega_2} - \frac{\dot{\Theta}_0^2}{2\,\sqrt{2}\,\omega_2} \\
 	\end{split}
 \end{equation*}
-Mit \ref{eq:DGLTheta} folgt
+Mit \ref{eq:DGLTheta} folgt\footnote{Wurde kurzzeitig dazu verwendet, um mal nur die
+Kleinwinkelnäherung mit Rungekutta zu lösen.}
 \begin{equation*}
 	\dot{\vec{\Theta}} = 
 	\begin{pmatrix}
@@ -174,8 +177,8 @@ Mit \ref{eq:DGLTheta} folgt
 	\vec{\Theta} \stackrel{\text{exp-Ansatz}}{=} \lambda\, \vec{\Theta}
 \end{equation*} 
 
-\subsection*{Aufgabenteil c}
-Mit den Annahmen aus Aufgabenteil a folgt:
+\subsection*{c)}
+Mit den Annahmen aus a) folgt:
 \begin{equation*}
   \begin{split}
   	\rightarrow \overbrace{\dot{\Theta_1}}^{y'(t)} &= \overbrace{\Theta_3}^{f(y)} \stackrel{\text{Code}}{=} dy[0] = y[2]\\
@@ -201,7 +204,7 @@ In der Methode \enquote{$\textsc{save}$} werden alle Daten in entsprechende .dat
 Es folgen die Plots für $Theta_i$ (und ihre Geschwindigkeiten), sowie die Energien (und -beträge). Dabei erkennt man leichte Inkonsistenzen bei der Energieerhaltung, die wir auf Rundungsfehler zurückführen. Die Differenzen betragen dabei $\Delta E_1 = -0.000799999999998$, bzw. $\Delta E_2 = -9.99999999998e-05$ (vgl. out.txt). Es werden  für Schwingungen verschiedener Amplitude und Breite angeregt. Während es im pos. Wurzelfall zu einer Verschiebung bei $\Theta_2$ kommt, ist bei der negativen Wurzel eine deutlich schwächere, breitere Schwingung zu erkennen. Insgesamt sind die Amplituden bei $\Theta_0$ und $\Theta_1$ ähnlich, aber die Breite im Minusfall deutlich geringer. Bei $\Theta_3$ zeigt sich eine deutlich niedrigere Amplitude bei kleinerer Breite. Alle Schwingungen sind harmonisch.
 \begin{landscape}
 	\begin{figure}
-		\OverfullCenter{\includegraphics[width=\textwidth]{../A1/testp1_zeitachse.pdf}}
+		\OverfullCenter{\includegraphics[width=\textwidth]{../A1/pos_sqrt2_zeitachse.pdf}}
 		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 1 (pos. Wurzel) (Zeitachse).}
 		\label{fig:OsziA11}
 	\end{figure}
@@ -209,16 +212,47 @@ Es folgen die Plots für $Theta_i$ (und ihre Geschwindigkeiten), sowie die Energ
 
 \begin{landscape}
 	\begin{figure}
-		\OverfullCenter{\includegraphics[width=\textwidth]{../A1/testp2_zeitachse.pdf}}
+		\OverfullCenter{\includegraphics[width=\textwidth]{../A1/neg_sqrt2_zeitachse.pdf}}
 		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 1 (neg. Wurzel) (Zeitachse).}
 		\label{fig:OsziA12}
 	\end{figure}
 \end{landscape} 
+Um die Energieerhaltung zu überprüfen betrachten wir $\Delta E := \max\limits_{i \in [1, N-1]}\left|E_0 -
+E_i\right|$. Für die beiden Fälle erhalten wir mit der verwendeten Schrittweite $h = 10^{-5}$:
+\begin{equation}
+	\begin{split}
+		\theta_2 = - \sqrt{2}\theta_1&: \Delta E = 811 \cdot 10^{-6} \textup{J} \\
+		\theta_2 = \sqrt{2}\theta_1&: \Delta E = 144 \cdot 10^{-6} \textup{J}\,. \\
+	\end{split}
+\end{equation}
+Die Energie ist also mit hinreichender Genauigkeit erhalten\footnote{Zur Erinnerung: Die Massen
+wurden auf $1\,\textup{kg}$ festgelegt, damit ergeben sich Energien der Größenordnung
+$10^{-1}\textup{J}$}.
 
-\subsection*{Aufgabenteil d} %Missing
+Mit den gegebenen Anfangsbedingungen erhalten wir also offensichtlich die erwarteten Eigenmoden
+(\ref{eqn:T}) der Kleinwinkelnäherung. Die parallele bzw. antiparallele Schwingung ist gut in den
+Abbildung der Teilaufgaben c) und d) erkennbar.
+
+\subsection*{d)}
+Die Trajektorien beider Massen haben wir in den Abbildungen \ref{fig:neg_traj} und \ref{fig:pos_traj}
+dargestellt. Damit sich beide Trajektorien relativ zu eineander betrachten lassen haben wir die
+Trajektorie von $m_1$ um 1 in positiver $y$-Richtung verschoben. Deutlich schöner ist allerdings die
+mitgeschickte Animation!
+\begin{figure}
+	\centering
+	\includegraphics[width=0.8\textwidth]{../A1/neg_sqrt2_trajektorie.pdf}
+	\caption{Trajektorie für den Fall $\theta_2 = -\sqrt{2}\theta_1$.}
+	\label{fig:neg_traj}
+\end{figure}
+\begin{figure}
+	\centering
+	\includegraphics[width=0.8\textwidth]{../A1/pos_sqrt2_trajektorie.pdf}
+	\caption{Trajektorie für den Fall $\theta_2 = \sqrt{2}\theta_1$.}
+	\label{fig:pos_traj}
+\end{figure}
 
 \section*{Poincar\'{e} Schnitt}
-\subsection*{Aufgabenteil a}
+\subsection*{a)}
 Unter der Annahme, dass die Geschwindigkeiten auf dem Zettel im unteren mittleren Block für den chaotischen Fall gelten, haben wir wie in Graphik \ref{fig:OsziC1} zu erkennende Phasenraumbilder geplottet. In der $\textsf{Dpendulum.cpp}$ haben wir die Berechnung der Energien rausgeworfen, da nicht explizit gefragt. Für den periodischen Fall haben wir nur die AB für die positive Wurzel implementiert, da nur 3 Startbedingungen gefragt waren. Für die Definition der Energie, also bei $\Theta_i = 0, \dot{\Theta_i} = 0$ E=0, haben wir $-m\,g\,\cos(\Theta)$ wird $m\,g\,(1-\cos(\Theta))$ (Achsenverschiebung).
 
 \begin{landscape}
@@ -228,24 +262,24 @@ Unter der Annahme, dass die Geschwindigkeiten auf dem Zettel im unteren mittlere
 		\label{fig:OsziC1}
 	\end{figure}
 \end{landscape} 
-\subsection*{Aufgabenteil b}
+\subsection*{b)}
 Die Störung haben wir in der Größenordnung $O(10^{-2})$ implementiert. Der euklidische Abstand ist der Betrag der Differenzen von ungestört und gestört. Deswegen haben wir die Werte, die wir in Aufgabe A2a) verwendet haben, recycelt und haben die Differenz in der Pythondatei gemacht.
 \begin{landscape}
 	\begin{figure}
 		\OverfullCenter{\includegraphics[width=\textwidth]{../A2/teilb.pdf}}
 		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 2b: Abstände der beiden Trajektorien zur ungestörten Lösung für beide AB.}
-		\label{fig:OsziC1}
+		\label{fig:OsziC2}
 	\end{figure}
 \end{landscape} 
  
-\subsection*{Aufgabenteil c}
+\subsection*{c)}
 In der $\textsf{Dpendulum.cpp}$ haben wir den Nulldurchgang dahingehend überprüft, dass wir eine Gerade durch den Durchgang legen und die Punkte vor und hinter dem Nulldurchgang multipliziert ein negatives Vorzeichen besitzen müssen. Über die Ableitung von $x_2$ aus \ref{eq:kartKords} erhält man die zweite Massenbewegung. 
 Zur Generierung der AB unter konstanter Energie haben wir zufällige Startwerte generiert, mit welchen die Energieerhaltung $\textsc{Etest}$ getestet wird. 
 \begin{landscape}
 	\begin{figure}
 		\OverfullCenter{\includegraphics[width=\textwidth]{../A2/teilc.pdf}}
 		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 2c: Poincar\'{e}-Schnitte für E=3$\,$J,10$\,$J,20$\,$J .}
-		\label{fig:OsziC1}
+		\label{fig:OsziC3}
 	\end{figure}
 \end{landscape} 
 
