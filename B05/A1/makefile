@@ -5,12 +5,16 @@ LDLIBS=-fopenmp
 
 all: a1show
 
-initializeSquareGrid.o: initializeSquareGrid.cpp
+initializeSquareGrid.o: initializeSquareGrid.cpp initializeSquareGrid.h
 
-initializeSquareGrid: initializeSquareGrid.o
+a1.o: a1.cpp initializeSquareGrid.h 
 
-a1.dat: initializeSquareGrid
-	./initializeSquareGrid
+#Dpendulum.o: Dpendulum.cpp Dpendulum.h rungkutt.h
+
+a1: a1.o initializeSquareGrid.o
+
+a1.dat: a1
+	./a1
 
 a1show: a1.dat
 	#python a1.py

@@ -1,21 +1,12 @@
 #include "../../Eigen/Eigen/Dense" //Eigen liegt oberhalb der B**-Ordner
 #include <math.h>
+#include <iostream>
+#include "initializeSquareGrid.h"
 
 using namespace Eigen;
+using namespace std;
 
-#ifndef SquareGrid_H
-#define SquareGrid_H
-class QuadrGitter {  
- 
-    public:
-        //Methoden
-        void ErstelleQuadrGitter(); //int AnzTeilchen, double dichte
-};
-#endif
-
-void ErstelleQuadrGitter() { //int AnzTeilchen, double dichte)
-    int AnzTeilchen = 100;
-    double dichte = 3;
+void QuadrGitter::ErstelleQuadrGitter(int AnzTeilchen, double dichte) {
     //int AnzTeilchen Anzahl an Teilchen für das Gitter
     //double dichte Dichte der Partikel
     MatrixXd particleinfo(2,AnzTeilchen); //2xAnzTeilchen Array mit einem Ortsvektor pro Spalte
@@ -33,8 +24,7 @@ void ErstelleQuadrGitter() { //int AnzTeilchen, double dichte)
     
     while (pow(AnzQuadrat,2) < AnzTeilchen)
     {  
-       //AnzQuadrat += 1.AnzQuadrat; 
-        AnzQuadrat = AnzQuadrat + 1;
+       AnzQuadrat = AnzQuadrat + 1;
     }
 
     // 2D Index zum Zählen der Plätze, Startposition untere linke Kante
@@ -47,8 +37,11 @@ void ErstelleQuadrGitter() { //int AnzTeilchen, double dichte)
     { 
         // Kord setzen
         //Addition ist in Eigen etwas schräg. aktPos + (0.5,0.5) fkt nicht
-        particleinfo(:,Teilchen) = (aktPos + Schrittweite)*(L/AnzQuadrat); //Teilchenpos in der Matrix setzen auf jew Kante
+        for(int komp = 0; komp < 2; komp++)
+        {
+            particleinfo(komp,Teilchen) = (aktPos(komp) + Schrittweite(komp))*(L/AnzQuadrat); //Teilchenpos in der Matrix setzen auf jew Kante
         //Doppelpunkt gibt komplette Zeile,bzw hier Spalte aus (also (x,y) des Teilchens).
+        }
 
         // Rastern des Pointers
         aktPos(0) = aktPos(0) + 1;
@@ -57,6 +50,13 @@ void ErstelleQuadrGitter() { //int AnzTeilchen, double dichte)
             aktPos(0) = 0;
             aktPos(1) = aktPos(1) + 1;
         }
-            
     }
-}    
+    //MatrixXd parInfuLaenge(2, AnzTeilchen);
+    //parInfuLaenge << particleinfo;
+    //parInfuLaenge << L;
+    //cout << "Matrix mit allen Vektoren: " << particleinfo << endl;
+    //cout << "Pointer: " << aktPos << endl;
+    //cout << "perfektes Quadrat: " << AnzQuadrat << endl;
+    //cout << "Länge: "<< L << endl;
+    //return parInfuLaenge;
+}
