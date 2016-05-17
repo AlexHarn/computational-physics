@@ -24,7 +24,7 @@ void Dpendulum::f(double /*t*/, double* y, double* dy, double g)
     dy[0] = y[2]; // d/dt theta_1 = theta_3
     dy[1] = y[3]; // d/dt theta_2 = theta_4
     dy[2] = pre*( 0.5*g*sint2*cost2t1 + 0.5*y[2]*y[2]*sint2t1*cost2t1 - g*sint1 + 0.5*y[3]*y[3]*sint2t1 ); // vergleiche Zettel
-    dy[3] = pre*(g*sint1*cost2t1 - 0.5*y[3]*y[3]*sint2t1*cost2t1 - g*sint2 - 0.5*y[2]*y[2]*sint2t1 ); // vergleiche Zettel
+    dy[3] = pre*(g*sint1*cost2t1 - 0.5*y[3]*y[3]*sint2t1*cost2t1 - g*sint2 - y[2]*y[2]*sint2t1 ); // vergleiche Zettel
 
     // In Kleinwinkelnäherung
     //dy[2] = g*(y[1] - 2*y[0]);
