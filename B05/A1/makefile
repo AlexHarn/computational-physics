@@ -7,11 +7,11 @@ all: a1show
 
 initializeSquareGrid.o: initializeSquareGrid.cpp initializeSquareGrid.h
 
-mdsimulation.o: mdsimulation.cpp mdsimulation.h initializeSquareGrid.h
+mdsimulation.o: mdsimulation.cpp mdsimulation.h initializeSquareGrid.h ljforces.h
 
-#Dpendulum.o: Dpendulum.cpp Dpendulum.h rungkutt.h
+ljforces.o: ljforces.cpp ljforces.h
 
-mdsimulation: mdsimulation.o initializeSquareGrid.o
+mdsimulation: mdsimulation.o initializeSquareGrid.o ljforces.o
 
 mdsimulation.dat: mdsimulation
 	./mdsimulation
@@ -20,4 +20,4 @@ a1show: mdsimulation.dat
 	#python a1.py
 
 clean:
-	rm -f a1 *.o *.dat *.pdf *.png out.txt
+	rm -f mdsimulation *.o *.dat *.pdf *.png out.txt

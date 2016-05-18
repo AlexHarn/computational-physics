@@ -1,5 +1,7 @@
 #ifndef SquareGrid_H
 #define SquareGrid_H
-        //Methoden
-        void ErstelleQuadrGitter(int AnzTeilchen, double dichte);
+class Quadratgitter {
+    public:
+        Eigen::MatrixXd erstellequadrgitter(int AnzTeilchen, double dichte);
+};
 #endif

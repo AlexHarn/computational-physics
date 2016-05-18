@@ -6,7 +6,12 @@
 using namespace Eigen;
 using namespace std;
 
-void ErstelleQuadrGitter(int AnzTeilchen, double dichte) {
+/**
+  * Erzeugung eines quadratischen Gitters und glm. Anordnung der Teilchen auf dem Gitter,
+  * um kleine Abstände zu vermeiden.
+  **/
+
+MatrixXd Quadratgitter::erstellequadrgitter(int AnzTeilchen, double dichte) {
     //int AnzTeilchen Anzahl an Teilchen für das Gitter
     //double dichte Dichte der Partikel
     MatrixXd particleinfo(2,AnzTeilchen); //2xAnzTeilchen Array mit einem Ortsvektor pro Spalte
@@ -51,12 +56,9 @@ void ErstelleQuadrGitter(int AnzTeilchen, double dichte) {
             aktPos(1) = aktPos(1) + 1;
         }
     }
-    //MatrixXd parInfuLaenge(2, AnzTeilchen);
-    //parInfuLaenge << particleinfo;
-    //parInfuLaenge << L;
     //cout << "Matrix mit allen Vektoren: " << particleinfo << endl;
     //cout << "Pointer: " << aktPos << endl;
     //cout << "perfektes Quadrat: " << AnzQuadrat << endl;
     //cout << "Länge: "<< L << endl;
-    //return parInfuLaenge;
+    return particleinfo;
 }
