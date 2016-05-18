@@ -7,16 +7,16 @@ all: a1show
 
 initializeSquareGrid.o: initializeSquareGrid.cpp initializeSquareGrid.h
 
-a1.o: a1.cpp initializeSquareGrid.h 
+mdsimulation.o: mdsimulation.cpp mdsimulation.h initializeSquareGrid.h
 
 #Dpendulum.o: Dpendulum.cpp Dpendulum.h rungkutt.h
 
-a1: a1.o initializeSquareGrid.o
+mdsimulation: mdsimulation.o initializeSquareGrid.o
 
-a1.dat: a1
-	./a1
+mdsimulation.dat: mdsimulation
+	./mdsimulation
 
-a1show: a1.dat
+a1show: mdsimulation.dat
 	#python a1.py
 
 clean:

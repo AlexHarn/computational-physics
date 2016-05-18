@@ -6,7 +6,7 @@
 using namespace Eigen;
 using namespace std;
 
-void QuadrGitter::ErstelleQuadrGitter(int AnzTeilchen, double dichte) {
+void ErstelleQuadrGitter(int AnzTeilchen, double dichte) {
     //int AnzTeilchen Anzahl an Teilchen für das Gitter
     //double dichte Dichte der Partikel
     MatrixXd particleinfo(2,AnzTeilchen); //2xAnzTeilchen Array mit einem Ortsvektor pro Spalte
@@ -17,13 +17,13 @@ void QuadrGitter::ErstelleQuadrGitter(int AnzTeilchen, double dichte) {
     }
     // Größe der Box (RB: Volumen, bzw. hier Fläche, da 2D); Teilchendichte umgeformt, auf Dim der Länge
     double L = pow((AnzTeilchen/dichte),0.5);
-    
+
     // Finde das kleinste perfekte Quadrat größer oder gleich der Anz an Partikeln
     // Bietet Gitterplätze für die Teile
     double AnzQuadrat = 2; //Seite des perfekten Quadrates
-    
+
     while (pow(AnzQuadrat,2) < AnzTeilchen)
-    {  
+    {
        AnzQuadrat = AnzQuadrat + 1;
     }
 
@@ -34,7 +34,7 @@ void QuadrGitter::ErstelleQuadrGitter(int AnzTeilchen, double dichte) {
     Schrittweite << 0.5, 0.5;
 
     for(int Teilchen = 1; Teilchen<AnzTeilchen ;Teilchen++)
-    { 
+    {
         // Kord setzen
         //Addition ist in Eigen etwas schräg. aktPos + (0.5,0.5) fkt nicht
         for(int komp = 0; komp < 2; komp++)
