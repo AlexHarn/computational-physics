@@ -71,7 +71,9 @@ void simulate(int AnzTeilchen, double Dichte, double Temperatur) {
 
     //Jetzt Kraftberechnung (s. ljforces.cpp), ToDo
     LJForces ljforces;
-    ljforces.kraft(particleInfo, L);
+    MatrixXd forces(2, AnzTeilchen);
+    forces = ljforces.kraft(particleInfo, L);
+    cout << forces << endl; //wirft noch zwischen durch ein nan, sind noch Nullen im dr. Liegt evtl an den Grenzen der for-Schleife in ljforces.cpp (mit TeilA,TeilB)
 }
 
 int main() {

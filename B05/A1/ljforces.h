@@ -2,6 +2,6 @@
 #define ljforces_H
 class LJForces {
     public:
-    void kraft(Eigen::MatrixXd particleinfo, double L);
+    Eigen::MatrixXd kraft(Eigen::MatrixXd particleinfo, double L);
 };
 #endif

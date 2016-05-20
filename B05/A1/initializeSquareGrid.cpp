@@ -38,7 +38,7 @@ MatrixXd Quadratgitter::erstellequadrgitter(int AnzTeilchen, double dichte) {
     Vector2d Schrittweite;
     Schrittweite << 0.5, 0.5;
 
-    for(int Teilchen = 1; Teilchen<AnzTeilchen ;Teilchen++)
+    for(int Teilchen = 0; Teilchen<AnzTeilchen ;Teilchen++)
     {
         // Kord setzen
         //Addition ist in Eigen etwas schräg. aktPos + (0.5,0.5) fkt nicht

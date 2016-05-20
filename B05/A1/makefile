@@ -9,9 +9,11 @@ initializeSquareGrid.o: initializeSquareGrid.cpp initializeSquareGrid.h
 
 mdsimulation.o: mdsimulation.cpp mdsimulation.h initializeSquareGrid.h ljforces.h
 
-ljforces.o: ljforces.cpp ljforces.h
+ljforces.o: ljforces.cpp ljforces.h periodRB.h
 
-mdsimulation: mdsimulation.o initializeSquareGrid.o ljforces.o
+periodRB.o: periodRB.cpp periodRB.h
+
+mdsimulation: mdsimulation.o initializeSquareGrid.o ljforces.o periodRB.o
 
 mdsimulation.dat: mdsimulation
 	./mdsimulation
