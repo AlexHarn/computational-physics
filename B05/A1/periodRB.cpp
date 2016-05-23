@@ -9,7 +9,10 @@ using namespace Eigen;
 Vector2d PeriodRB::kurzerWeg(Vector2d dr, double L)
 {
 
-               // 1. Halbe Boxlänge in jede Richtung
+                /*
+                 * 1. Halbe Boxlänge in jede Richtung, r_c einfacher Cutoff aller Terme,
+                 * die zu weit weg sind (WW mit den period Bildern)
+                 **/
                 double hL = L/2.0;    
 
                 /* 2. Abstandsvec sollte in [-hL_x, hL_x] & [-hL_y, hL_y] liegen

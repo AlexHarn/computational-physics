@@ -12,6 +12,7 @@ using namespace std;
   * Berechnet die Kräfte auf ein Ensemble von LJ-Teilchen in 2D
   * Gibt die Kräfte auf alle Teilchen in einer bestimmten Ordnung zurück
   * $\sigma$ (Längenskala) = $\epsilon$ (Energieskala) = 1
+  * Berechnet Dir auch Epot in jedem Zeitschritt
   **/
 
 MatrixXd LJForces::kraft(MatrixXd particleinfo, double L)
@@ -23,6 +24,10 @@ MatrixXd LJForces::kraft(MatrixXd particleinfo, double L)
 
     // Abstandsvektor
     Vector2d dr(0,0);
+    // V_LJ(r) = .. , absr= Betrag von r
+    double V = 0;
+    double absr = 0;
+
     for(int TeilA = 0; TeilA < (AnzTeilchen-1); TeilA++) //über alle TeilchenPAARE (<=> Grenzen: Ränder) gehen
     {
         Vector2d tempA(0,0);
@@ -37,6 +42,16 @@ MatrixXd LJForces::kraft(MatrixXd particleinfo, double L)
                 // Period RB beachten, also kürzesten Weg zum nächsten Teil (auch in Nachbarbox)
                 PeriodRB periodRB;
                 dr = periodRB.kurzerWeg(dr, L);
+
+                /* Potential(Betrag von dr), über alle TeilchenPaare summiert
+                 * ist Epot, V_LJ(r) = 4*(pow(pow(r,-1),12)-pow(pow(r,-1),6));
+                 **/
+                absr = dr.squaredNorm();
+                V += 4*(pow(pow(absr,-1),12)-pow(pow(absr,-1),6));
+                //cout << V << endl;
+            
+                //TODO noch in .dat-file schreiben
+
                 // dr2 = dr^2
                 double dr2 = dr.dot(dr);
 
