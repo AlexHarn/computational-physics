@@ -16,31 +16,25 @@ using namespace std;
 
 MatrixXd LJForces::kraft(MatrixXd particleinfo, double L)
 {
-    int AnzTeilchen = particleinfo.cols();
     int dim = particleinfo.rows();
+    int AnzTeilchen = particleinfo.cols();
     MatrixXd forces(dim, AnzTeilchen); 
-    //selbe Dim wie particleinfo, rows: 2
+    //selbe Dim wie particleinfo, rows: 2 (x,y)
 
-
-    //Matrixeinträge auf 0 setzen, kann man sicher effizienter schreiben
-    for(int teile = 0; teile< AnzTeilchen; teile++) {
-        for(int komp = 0; komp<dim; komp++) {
-            forces(komp, teile) = 0;
-        }
-    }
     // Abstandsvektor
     Vector2d dr(0,0);
     for(int TeilA = 0; TeilA < (AnzTeilchen-1); TeilA++) //über alle TeilchenPAARE (<=> Grenzen: Ränder) gehen
     {
-        for(int TeilB = (TeilA+2); TeilB < AnzTeilchen; TeilB++) //s. Komm erste Schleife
+        Vector2d tempA(0,0);
+        tempA = particleinfo.block(0,TeilA,2,1); //Gibt die TeilA-te Teilchen-kords aus
+        for(int TeilB = (TeilA+1); TeilB < AnzTeilchen; TeilB++) //s. Komm erste Schleife
         {
-            for(int komp=0; komp<dim; komp++) //für x und y (geht sicher schöner, wenn man schon mit Vec rechnet)
-            {
-                // Distanz zwischen zwei Teilchen    
-                dr(komp) = particleinfo(komp,TeilA) - particleinfo(komp,TeilB);
-                //cout << dr << endl;
+                Vector2d tempB(0,0);
+                tempB = particleinfo.block(0,TeilB,2,1);
 
-                // Period RB beachten
+                // Distanz zwischen zwei Teilchen    
+                dr = tempA-tempB;
+                // Period RB beachten, also kürzesten Weg zum nächsten Teil (auch in Nachbarbox)
                 PeriodRB periodRB;
                 dr = periodRB.kurzerWeg(dr, L);
                 // dr2 = dr^2
@@ -59,11 +53,23 @@ MatrixXd LJForces::kraft(MatrixXd particleinfo, double L)
                 double r2 = 1.0/dr2;
                 // Klammerterm nach "48"
                 double force = pow(r2, 4) * (pow(r2,3) - 0.5);
-                
+
+                //temp 2dim Vektoren für Matrixspalten (im Prinzip Kraftkords der Teile)                
+                Vector2d tempf1(0,0);
+                tempf1 = forces.block(0,TeilA,2,1);
+                Vector2d tempf2(0,0);
+                tempf2 = forces.block(0,TeilB,2,1);
+
                 // Newtons Dritte (Actio = Reactio) für die beiden Teilchen, also WW
-                forces(komp, TeilA) = forces(komp, TeilA) + dr(komp)*force; //das aufaddieren (Reactio)
-                forces(komp, TeilB) = forces(komp, TeilB) - dr(komp)*force; //oder abziehen (Actio)
-            }
+                tempf1 = tempf1 + dr*force; //das aufaddieren (Reactio)
+                tempf2 = tempf2 - dr*force; //oder abziehen (Actio)
+
+                //Zusammenpacken. Da wie vorher mit Vektoren rechnen, muss jede Komp vorher durch sein
+                for(int komp=0; komp<dim;komp++)
+                {
+                    forces(komp,TeilA) = tempf1(komp);
+                    forces(komp,TeilB) = tempf2(komp);            
+                }
         }
     }
     //Faktor von der Kraft

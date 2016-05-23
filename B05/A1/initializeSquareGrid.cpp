@@ -15,17 +15,13 @@ MatrixXd Quadratgitter::erstellequadrgitter(int AnzTeilchen, double dichte) {
     //int AnzTeilchen Anzahl an Teilchen für das Gitter
     //double dichte Dichte der Partikel
     MatrixXd particleinfo(2,AnzTeilchen); //2xAnzTeilchen Array mit einem Ortsvektor pro Spalte
-    for(int j = 0; j < AnzTeilchen; j++) { //Anz-Teil-Spalten in der Matrix
-        for(int i = 0; i < 2; i++) { //durch Beginn bei 0 passt die Grenze wieder: 2dim Vektor
-            particleinfo(i,j) = 0;        //füllt mit Nullen
-        }
-    }
+
     // Größe der Box (RB: Volumen, bzw. hier Fläche, da 2D); Teilchendichte umgeformt, auf Dim der Länge
-    double L = pow((AnzTeilchen/dichte),0.5);
+    double L = pow((AnzTeilchen/dichte),1/3.0);
 
     // Finde das kleinste perfekte Quadrat größer oder gleich der Anz an Partikeln
     // Bietet Gitterplätze für die Teile
-    double AnzQuadrat = 2; //Seite des perfekten Quadrates
+    double AnzQuadrat = 2;
 
     while (pow(AnzQuadrat,2) < AnzTeilchen)
     {
@@ -35,18 +31,38 @@ MatrixXd Quadratgitter::erstellequadrgitter(int AnzTeilchen, double dichte) {
     // 2D Index zum Zählen der Plätze, Startposition untere linke Kante
     Vector2d aktPos;
     aktPos << 0, 0;
-    Vector2d Schrittweite;
-    Schrittweite << 0.5, 0.5;
+    // Einkommentieren, wenn wie unten gewünscht
+    /*Vector2d Schrittweite;
+    Schrittweite << 0.5, 0.5;*/
 
+    // Kord setzen:
+    Vector2d tempTeil(0,0);
+    // wie gewünscht nach 1a, zaehler ist Spaltenzähler
+    int zaehler = 0;
+    for(int n = 0; n<=3; n++) {
+        for(int m=0; m<=3;m++) {
+            //45/46 geht leider nicht in einer Zeile mit ().. Mag Eigen nicht..
+            tempTeil << 1+2*n , 1+2*m;
+            tempTeil = tempTeil *1/8.0 * L;
+            for(int komp=0;komp<2;komp++)
+            {
+                particleinfo(komp,zaehler) = tempTeil(komp);
+            }
+            zaehler++;
+        }
+    }
     for(int Teilchen = 0; Teilchen<AnzTeilchen ;Teilchen++)
     {
-        // Kord setzen
-        //Addition ist in Eigen etwas schräg. aktPos + (0.5,0.5) fkt nicht
-        for(int komp = 0; komp < 2; komp++)
+        //Abwandlung der Aufgabe:
+        // Kord setzen: Teilchenpos in der Matrix setzen auf jew Kante
+        /*Vector2d tempTeil(0,0);
+        tempTeil = particleinfo.block(0,Teilchen,2,1);
+        tempTeil = (aktPos + Schrittweite)*(L/AnzQuadrat);
+        for(int komp=0;komp<2;komp++)
         {
-            particleinfo(komp,Teilchen) = (aktPos(komp) + Schrittweite(komp))*(L/AnzQuadrat); //Teilchenpos in der Matrix setzen auf jew Kante
-        //Doppelpunkt gibt komplette Zeile,bzw hier Spalte aus (also (x,y) des Teilchens).
-        }
+            particleinfo(komp,Teilchen) = tempTeil(komp);
+        }*/
+
 
         // Rastern des Pointers
         aktPos(0) = aktPos(0) + 1;
@@ -54,11 +70,7 @@ MatrixXd Quadratgitter::erstellequadrgitter(int AnzTeilchen, double dichte) {
         {
             aktPos(0) = 0;
             aktPos(1) = aktPos(1) + 1;
-        }
+        }    
     }
-    //cout << "Matrix mit allen Vektoren: " << particleinfo << endl;
-    //cout << "Pointer: " << aktPos << endl;
-    //cout << "perfektes Quadrat: " << AnzQuadrat << endl;
-    //cout << "Länge: "<< L << endl;
     return particleinfo;
 }

@@ -14,6 +14,7 @@ Vector2d PeriodRB::kurzerWeg(Vector2d dr, double L)
 
                 /* 2. Abstandsvec sollte in [-hL_x, hL_x] & [-hL_y, hL_y] liegen
                  * (Weg zur Nachbarbox kürzer als in eigener Box)
+                 * Sonst kürzeren Weg nehmen
                  */
                 for(int dim = 0; dim < 2; dim++) {
                     if(dr(dim) > hL)
