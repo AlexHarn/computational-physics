@@ -6,29 +6,87 @@ using namespace Eigen;
   * Klasse untersucht, ob der kürzeste Weg zur nächsten Box oder in eigener Box liegt. Wird in ljforces.cpp und
   * mdsimulation.cpp aufgerufen.
   */
+Vector2d PeriodRB::umklapp(Vector2d tempRB, double L)
+{
+    for (int i = 0; i<2; i++)
+    {
+        if(tempRB(i) < -L)
+        {
+            tempRB(i) += L;
+        }
+        if(tempRB(i) > L)
+        {
+            tempRB(i) -= L;
+        }
+    }
+    return tempRB;
+}
+
+
 Vector2d PeriodRB::kurzerWeg(Vector2d dr, double L)
 {
+    /*  Nicht hübsch aber effektiv. Frage in einem Kreis alle 9 in Frage kommenden Positionen ab.
+        Reihenfolge (gegen den UZS):        
+        9 8 7
+        2 1 6
+        3 4 5
+    */
+    double rc = L/2.0;
+    if (dr.norm() <= rc)
+    {
+        return dr;
+    }
 
-                /*
-                 * 1. Halbe Boxlänge in jede Richtung, r_c einfacher Cutoff aller Terme,
-                 * die zu weit weg sind (WW mit den period Bildern)
-                 **/
-                double hL = L/2.0;    
+    dr(0) = dr(0)-L;
+    if (dr.norm() <= rc)
+    {
+        return dr;
+    }
 
-                /* 2. Abstandsvec sollte in [-hL_x, hL_x] & [-hL_y, hL_y] liegen
-                 * (Weg zur Nachbarbox kürzer als in eigener Box)
-                 * Sonst kürzeren Weg nehmen
-                 */
-                for(int dim = 0; dim < 2; dim++) {
-                    if(dr(dim) > hL)
-                    {
-                        dr(dim) = dr(dim)-L;
-                    }
-                    else if (dr(dim) < -hL)
-                    {
-                        dr(dim) = dr(dim)+L;
-                    }
-                }   
+    dr(1) = dr(1)-L;
+    if (dr.norm() <= rc)
+    {
+        return dr;
+    }
 
-                return dr;
+    dr(0) = dr(0)+L;
+    if (dr.norm() <= rc)
+    {
+        return dr;
+    }
+
+    dr(0) = dr(0)+L;
+    if (dr.norm() <= rc)
+    {
+        return dr;
+    }
+
+    dr(1) = dr(1)+L;
+    if (dr.norm() <= rc)
+    {
+        return dr;
+    }
+
+    dr(1) = dr(1)+L;
+    if (dr.norm() <= rc)
+    {
+        return dr;
+    }
+
+    dr(0) = dr(0)-L;
+    if (dr.norm() <= rc)
+    {
+        return dr;
+    }
+
+    dr(0) = dr(0)-L;
+    if (dr.norm() <= rc)
+    {
+        return dr;
+    }
+    // Wenn dr außerhalb liegt, gebe 0 0 zurück.
+    dr << 0, 0;
+    return dr;
 }
+
+

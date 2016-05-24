@@ -7,7 +7,7 @@ class MDSimulation
 {
     public:
         // Speichert alle Observablen
-        void save(double AnzTeilchen, double Dichte, double Temperatur, double dt, double dt2, int N, int DruckFreq, std::string fname);
+        void save(double AnzTeilchen, double dichte, double Temperatur, double dt, int N, int L, int DruckFreq, std::string fname, int bins, double Dr);
 
         /** MD-Simulation
           * 1. Gitter erstellen (s. initializeSquareGrid.cpp)
@@ -16,6 +16,6 @@ class MDSimulation
           * 4. Kraftberechnung
           * 5. Integrationsschritt (+Zähler, aktuell auskommentiert)
           **/
-        void simulate(int AnzTeilchen, double Dichte, double Temperatur, double dt, double dt2, int N, int DruckFreq, std::string fname);
+        void simulate(int AnzTeilchen, double dichte, double Temperatur, double dt, int N, int L, int DruckFreq, std::string fname, int bins, double Dr);
 };
 #endif

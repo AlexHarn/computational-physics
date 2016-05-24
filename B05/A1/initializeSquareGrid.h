@@ -2,6 +2,6 @@
 #define SquareGrid_H
 class Quadratgitter {
     public:
-        Eigen::MatrixXd erstellequadrgitter(int AnzTeilchen, double dichte);
+        Eigen::MatrixXd erstellequadrgitter(int AnzTeilchen);
 };
 #endif

@@ -1,0 +1,73 @@
+\input{../../header.tex}
+\newcommand\OverfullCenter[1]{\noindent\makebox[\linewidth]{#1}}
+\begin{document}
+\noindent
+\centerline{\small{\textsc{Technische Universität Dortmund}}} \\
+\large\textbf{Übungsblatt 05} \hfill \footnotesize\textbf{Sebastian Bange, Alexander Harnisch, Alexander Knodel} \\
+\normalsize Computational Physics \hfill \today \\
+Prof. Dr. Jan Kierfeld \hfill Abgabefrist: 27.05.2016\\
+\noindent\makebox[\linewidth]{\rule{\textwidth}{0.4pt}}
+\section*{Aufgabe 1 - MD-Simulation im LJ-Potential}
+Es wird das Verhalten von Teilchen im mikrokanonischen Ensemble unter Einfluss des Lennard-Jones Potentials
+\begin{equation}
+V(r) = 4 \left[\left(\frac{1}{r}\right)^{12}-\left(\frac{1}{r}\right)^6\right]
+\label{eq:lJ}
+\end{equation}
+in einem zweidimensionalen System ($A\,=\,L\,\times\,L$) mit periodischen Randbedingungen untersucht.
+
+\subsection*{Initialisierung}
+Zur Vermeidung kleiner Abstände (und damit großer Kräfte) wird die Anfangskonfiguration der 16 geforderten Partikel (lt. Aufgabenstellung) wie folgt gesetzt:
+
+\begin{equation*}
+r(0) = \frac{1}{8}\,L\, \left( 1 + 2\,n,1+2\,m\right) \qquad n,m = 0,\ldots,3 \qquad \text{(in der Box)}
+\end{equation*}
+Um einen Systemdrift und eine Temperaturabweichung zu vermeiden, wird die Schwerpunktsgeschwindigkeit auf null gesetzt (die PÜ ergeben sich aus den Relativbewegungen der Teilchen). Alternativ hätte man die Teilchen auch auf die Kanten des Quadrats setzen können, was allerdings bei kleinen $L$ wiederum das Kraftproblem hervorhebt.
+Die Kantenlänge der Box wird (lt. Aufgabenteil e) auf $L = 8\sigma= 8$ gesetzt, ein alternativer Ansatz folgt über die Teilchendichte $\rho = \frac{N}{V} \Leftrightarrow L = \left(\frac{N}{\rho}\right)^{\frac{1}{3}}$. Wir prüfen anhand der Teilchenzahl, wie groß unser Gitter werden muss: Die Quadratwurzel der Teilchenzahl entspricht gerade einer Quadratseite, die Platz für unsere Teilchen bietet. Die Koordinaten werden (komponentenweise) in einer $2\times16$-Matrix P(articleInfo) gespeichert:
+\begin{equation*}
+	\underline{\underline{P}} = 
+	\left[
+	\begin{pmatrix}
+		x\\
+		y\\		
+	\end{pmatrix}_1
+	\begin{pmatrix}
+		x\\
+		y\\		
+	\end{pmatrix}_2
+	\ldots
+	\right]
+\end{equation*}
+Sodann werden aus einem aktuellen Unix-Timestamp für $r$ und $\varphi$ Zahlen aus [0,1] generiert, die später für die Geschwindigkeiten dienen. Mögliche Alternativen wären hier kartesische Koordinaten gewesen, die aber durch die Ränder außerhalb einen in ein Quadrat gelegten Kreis Peaks in der Häufigkeit von $r$ und $\varphi$ generieren würden. Diese könnte man natürlich einfach abschneiden, allerdings verschwinden diese Peaks nach der Äquilibrierung sowieso.\\
+
+Nun werden alle Geschwindigkeiten zufällig erzeugt und die Schwerpunktsgeschwindigkeiten abgezogen. Auch diese Wertepaare werden in eine der Particleinfo gleichdimensionierten Matrix geschrieben. Über $E_{\text{kin}} = 0.5\,m\,v^2$ wird die kinetische Energie berechnet und über das Äquipartitionstheorem die Temperatur bestimmt. Nach Kapitel 5.5.1 wird ein isokinetischer Thermostat implementiert, wodurch die Geschwindigkeiten neu skaliert werden müssen (5.40). Dadurch wird die kinetische Energie konstant (bei definierter Temperatur) gehalten und wir wechseln in's kanonische Ensemble. Im Allgemeinen führt dieser Thermostat leider nicht zu einer boltzmannverteilten Energie. Dazu würde sich bspw. der Nos\'{e}-Hoover-Thermostat anbieten.
+
+\subsection*{Kraftberechnung}
+Bei der Kraftberechnung wird über alle Teilchenpaare geloopt. Dabei wird jedes Nachbarteilchen geprüft. Aus der Ortskoordinatenmatrix \textit{particleInfo} extrahieren wir jeweils den zweidimensionalen Vektor des Teilchens. Dann bilden wir den Abstandsvektor, der über einen einfachen Cutoff $r_c = \frac{L}{2}$ gekürzt wird. Um einen Cutoff-Radius zu implementieren, gehen wir die umliegenden Boxen gegen den Uhrzeigersinn ab. Alternativ kann hier auch eine Cutoff-Box genutzt werden.
+Die Wechselwirkungen außerhalb des Radius werden über die \textsc{continue}-Funktion entfernt. Das Potential berechnen wir uns schließlich über den Betrag und das LJ-Potential \eqref{eq:lJ}. Sodann bauen wir stückweise alle Terme zusammen, nach folgender Gleichung:
+\begin{equation*}
+\begin{split}
+	V(r) &= 4\cdot \varepsilon \cdot \left( \left( \frac{\sigma}{r} \right)^12 - \left( \frac{\sigma}{r} \right)^6 \right) \qquad \sigma = \varepsilon = 1 \text{(vgl Aufgabe)} \\
+		F &= -\text{grad} \,V\\
+        F(r)_x &= 4 \cdot \left(\frac{x}{r}\right) \cdot \left(12\cdot\left(\frac{1}{r}\right)^{13} - 6\cdot\left(\frac{1}{r}\right)^7\right) \\
+            F(r)_x &= x \cdot 48 \cdot \left( \frac{1}{r} \right)^8 \cdot \left(\left(\frac{1}{r}\right)^6 - 0.5\right) \\
+\end{split}
+\end{equation*}
+Nach Newtons drittem Axiom werden aus der Kraftberechnung in eine Richtung auf die andere geschlossen. Den Faktor 48 haben wir zur Erleichterung der Rechenlast an das Ende der Methode gesetzt.
+
+\subsection*{MD-Simulation / Integration}
+Für die Integration wird der Geschwindigkeits-Verlet-Algorithmus (mit $dt=h=0.01$) genutzt, der durch den Lioville-Operator die Energieerhaltung, die Konstanz des Phasenraumvolumens, sowie die Zeitumkehr sichert. Der Geschwindigkeits-Verlet ist gegenüber des \enquote{klassischen} Verlets selbststartend (es benötigt also keinen $\vec{r}_{n-1}$). Durch die Matrizenimplementierung können hier alle Koordinaten auf einmal aktualisiert werden. Dabei müssen erneut die Randbedingungen beachtet werden, sodass eventuell austretende Teilchen wieder auf ein periodisches Bild gesetzt werden. Für die Geschwindigkeiten und Kräfte wird analoges nach (4.25) gemacht. Dann wird der Zeitschritt erhöht. Über einen Schrittzähler kann die Anzahl der Schritte ausgegeben werden. Dadurch kann die Zeitmittelung leichter umgesetzt werden. Die Äquilibrierungszeit ist an dem Energieplot ablesbar, wenn sich $E_{\text{kin}}$ und $E_{\text{pot}}$ nicht in ihrer Größenordnung unterscheiden. Das ist die Anzahl der Zeitschritte, nachdem das System äquilibriert.
+
+Das Histogramm zählt im Intervall $0<r<L/2$ in $N_H$ die Bins der Länge $\Delta r = L / 2 N_H$, also folgt für die Abfrage $\frac{\Delta r}{\text{Gesamtanzahl der Bins}}$. Es wird also geschaut, im welchen Subintervall der Paarabstand liegt. Für alle weiteren, kleineren Abstände entfällt sodann die Zählung.\\
+
+Die Paarverteilungsfunktion $g(r)$ wird nach S.85 im Skript implementiert. Dabei wird $\Delta A$ (da Problem zweidim) über die Differenzfläche eines Kreises mit dem Radius $r_a$ und eines Kreises mit dem Radius $r_i$ gebildet. über die Dichte und die Anzahl der Teilchen, sowie die gemittelte Paaranzahl ergibt sich $g(r)$. Die Äquilibrierungsphase wird durch einen Schalter abgewartet.
+
+%\begin{landscape}
+%	\begin{figure}
+%		\OverfullCenter{\includegraphics[width=\textwidth]{../A1/.pdf}}
+%		\caption{Graphische Darstellung der Ergebnisse von Aufgabe .}
+%		\label{fig:}
+%	\end{figure}
+%\end{landscape} 
+
+%\printbibliography
+\end{document}
