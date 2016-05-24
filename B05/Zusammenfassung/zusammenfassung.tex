@@ -59,7 +59,13 @@ Für die Integration wird der Geschwindigkeits-Verlet-Algorithmus (mit $dt=h=0.0
 
 Das Histogramm zählt im Intervall $0<r<L/2$ in $N_H$ die Bins der Länge $\Delta r = L / 2 N_H$, also folgt für die Abfrage $\frac{\Delta r}{\text{Gesamtanzahl der Bins}}$. Es wird also geschaut, im welchen Subintervall der Paarabstand liegt. Für alle weiteren, kleineren Abstände entfällt sodann die Zählung.\\
 
-Die Paarverteilungsfunktion $g(r)$ wird nach S.85 im Skript implementiert. Dabei wird $\Delta A$ (da Problem zweidim) über die Differenzfläche eines Kreises mit dem Radius $r_a$ und eines Kreises mit dem Radius $r_i$ gebildet. über die Dichte und die Anzahl der Teilchen, sowie die gemittelte Paaranzahl ergibt sich $g(r)$. Die Äquilibrierungsphase wird durch einen Schalter abgewartet.
+Die Paarverteilungsfunktion $g(r)$ wird nach S.85 im Skript implementiert. Dabei wird $\Delta A$ (da Problem zweidim) über die Differenzfläche eines Kreises mit dem Radius $r_a$ und eines Kreises mit dem Radius $r_i$ gebildet:
+
+\begin{equation*}
+\Delta A = A_{\text{außen}} - A_{\text{innen}} = \pi [\{l \, \Delta r\}^2-\{(l-1)\,\Delta r\}^2]
+\end{equation*}
+
+Über die Dichte und die Anzahl der Teilchen, sowie die gemittelte Paaranzahl ergibt sich $g(r)$. Die Äquilibrierungsphase wird durch einen Schalter abgewartet.
 
 %\begin{landscape}
 %	\begin{figure}

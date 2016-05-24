@@ -206,7 +206,7 @@ void simulate(int AnzTeilchen, double  dichte, double Temperatur, double dt, int
         double DA = 0;
         for(int i = 0; i< bins;i++)
         {
-            DA = M_PI*(pow((i*Dr),2)-pow(((i-1)*Dr),2));
+            DA = DA + M_PI*(pow((i*Dr),2)-pow(((i-1)*Dr),2));
         }
         double g = 0;
 
