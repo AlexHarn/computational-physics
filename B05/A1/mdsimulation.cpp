@@ -203,7 +203,11 @@ void simulate(int AnzTeilchen, double  dichte, double Temperatur, double dt, int
         }
         /* Differenzfläche zwischen Kreis mit r = r_i und Kreis mit r = r_a,
          * Delta A = PI*((l*Delta r)^2-(l-1*Delta r)^2) :: S.85 im Skript */
-        double DA = M_PI*(pow((bins*Dr),2)-pow(((bins-1)*Dr),2));;
+        double DA = 0;
+        for(int i = 0; i< bins;i++)
+        {
+            DA = M_PI*(pow((i*Dr),2)-pow(((i-1)*Dr),2));
+        }
         double g = 0;
 
         if(active && mittelung)
