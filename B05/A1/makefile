@@ -1,6 +1,6 @@
 CC=g++
 CXX=g++
-CXXFLAGS=-std=c++11 -fopenmp -g
+CXXFLAGS=-std=c++11 -fopenmp -g -Wno-ignored-attributes -Wno-deprecated-declarations
 LDLIBS=-fopenmp
 
 all: a1show

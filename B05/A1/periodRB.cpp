@@ -1,43 +1,38 @@
-#include "../../Eigen/Eigen/Dense" //Eigen liegt oberhalb der B**-Ordner
+#include <eigen3/Eigen/Dense>
 #include "periodRB.h"
 
 using namespace Eigen;
-/**
-  * Klasse untersucht, ob der kürzeste Weg zur nächsten Box oder in eigener Box liegt. Wird in ljforces.cpp und
-  * mdsimulation.cpp aufgerufen.
-  */
-Vector2d PeriodRB::umklapp(Vector2d tempRB, double L)
+void umklapp(Vector2d &tempRB, double L)
 {
-    for (int i = 0; i<2; i++)
+    for ( int i = 0; i<2; i++ )
     {
-        if(tempRB(i) < -L)
+        if ( tempRB(i) < -L )
         {
             tempRB(i) += L;
         }
-        if(tempRB(i) > L)
+        if ( tempRB(i) > L )
         {
             tempRB(i) -= L;
         }
     }
-    return tempRB;
 }
 
 
-Vector2d PeriodRB::kurzerWeg(Vector2d dr, double L)
+Vector2d kurzerWeg(Vector2d dr, double L)
 {
     /*  Nicht hübsch aber effektiv. Frage in einem Kreis alle 9 in Frage kommenden Positionen ab.
-        Reihenfolge (gegen den UZS):        
+        Reihenfolge (gegen den UZS):
         9 8 7
         2 1 6
         3 4 5
     */
-    double rc = L/2.0;
+    const double rc = L/2.0;
     if (dr.norm() <= rc)
     {
         return dr;
     }
 
-    dr(0) = dr(0)-L;
+    dr(0) = dr(0) - L;
     if (dr.norm() <= rc)
     {
         return dr;
@@ -88,5 +83,3 @@ Vector2d PeriodRB::kurzerWeg(Vector2d dr, double L)
     dr << 0, 0;
     return dr;
 }
-
-
