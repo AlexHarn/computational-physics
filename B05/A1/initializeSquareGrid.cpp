@@ -6,16 +6,12 @@
 using namespace Eigen;
 using namespace std;
 
-MatrixXd erstellequadrgitter(int AnzTeilchen)
+MatrixXd erstellequadrgitter(int AnzTeilchen, double L)
 {
     //int AnzTeilchen Anzahl an Teilchen für das Gitter
     //double dichte Dichte der Partikel
     MatrixXd particleinfo(2, AnzTeilchen); //2xAnzTeilchen Array mit einem Ortsvektor pro Spalte
 
-    double L = 8;
-
-    // Finde das kleinste perfekte Quadrat größer oder gleich der Anz an Partikeln
-    // Bietet Gitterplätze für die Teile
     double N = sqrt(AnzTeilchen);
 
     // Kord setzen:
@@ -26,7 +22,7 @@ MatrixXd erstellequadrgitter(int AnzTeilchen)
     {
         for ( int m=0; m<N ;m++ )
         {
-            tempTeil << 1+2*n*1/8.0 * L, 1+2*m*1/8.0*L;
+            tempTeil << (1+2*n)*L/8.0, (1+2*m)*L/8.0;
             for ( int komp=0; komp<2; komp++ )
             {
                 particleinfo(komp, zaehler) = tempTeil(komp);

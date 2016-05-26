@@ -38,7 +38,7 @@ void simulate(int AnzTeilchen, double Temperatur, double dt, int N, string fname
     double dt2 = dt*dt;
     // Erstelle Gitter
     MatrixXd particleInfo(2, AnzTeilchen);
-    particleInfo = erstellequadrgitter(AnzTeilchen);
+    particleInfo = erstellequadrgitter(AnzTeilchen, L);
 
     //aktueller Unix-Timestamp für rand-Nummern
     unsigned int seed = chrono::system_clock::now().time_since_epoch().count();
