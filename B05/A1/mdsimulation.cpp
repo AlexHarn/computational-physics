@@ -1,5 +1,5 @@
 #include <eigen3/Eigen/Core>
-#include <math.h>
+#include <cmath>
 #include <iostream>
 #include <chrono>
 #include <fstream>
@@ -10,6 +10,8 @@
 #include "periodRB.h"
 
 #define CALI 10
+#define M_PI 3.1415
+
 
 using namespace Eigen;
 using namespace std;
@@ -119,7 +121,6 @@ void simulate(int AnzTeilchen, double Temperatur, double dt, int N, string fname
      * kanonische MD-Simulation *
      ****************************/
 
-    double zeitzaehler = 0;
     bool active = false;
     VectorXd hist(bins);
 
@@ -134,8 +135,18 @@ void simulate(int AnzTeilchen, double Temperatur, double dt, int N, string fname
         // Aktualisiere Positionen
         //r(t)..
         //Geschwindigkeits-Verlet-Algorithmus nach (4.25), h = dt
-        particleInfo = particleInfo + dt*vmatrix + 0.5*dt2*forces;
+        particleInfo += dt*vmatrix + 0.5*dt2*forces;
 
+
+        // Geschwindigkeiten aktualisieren, alle Kords auf einmal
+        // Rest vom v-Verlet
+        vmatrix += 0.5*dt*forces;
+
+        /** Neue Kräfte berechnen **/
+        kraft(forces, particleInfo, L, active, hist, savedata(2, step));
+
+        vmatrix += 0.5*dt*forces;
+        
         // RB beachten
         for (int Teil = 0; Teil < AnzTeilchen; Teil++)
         {
@@ -151,18 +162,6 @@ void simulate(int AnzTeilchen, double Temperatur, double dt, int N, string fname
                 particleInfo(zeile, Teil) = tempRB(zeile);
             }
         }
-
-        // Geschwindigkeiten aktualisieren, alle Kords auf einmal
-        // Rest vom v-Verlet
-        vmatrix += 0.5*dt*forces;
-
-        /** Neue Kräfte berechnen **/
-        kraft(forces, particleInfo, L, active, hist, savedata(2, step));
-
-        vmatrix += 0.5*dt*forces;
-
-        /* ** Zeitschritt ** */
-        zeitzaehler += dt;
 
         /* ** Warte Äquilibrierungsphase ab ** */
         if (step == CALI)

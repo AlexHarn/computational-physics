@@ -39,6 +39,7 @@ void kraft(MatrixXd &forces, MatrixXd particleinfo, double L, bool active, Vecto
              **/
 
             absr = dr.norm();
+
             /* ** Histogramm ** */
             if ( active )
             {
@@ -68,8 +69,8 @@ void kraft(MatrixXd &forces, MatrixXd particleinfo, double L, bool active, Vecto
             tempf2 = forces.block(0, TeilB, 2, 1);
 
             // Newtons Dritte (Actio = Reactio) für die beiden Teilchen, also WW
-            tempf1 = tempf1 + dr*force; //das aufaddieren (Reactio)
-            tempf2 = tempf2 - dr*force; //oder abziehen (Actio)
+            tempf1 += dr*force; //das aufaddieren (Reactio)
+            tempf2 -= dr*force; //oder abziehen (Actio)
 
             //Zusammenpacken. Da wir vorher mit Vektoren rechnen, muss jede Komp vorher durch sein
             for ( int komp=0; komp<2; komp++ )
