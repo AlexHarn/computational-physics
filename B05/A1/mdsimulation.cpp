@@ -207,14 +207,31 @@ void simulate(int AnzTeilchen, double Temperatur, double dt, int N, string fname
 	cout << Tm << endl;
     /*
      *double DA = 0;
-     *for(int i = 0; i< bins;i++)
+     *for(int i = 0; i < bins; i++)
      *{
-     *    DA = DA + M_PI*(pow((i*Dr),2)-pow(((i-1)*Dr),2));
+     *    DA = M_PI * ( pow((i+1)*(L/(2*bins)), 2)-pow((i)*L/(2*bins), 2) );
      *}
      *double g = 0;
      */
     ////Korrfkt g(r)
     //g = sumanzahl/(dichte*AnzTeilchen*DA);
+	
+	double anzahl = 0;
+	for ( int i = 0; i < bins; i++)
+	{
+		anzahl += hist(i);
+	}
+	hist /= anzahl;
+	
+	double DA = 0;
+    for(int i = 0; i < bins; i++)
+    {
+        DA = M_PI * ( pow((i+1.0)*(L/(2.0*bins)), 2)-pow((i)*L/(2.0*bins), 2) );
+		cout << DA << endl;
+		hist(i) /= DA * AnzTeilchen / pow(L, 2);
+    }
+	
+	
     ofstream fout;
     fout.open(fname+"_savedata.dat");
     fout << "#t\tSchwerpunktsgeschwindigkeit\tTemperatur\tE_pot\tE_kin" << endl;
@@ -227,7 +244,7 @@ void simulate(int AnzTeilchen, double Temperatur, double dt, int N, string fname
     }
     fout.close();
     
-    fout.open(fname+"_hist.dat");
+    fout.open(fname+"_paar.dat");
     fout << "#Abstand\tAnzahl" << endl;
     for ( int i = 0; i<bins; i++ )
     {
@@ -244,8 +261,6 @@ int main()
 
     // Simulationsparameter
     double dt = 0.01;                       // Integrationszeit, entspricht h im Verlet dt = 0.01
-    //double Temperatur = 0.01;              // Temperatur für die Simulation, T(0) = 0.01 lt. Aufgabe c
-    //double Temperatur = 100.0;             // Temperatur für die Simulation, T(0) = 100 lt. Aufgabe c
 
     int N = 10000;            // gesamte Simulationszeit (in Anzahl an Integrationsschritten), hier später 10^4 Schritte (0.01->1000000)
 	
