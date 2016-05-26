@@ -8,7 +8,7 @@
 using namespace Eigen;
 using namespace std;
 
-void kraft(MatrixXd &forces, MatrixXd particleinfo, double L, bool active, VectorXd &bins, double &V)
+void kraft(MatrixXd &forces, MatrixXd &particleinfo, double L, bool active, VectorXd &bins, double &V)
 {
     int AnzTeilchen = particleinfo.cols();
 
@@ -28,7 +28,7 @@ void kraft(MatrixXd &forces, MatrixXd particleinfo, double L, bool active, Vecto
             // Distanz zwischen zwei Teilchen
             dr = tempA - tempB;
             // Period RB beachten, also kürzesten Weg zum nächsten Teil (auch in Nachbarbox)
-            dr = kurzerWeg(dr, L);
+            kurzerWeg(dr, L);
             // Nimmt den 0-Vektor raus
             if ( dr(0) == 0 && dr(1) == 0 )
             {

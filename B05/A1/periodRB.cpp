@@ -18,7 +18,7 @@ void umklapp(Vector2d &tempRB, double L)
 }
 
 
-Vector2d kurzerWeg(Vector2d dr, double L)
+void kurzerWeg(Vector2d &dr, double L)
 {
     /*  Nicht hübsch aber effektiv. Frage in einem Kreis alle 9 in Frage kommenden Positionen ab.
         Reihenfolge (gegen den UZS):
@@ -29,57 +29,57 @@ Vector2d kurzerWeg(Vector2d dr, double L)
     const double rc = L/2.0;
     if (dr.norm() <= rc)
     {
-        return dr;
+        return;
     }
 
     dr(0) = dr(0) - L;
     if (dr.norm() <= rc)
     {
-        return dr;
+        return;
     }
 
     dr(1) = dr(1)-L;
     if (dr.norm() <= rc)
     {
-        return dr;
+        return;
     }
 
     dr(0) = dr(0)+L;
     if (dr.norm() <= rc)
     {
-        return dr;
+        return;
     }
 
     dr(0) = dr(0)+L;
     if (dr.norm() <= rc)
     {
-        return dr;
+        return;
     }
 
     dr(1) = dr(1)+L;
     if (dr.norm() <= rc)
     {
-        return dr;
+        return;
     }
 
     dr(1) = dr(1)+L;
     if (dr.norm() <= rc)
     {
-        return dr;
+        return;
     }
 
     dr(0) = dr(0)-L;
     if (dr.norm() <= rc)
     {
-        return dr;
+        return;
     }
 
     dr(0) = dr(0)-L;
     if (dr.norm() <= rc)
     {
-        return dr;
+        return;
     }
     // Wenn dr außerhalb liegt, gebe 0 0 zurück.
     dr << 0, 0;
-    return dr;
+    return;
 }

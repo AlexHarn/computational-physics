@@ -6,9 +6,6 @@
 class MDSimulation
 {
     public:
-        // Speichert alle Observablen
-        void save(double AnzTeilchen, double dichte, double Temperatur, double dt, int N, int L, int DruckFreq, std::string fname, int bins, double Dr);
-
         /** MD-Simulation
           * 1. Gitter erstellen (s. initializeSquareGrid.cpp)
           * 2. zufällige Geschwindigkeiten generieren
