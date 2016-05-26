@@ -28,7 +28,7 @@ using namespace std;
 void simulate(int AnzTeilchen, double Temperatur, double dt, int N, string fname, int L, int bins)
 {
     MatrixXd savedata(4, N); // Schwerpunktsgeschwindigket, Temperatur, potentielle Energie, kinetische Energie
-    savedata(1, 0) = Temperatur;
+	savedata.setZero();
 
     /****************************
      *      Initialisierung     *
@@ -36,6 +36,7 @@ void simulate(int AnzTeilchen, double Temperatur, double dt, int N, string fname
 
     // (Integrationszeit)^2
     double dt2 = dt*dt;
+
     // Erstelle Gitter
     MatrixXd particleInfo = erstellequadrgitter(AnzTeilchen, L);
 
@@ -65,19 +66,29 @@ void simulate(int AnzTeilchen, double Temperatur, double dt, int N, string fname
     }
 
     vges = vges/AnzTeilchen;
-    savedata(0, 0) = 0;
         
     for ( int zeile = 0; zeile < AnzTeilchen; zeile++ )
     {
         for ( int i = 0; i<2; i++ )
         {
             //Schwerpunktsgeschwindigkeit abziehen, sonst Drift, in neue Matrix, um alle Vektoren mizunehmen
-            vmatrix(i, zeile) = vmatrix(i, zeile) - vges(i);
+            vmatrix(i, zeile) -= vges(i);
         }
 
         //Init: Ekin = 1/2mv^2 = Nf kbT/2 (ÄquipartTheorem) , Nf = 2N-2, kb=1, m=1 (2 Raumdimensionen, 2 FG pro Schwerpunktsimpuls)
         savedata(3, 0) += 0.5*( pow(vmatrix(0, zeile), 2) + pow(vmatrix(1,zeile), 2) );
     }
+	
+    vges << 0,0;
+	for ( int zeile = 0; zeile < AnzTeilchen; zeile++ )
+    {
+        for ( int i = 0; i<2; i++ )
+        {
+            vges(i) += vmatrix(i, zeile);
+        }
+    }
+    vges = vges/AnzTeilchen;
+    savedata(0, 0) = vges.norm();
 
     double T = 2*savedata(3, 0)/( 2*AnzTeilchen - 2 );
 
@@ -92,12 +103,14 @@ void simulate(int AnzTeilchen, double Temperatur, double dt, int N, string fname
             vmatrix(i, zeile) = vskalierungfaktor*vmatrix(i, zeile);
         }
     }
-
+	
+	savedata(3, 0) = 0;
     for ( int zeile = 0; zeile < AnzTeilchen; zeile++ )
     {
         //Init: Ekin = 1/2mv^2 = Nf kbT/2 (ÄquipartTheorem) , Nf = 2N-2, kb=1, m=1 (2 Raumdimensionen, 2 FG pro Schwerpunktsimpuls)
         savedata(3, 0) += 0.5*( pow(vmatrix(0, zeile), 2) + pow(vmatrix(1,zeile), 2) );
     }
+    savedata(1, 0) = 2*savedata(3, 0)/( 2*AnzTeilchen - 2 );
 
     /*
      * Histogramm (fehlt), Epot spinnt noch rum, V wird in ljforces.cpp einfach riesig..
@@ -174,7 +187,7 @@ void simulate(int AnzTeilchen, double Temperatur, double dt, int N, string fname
             savedata(3, step) += 0.5*(pow(vmatrix(0,Teil), 2)+pow(vmatrix(1,Teil), 2));
         }
         savedata(1, step) = 2*savedata(3, step)/(2*AnzTeilchen-2);
-
+		vges << 0, 0;
         for ( int zeile = 0; zeile < AnzTeilchen; zeile++ )
         {
             for ( int i = 0; i<2; i++ )
@@ -227,15 +240,20 @@ int main()
 {
     int AnzTeilchen = 16;         // Anzahl an Teilchen
     double L = 8.0;
-    int bins = 15;
+    int bins = 100;
 
     // Simulationsparameter
     double dt = 0.01;                       // Integrationszeit, entspricht h im Verlet dt = 0.01
     //double Temperatur = 0.01;              // Temperatur für die Simulation, T(0) = 0.01 lt. Aufgabe c
     //double Temperatur = 100.0;             // Temperatur für die Simulation, T(0) = 100 lt. Aufgabe c
 
-    int N = 100;            // gesamte Simulationszeit (in Anzahl an Integrationsschritten), hier später 10^4 Schritte (0.01->1000000)
-
-    simulate(AnzTeilchen, 1, dt, N, "test", L, bins);
+    int N = 10000;            // gesamte Simulationszeit (in Anzahl an Integrationsschritten), hier später 10^4 Schritte (0.01->1000000)
+	
+	cout << "erstelle a1.dat" << endl;
+    simulate(AnzTeilchen, 1, dt, N, "a1", L, bins);
+	cout << "erstelle a2.dat" << endl;
+    simulate(AnzTeilchen, 0.01, dt, N, "a2", L, bins);
+	cout << "erstelle a3.dat" << endl;
+    simulate(AnzTeilchen, 100, 0.0001, N, "a3", L, bins);
     return 0;
 }

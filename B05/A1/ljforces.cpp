@@ -10,6 +10,7 @@ using namespace std;
 
 void kraft(MatrixXd &forces, MatrixXd &particleinfo, double L, bool active, VectorXd &bins, double &V)
 {
+	forces.setZero();
     int AnzTeilchen = particleinfo.cols();
 
     // Abstandsvektor
