@@ -6,7 +6,7 @@ void umklapp(Vector2d &tempRB, double L)
 {
     for ( int i = 0; i<2; i++ )
     {
-        if ( tempRB(i) < -L )
+        if ( tempRB(i) < 0 )
         {
             tempRB(i) += L;
         }
