@@ -192,6 +192,7 @@ void simulate(int AnzTeilchen, double Temperatur, double dt, int N, string fname
        Tm += savedata(1, i); 
     }
     Tm /= N - CALI;
+	cout << Tm << endl;
     /*
      *double DA = 0;
      *for(int i = 0; i< bins;i++)

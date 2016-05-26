@@ -75,8 +75,8 @@ void kraft(MatrixXd &forces, MatrixXd particleinfo, double L, bool active, Vecto
             //Zusammenpacken. Da wir vorher mit Vektoren rechnen, muss jede Komp vorher durch sein
             for ( int komp=0; komp<2; komp++ )
             {
-                forces(komp, TeilA) = tempf1(komp)*dr(komp);
-                forces(komp, TeilB) = tempf2(komp)*dr(komp);
+                forces(komp, TeilA) = tempf1(komp);
+                forces(komp, TeilB) = tempf2(komp);
             }
         }
     }
