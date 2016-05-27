@@ -68,13 +68,13 @@ Die Paarverteilungsfunktion $g(r)$ wird nach S.85 im Skript implementiert. Dabei
 \Delta A = A_{\text{außen}} - A_{\text{innen}} = \pi [\{l \, \Delta r\}^2-\{(l-1)\,\Delta r\}^2]
 \end{equation*}
 
-Über die Dichte (Teilchenzahl durch Volumen (Fläche)) und die Anzahl der Teilchen, sowie die gemittelte Paaranzahl ergibt sich $g(r)$. Die Äquilibrierungsphase wird durch einen Schalter abgewartet.
+Über die Dichte (Teilchenzahl durch Volumen (Fläche)) und die Anzahl der Teilchen, sowie die gemittelte Paaranzahl ergibt sich $g(r)$, wobei ein Faktor 1/2 durch Actio=Reactio dazukommt. Die Äquilibrierungsphase wird durch einen Schalter abgewartet.
 
 Nach etwa 1000 Schritten äquilibriert das System. Das ist ein recht später Zeitpunkt, aber wir wollten eine zu frühe Messung vermeiden.
 
 \begin{landscape}
 	\begin{figure}
-		\OverfullCenter{\includegraphics[width=\textwidth]{../A1/A1_savedata.pdf}}
+		\OverfullCenter{\includegraphics[width=\textwidth]{../Abgabe/a1_savedata.pdf}}
 		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 1b: Plots der Observablen ($T_0$ = 1$\,\varepsilon$))}
 		\label{fig:observablen1}
 	\end{figure}
@@ -83,7 +83,7 @@ Nach etwa 1000 Schritten äquilibriert das System. Das ist ein recht später Zei
 
 \begin{landscape}
 	\begin{figure}
-		\OverfullCenter{\includegraphics[width=\textwidth]{../A1/A1_paar.pdf}}
+		\OverfullCenter{\includegraphics[width=\textwidth]{../Abgabe/a1_paar.pdf}}
 		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 1c: Paarkorrelationsfunktion ($T_0$ = 1$\,\varepsilon$))}
 		\label{fig:paarb1}
 	\end{figure}
@@ -91,7 +91,7 @@ Nach etwa 1000 Schritten äquilibriert das System. Das ist ein recht später Zei
 
 \begin{landscape}
 	\begin{figure}
-		\OverfullCenter{\includegraphics[width=\textwidth]{../A1/A2_savedata.pdf}}
+		\OverfullCenter{\includegraphics[width=\textwidth]{../Abgabe/a2_savedata.pdf}}
 		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 1b: Plots der Observablen ($T_0$ = 0.01$\,\varepsilon$))}
 		\label{fig:observablen2}
 	\end{figure}
@@ -100,7 +100,7 @@ Nach etwa 1000 Schritten äquilibriert das System. Das ist ein recht später Zei
 
 \begin{landscape}
 	\begin{figure}
-		\OverfullCenter{\includegraphics[width=\textwidth]{../A1/A2_paar.pdf}}
+		\OverfullCenter{\includegraphics[width=\textwidth]{../Abgabe/a2_paar.pdf}}
 		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 1c: Paarkorrelationsfunktion ($T_0$ = 0.01$\,\varepsilon$))}
 		\label{fig:paarb2}
 	\end{figure}
@@ -108,7 +108,7 @@ Nach etwa 1000 Schritten äquilibriert das System. Das ist ein recht später Zei
 
 \begin{landscape}
 	\begin{figure}
-		\OverfullCenter{\includegraphics[width=\textwidth]{../A1/A1_savedata.pdf}}
+		\OverfullCenter{\includegraphics[width=\textwidth]{../Abgabe/a1_savedata.pdf}}
 		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 1b: Plots der Observablen ($T_0$ = 100$\,\varepsilon$))}
 		\label{fig:observablen3}
 	\end{figure}
@@ -117,7 +117,7 @@ Nach etwa 1000 Schritten äquilibriert das System. Das ist ein recht später Zei
 
 \begin{landscape}
 	\begin{figure}
-		\OverfullCenter{\includegraphics[width=\textwidth]{../A1/A2_paar.pdf}}
+		\OverfullCenter{\includegraphics[width=\textwidth]{../Abgabe/a2_paar.pdf}}
 		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 1c: Paarkorrelationsfunktion ($T_0$ = 100$\,\varepsilon$)}
 		\label{fig:paarb3}
 	\end{figure}
@@ -125,32 +125,62 @@ Nach etwa 1000 Schritten äquilibriert das System. Das ist ein recht später Zei
 
 Es lassen sich folgende Phasen erkennen:
 \begin{enumerate}
-\item[1K] gasförmig \\
-\item[0.01K] flüssig \\
-\item[100K] fest, wobei uns das physikalisch nicht sinnvoll erscheint.\\
+\item[1$\,\varepsilon$] gasförmig \\
+\item[0.01$\,\varepsilon$] flüssig \\
+\item[100$\,\varepsilon$] fest/kristallin, wobei uns das physikalisch nicht sinnvoll erscheint.\\
 \end{enumerate}
 
 \begin{comment}
-%Aufg e: Was passiert nun bei T = 0.01? Schauen Sie sich
-%     * die potentielle, kinetische und Gesamtenergie während der Äquilibrierung an und messen
-%     * Sie g(r) an dem äquilibrierten System. Es kann auch interessant sein sich Snapshots, also
-%     * Bilder der Konfiguration des Systems, anzuschauen. -> Plots der Energien, Paarkorrfkt.
+\newpage
 \begin{landscape}
 	\begin{figure}
-		\OverfullCenter{\includegraphics[width=\textwidth]{../A1/A3_savedata.pdf}}
-		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 1d: Plots der Energien}
-		\label{fig:energie}
+		\OverfullCenter{\includegraphics[width=\textwidth]{../Abgabe/a3_savedata.pdf}}
+		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 1d: Plots der Energien ($T_0$ = 1$\,\varepsilon$)}
+		\label{fig:energie1}
 	\end{figure}
 \end{landscape} 
 
 \begin{landscape}
 	\begin{figure}
-		\OverfullCenter{\includegraphics[width=\textwidth]{../A1/A3_paar.pdf}}
-		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 1d: Plots der Paarkorrelationsfunktion}
-		\label{fig:energie}
+		\OverfullCenter{\includegraphics[width=\textwidth]{../Abgabe/a3_paar.pdf}}
+		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 1d: Plots der Paarkorrelationsfunktion ($T_0$ = 1$\,\varepsilon$)}
+		\label{fig:korr1}
 	\end{figure}
 \end{landscape} 
+
+\begin{landscape}
+	\begin{figure}
+		\OverfullCenter{\includegraphics[width=\textwidth]{../Abgabe/a3_savedata.pdf}}
+		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 1d: Plots der Energien ($T_0$ = 0.01$\,\varepsilon$)}
+		\label{fig:energie2}
+	\end{figure}
+\end{landscape} 
+
+\begin{landscape}
+	\begin{figure}
+		\OverfullCenter{\includegraphics[width=\textwidth]{../Abgabe/a3_paar.pdf}}
+		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 1d: Plots der Paarkorrelationsfunktion($T_0$ = 0.01$\,\varepsilon$)}
+		\label{fig:korr2}
+	\end{figure}
+\end{landscape} 
+
+\begin{landscape}
+	\begin{figure}
+		\OverfullCenter{\includegraphics[width=\textwidth]{../Abgabe/a3_savedata.pdf}}
+		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 1d: Plots der Energien($T_0$ = 100$\,\varepsilon$)}
+		\label{fig:energie3}
+	\end{figure}
+\end{landscape} 
+
+\begin{landscape}
+	\begin{figure}
+		\OverfullCenter{\includegraphics[width=\textwidth]{../Abgabe/a3_paar.pdf}}
+		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 1d: Plots der Paarkorrelationsfunktion($T_0$ = 100$\,\varepsilon$)}
+		\label{fig:korr3}
+	\end{figure}
+\end{landscape} 
+
+Bei T = 0.01$\,\varepsilon$ ..
 \end{comment}
-
 %\printbibliography
 \end{document}
