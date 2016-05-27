@@ -5,14 +5,198 @@
 #include <fstream>
 #include <string>
 #include <random>
-#include "initializeSquareGrid.h"
-#include "ljforces.h"
-#include "periodRB.h"
-
-#define CALI 100
+#include <math.h>
+#include <eigen3/Eigen/Core>
+#include <iostream>
 
 using namespace Eigen;
 using namespace std;
+
+MatrixXd erstellequadrgitter(int AnzTeilchen, double L)
+{
+    //int AnzTeilchen Anzahl an Teilchen für das Gitter
+    //double dichte Dichte der Partikel
+    MatrixXd particleinfo(2, AnzTeilchen); //2xAnzTeilchen Array mit einem Ortsvektor pro Spalte
+
+    double N = sqrt(AnzTeilchen);
+
+    // Kord setzen:
+    Vector2d tempTeil(0, 0);
+    // wie gewünscht nach 1a, zaehler ist Spaltenzähler
+    int zaehler = 0;
+    for ( int n = 0; n<N; n++ )
+    {
+        for ( int m=0; m<N ;m++ )
+        {
+            tempTeil << (1+2*n)*L/8.0, (1+2*m)*L/8.0;
+            for ( int komp=0; komp<2; komp++ )
+            {
+                particleinfo(komp, zaehler) = tempTeil(komp);
+            }
+            zaehler++;
+        }
+    }
+    return particleinfo;
+}
+
+void umklapp(Vector2d &tempRB, double L)
+{
+    for ( int i = 0; i<2; i++ )
+    {
+        if ( tempRB(i) < 0 )
+        {
+            tempRB(i) += L;
+        }
+        if ( tempRB(i) > L )
+        {
+            tempRB(i) -= L;
+        }
+    }
+}
+
+void kurzerWeg(Vector2d &dr, double L)
+{
+    /*  Nicht hübsch aber effektiv. Frage in einem Kreis alle 9 in Frage kommenden Positionen ab.
+        Reihenfolge (gegen den UZS):
+        9 8 7
+        2 1 6
+        3 4 5
+    */
+    const double rc = L/2.0;
+    if (dr.norm() <= rc)
+    {
+        return;
+    }
+
+    dr(0) = dr(0) - L;
+    if (dr.norm() <= rc)
+    {
+        return;
+    }
+
+    dr(1) = dr(1)-L;
+    if (dr.norm() <= rc)
+    {
+        return;
+    }
+
+    dr(0) = dr(0)+L;
+    if (dr.norm() <= rc)
+    {
+        return;
+    }
+
+    dr(0) = dr(0)+L;
+    if (dr.norm() <= rc)
+    {
+        return;
+    }
+
+    dr(1) = dr(1)+L;
+    if (dr.norm() <= rc)
+    {
+        return;
+    }
+
+    dr(1) = dr(1)+L;
+    if (dr.norm() <= rc)
+    {
+        return;
+    }
+
+    dr(0) = dr(0)-L;
+    if (dr.norm() <= rc)
+    {
+        return;
+    }
+
+    dr(0) = dr(0)-L;
+    if (dr.norm() <= rc)
+    {
+        return;
+    }
+    // Wenn dr außerhalb liegt, gebe 0 0 zurück.
+    dr << 0, 0;
+    return;
+}
+
+void kraft(MatrixXd &forces, MatrixXd &particleinfo, double L, bool active, VectorXd &bins, double &V)
+{
+	forces.setZero();
+    int AnzTeilchen = particleinfo.cols();
+
+    // Abstandsvektor
+    Vector2d dr(0,0);
+    double absr = 0;
+
+    for ( int TeilA = 0; TeilA < (AnzTeilchen-1); TeilA++ ) //über alle TeilchenPAARE (<=> Grenzen: Ränder) gehen
+    {
+        Vector2d tempA(0, 0);
+        tempA = particleinfo.block(0, TeilA, 2, 1); //Gibt die TeilA-te Teilchen-kords aus
+        for ( int TeilB = ( TeilA + 1 ); TeilB < AnzTeilchen; TeilB++ ) //s. Komm erste Schleife
+        {
+            Vector2d tempB(0, 0);
+            tempB = particleinfo.block(0, TeilB, 2, 1);
+
+            // Distanz zwischen zwei Teilchen
+            dr = tempA - tempB;
+            // Period RB beachten, also kürzesten Weg zum nächsten Teil (auch in Nachbarbox)
+            kurzerWeg(dr, L);
+            // Nimmt den 0-Vektor raus
+            if ( dr(0) == 0 && dr(1) == 0 )
+            {
+                continue;
+            }
+            /* Potential(Betrag von dr), über alle TeilchenPaare summiert
+             * ist Epot, V_LJ(r) = 4*(pow(pow(r,-1),12)-pow(pow(r,-1),6));
+             **/
+
+            absr = dr.norm();
+
+            /* ** Histogramm ** */
+            if ( active )
+            {
+                bins((int) ( absr*2*bins.size()/L ))++;
+            }
+
+            V += 4*( pow(absr, -12) - pow(absr, -6) );
+
+            /*
+             * LJ-Potential:
+             * V(r) = 4*epsilon* ((sigma/r)^12 - (sigma/r)^6), sigma = epsilon = 1 (vgl Aufgabe)
+             * F = -gradV
+             * F(r)_x = 4 * (x/r) * (12*(1/r)^13 - 6*(1/r)^7)
+             *        = x *48 * (1/r)^8 * ((1/r)^6 - 0.5)
+             * für y analog
+             */
+
+            // Zuerst 1/r^2
+            double r2 = 1.0/dr.squaredNorm();
+            // Klammerterm nach "48"
+            double force = pow(r2, 4) * ( pow(r2, 3) - 0.5 );
+
+            //temp 2dim Vektoren für Matrixspalten (im Prinzip Kraftkords der Teile)
+            Vector2d tempf1(0, 0);
+            tempf1 = forces.block(0, TeilA, 2, 1);
+            Vector2d tempf2(0, 0);
+            tempf2 = forces.block(0, TeilB, 2, 1);
+
+            // Newtons Dritte (Actio = Reactio) für die beiden Teilchen, also WW
+            tempf1 += dr*force; //das aufaddieren (Reactio)
+            tempf2 -= dr*force; //oder abziehen (Actio)
+
+            //Zusammenpacken. Da wir vorher mit Vektoren rechnen, muss jede Komp vorher durch sein
+            for ( int komp=0; komp<2; komp++ )
+            {
+                forces(komp, TeilA) = tempf1(komp);
+                forces(komp, TeilB) = tempf2(komp);
+            }
+        }
+    }
+    //Faktor von der Kraft
+    forces = forces*48;
+}
+#define CALI 100
 
 /**
   * simulate(..) macht folgendes:
