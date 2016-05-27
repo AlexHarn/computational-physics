@@ -1,4 +1,5 @@
 \input{../../header.tex}
+\usepackage{verbatim}
 \newcommand\OverfullCenter[1]{\noindent\makebox[\linewidth]{#1}}
 \begin{document}
 \noindent
@@ -13,7 +14,7 @@ Es wird das Verhalten von Teilchen im mikrokanonischen Ensemble unter Einfluss d
 V(r) = 4 \left[\left(\frac{1}{r}\right)^{12}-\left(\frac{1}{r}\right)^6\right]
 \label{eq:lJ}
 \end{equation}
-in einem zweidimensionalen System ($A\,=\,L\,\times\,L$) mit periodischen Randbedingungen untersucht.
+in einem zweidimensionalen System ($A\,=\,L\,\times\,L$) mit periodischen Randbedingungen untersucht. Allgemein ist es in Eigen sinnvoll, alle Matrizen über Referenzen zu übergeben.
 
 \subsection*{Initialisierung}
 Zur Vermeidung kleiner Abstände (und damit großer Kräfte) wird die Anfangskonfiguration der 16 geforderten Partikel (lt. Aufgabenstellung) wie folgt gesetzt:
@@ -42,7 +43,7 @@ Sodann werden aus einem aktuellen Unix-Timestamp für $r$ und $\varphi$ Zahlen a
 Nun werden alle Geschwindigkeiten zufällig erzeugt und die Schwerpunktsgeschwindigkeiten abgezogen. Auch diese Wertepaare werden in eine der Particleinfo gleichdimensionierten Matrix geschrieben. Über $E_{\text{kin}} = 0.5\,m\,v^2$ wird die kinetische Energie berechnet und über das Äquipartitionstheorem die Temperatur bestimmt. Nach Kapitel 5.5.1 wird ein isokinetischer Thermostat implementiert, wodurch die Geschwindigkeiten neu skaliert werden müssen (5.40). Dadurch wird die kinetische Energie konstant (bei definierter Temperatur) gehalten und wir wechseln in's kanonische Ensemble. Im Allgemeinen führt dieser Thermostat leider nicht zu einer boltzmannverteilten Energie. Dazu würde sich bspw. der Nos\'{e}-Hoover-Thermostat anbieten.
 
 \subsection*{Kraftberechnung}
-Bei der Kraftberechnung wird über alle Teilchenpaare geloopt. Dabei wird jedes Nachbarteilchen geprüft. Aus der Ortskoordinatenmatrix \textit{particleInfo} extrahieren wir jeweils den zweidimensionalen Vektor des Teilchens. Dann bilden wir den Abstandsvektor, der über einen einfachen Cutoff $r_c = \frac{L}{2}$ gekürzt wird. Um einen Cutoff-Radius zu implementieren, gehen wir die umliegenden Boxen gegen den Uhrzeigersinn ab. Alternativ kann hier auch eine Cutoff-Box genutzt werden.
+Bei der Kraftberechnung wird über alle Teilchenpaare geloopt. Dabei wird jedes Nachbarteilchen geprüft. Aus der Ortskoordinatenmatrix \textit{particleInfo} extrahieren wir jeweils den zweidimensionalen Vektor des Teilchens. Dann bilden wir den Abstandsvektor, der über einen einfachen Cutoff $r_c = \frac{L}{2}$ gekürzt wird. Um einen Cutoff-Radius zu implementieren, gehen wir die umliegenden Boxen gegen den Uhrzeigersinn ab. Alternativ kann hier auch eine Cutoff-Box genutzt werden. Das Prinzip nutzen wir wiederum, wenn ein Teilchen das Rand eines Bildes erreicht und wieder in die Box gesetzt werden soll. Da wir durch die Startpositionen bei Null (unten links) beginnen, fragen wir in den Randbedingungen nicht von [-L/2,L/2] ab, sondern 0 bis L.
 Die Wechselwirkungen außerhalb des Radius werden über die \textsc{continue}-Funktion entfernt. Das Potential berechnen wir uns schließlich über den Betrag und das LJ-Potential \eqref{eq:lJ}. Sodann bauen wir stückweise alle Terme zusammen, nach folgender Gleichung:
 \begin{equation*}
 \begin{split}
@@ -54,10 +55,12 @@ Die Wechselwirkungen außerhalb des Radius werden über die \textsc{continue}-Fu
 \end{equation*}
 Nach Newtons drittem Axiom werden aus der Kraftberechnung in eine Richtung auf die andere geschlossen. Den Faktor 48 haben wir zur Erleichterung der Rechenlast an das Ende der Methode gesetzt.
 
+In \textsc{savedata} speichern wir alle gefragten Observablen.
+
 \subsection*{MD-Simulation / Integration}
 Für die Integration wird der Geschwindigkeits-Verlet-Algorithmus (mit $dt=h=0.01$) genutzt, der durch den Lioville-Operator die Energieerhaltung, die Konstanz des Phasenraumvolumens, sowie die Zeitumkehr sichert. Der Geschwindigkeits-Verlet ist gegenüber des \enquote{klassischen} Verlets selbststartend (es benötigt also keinen $\vec{r}_{n-1}$). Durch die Matrizenimplementierung können hier alle Koordinaten auf einmal aktualisiert werden. Dabei müssen erneut die Randbedingungen beachtet werden, sodass eventuell austretende Teilchen wieder auf ein periodisches Bild gesetzt werden. Für die Geschwindigkeiten und Kräfte wird analoges nach (4.25) gemacht. Dann wird der Zeitschritt erhöht. Über einen Schrittzähler kann die Anzahl der Schritte ausgegeben werden. Dadurch kann die Zeitmittelung leichter umgesetzt werden. Die Äquilibrierungszeit ist an dem Energieplot ablesbar, wenn sich $E_{\text{kin}}$ und $E_{\text{pot}}$ nicht in ihrer Größenordnung unterscheiden. Das ist die Anzahl der Zeitschritte, nachdem das System äquilibriert.
 
-Das Histogramm zählt im Intervall $0<r<L/2$ in $N_H$ die Bins der Länge $\Delta r = L / 2 N_H$, also folgt für die Abfrage $\frac{\Delta r}{\text{Gesamtanzahl der Bins}}$. Es wird also geschaut, im welchen Subintervall der Paarabstand liegt. Für alle weiteren, kleineren Abstände entfällt sodann die Zählung.\\
+Das Histogramm zählt im Intervall $0<r<L/2$ die Bins der Länge $\Delta r = \frac{L}{2\,N_H}$ ($N_H$ ist Anzahl. Es wird also geschaut, im welchen Subintervall der Paarabstand liegt. Für alle weiteren, kleineren Abstände entfällt sodann die Zählung.\\
 
 Die Paarverteilungsfunktion $g(r)$ wird nach S.85 im Skript implementiert. Dabei wird $\Delta A$ (da Problem zweidim) über die Differenzfläche eines Kreises mit dem Radius $r_a$ und eines Kreises mit dem Radius $r_i$ gebildet:
 
@@ -65,15 +68,89 @@ Die Paarverteilungsfunktion $g(r)$ wird nach S.85 im Skript implementiert. Dabei
 \Delta A = A_{\text{außen}} - A_{\text{innen}} = \pi [\{l \, \Delta r\}^2-\{(l-1)\,\Delta r\}^2]
 \end{equation*}
 
-Über die Dichte und die Anzahl der Teilchen, sowie die gemittelte Paaranzahl ergibt sich $g(r)$. Die Äquilibrierungsphase wird durch einen Schalter abgewartet.
+Über die Dichte (Teilchenzahl durch Volumen (Fläche)) und die Anzahl der Teilchen, sowie die gemittelte Paaranzahl ergibt sich $g(r)$. Die Äquilibrierungsphase wird durch einen Schalter abgewartet.
 
-%\begin{landscape}
-%	\begin{figure}
-%		\OverfullCenter{\includegraphics[width=\textwidth]{../A1/.pdf}}
-%		\caption{Graphische Darstellung der Ergebnisse von Aufgabe .}
-%		\label{fig:}
-%	\end{figure}
-%\end{landscape} 
+Nach etwa 1000 Schritten äquilibriert das System. Das ist ein recht später Zeitpunkt, aber wir wollten eine zu frühe Messung vermeiden.
+
+\begin{landscape}
+	\begin{figure}
+		\OverfullCenter{\includegraphics[width=\textwidth]{../A1/A1_savedata.pdf}}
+		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 1b: Plots der Observablen ($T_0$ = 1$\,\varepsilon$))}
+		\label{fig:observablen1}
+	\end{figure}
+\end{landscape} 
+
+
+\begin{landscape}
+	\begin{figure}
+		\OverfullCenter{\includegraphics[width=\textwidth]{../A1/A1_paar.pdf}}
+		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 1c: Paarkorrelationsfunktion ($T_0$ = 1$\,\varepsilon$))}
+		\label{fig:paarb1}
+	\end{figure}
+\end{landscape} 
+
+\begin{landscape}
+	\begin{figure}
+		\OverfullCenter{\includegraphics[width=\textwidth]{../A1/A2_savedata.pdf}}
+		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 1b: Plots der Observablen ($T_0$ = 0.01$\,\varepsilon$))}
+		\label{fig:observablen2}
+	\end{figure}
+\end{landscape} 
+
+
+\begin{landscape}
+	\begin{figure}
+		\OverfullCenter{\includegraphics[width=\textwidth]{../A1/A2_paar.pdf}}
+		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 1c: Paarkorrelationsfunktion ($T_0$ = 0.01$\,\varepsilon$))}
+		\label{fig:paarb2}
+	\end{figure}
+\end{landscape} 
+
+\begin{landscape}
+	\begin{figure}
+		\OverfullCenter{\includegraphics[width=\textwidth]{../A1/A1_savedata.pdf}}
+		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 1b: Plots der Observablen ($T_0$ = 100$\,\varepsilon$))}
+		\label{fig:observablen3}
+	\end{figure}
+\end{landscape} 
+
+
+\begin{landscape}
+	\begin{figure}
+		\OverfullCenter{\includegraphics[width=\textwidth]{../A1/A2_paar.pdf}}
+		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 1c: Paarkorrelationsfunktion ($T_0$ = 100$\,\varepsilon$)}
+		\label{fig:paarb3}
+	\end{figure}
+\end{landscape} 
+
+Es lassen sich folgende Phasen erkennen:
+\begin{enumerate}
+\item[1K] gasförmig \\
+\item[0.01K] flüssig \\
+\item[100K] fest, wobei uns das physikalisch nicht sinnvoll erscheint.\\
+\end{enumerate}
+
+\begin{comment}
+%Aufg e: Was passiert nun bei T = 0.01? Schauen Sie sich
+%     * die potentielle, kinetische und Gesamtenergie während der Äquilibrierung an und messen
+%     * Sie g(r) an dem äquilibrierten System. Es kann auch interessant sein sich Snapshots, also
+%     * Bilder der Konfiguration des Systems, anzuschauen. -> Plots der Energien, Paarkorrfkt.
+\begin{landscape}
+	\begin{figure}
+		\OverfullCenter{\includegraphics[width=\textwidth]{../A1/A3_savedata.pdf}}
+		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 1d: Plots der Energien}
+		\label{fig:energie}
+	\end{figure}
+\end{landscape} 
+
+\begin{landscape}
+	\begin{figure}
+		\OverfullCenter{\includegraphics[width=\textwidth]{../A1/A3_paar.pdf}}
+		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 1d: Plots der Paarkorrelationsfunktion}
+		\label{fig:energie}
+	\end{figure}
+\end{landscape} 
+\end{comment}
 
 %\printbibliography
 \end{document}
