@@ -19,7 +19,7 @@ mdsimulation.dat: mdsimulation
 	./mdsimulation
 
 a1show: mdsimulation.dat
-	#python a1.py
+	python a1.py
 
 clean:
 	rm -f mdsimulation *.o *.dat *.pdf *.png out.txt
