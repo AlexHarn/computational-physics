@@ -9,7 +9,7 @@
 
 int main()
 {
-    PoissionSquare square(1, 1, 0.05, 1e-5);
+    PoissionRect square(1, 1, 0.05, 1e-5);
 
     // a)
     square.calc();

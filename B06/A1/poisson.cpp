@@ -6,10 +6,10 @@
 
 using namespace std;
 //-------------------------------------------------------------------------------
-//                             CLASS PoissionSquare
+//                             CLASS PoissionRect
 //                        PRIVATE IMPLEMENTATION SECTION
 //-------------------------------------------------------------------------------
-void PoissionSquare::calcP()
+void PoissionRect::calcP()
 {
     double max;
     double temp = 0;
@@ -28,7 +28,7 @@ void PoissionSquare::calcP()
         }
     } while ( max >= eps );
 }
-void PoissionSquare::calcE()
+void PoissionRect::calcE()
 {
 	for ( int x = 1; x < phi.rows() - 1; x++ )
 	{
@@ -40,10 +40,10 @@ void PoissionSquare::calcE()
 	}
 }
 //-------------------------------------------------------------------------------
-//                             CLASS PoissionSquare
+//                             CLASS PoissionRect
 //                       PUBLIC IMPLEMENTATION SECTION
 //-------------------------------------------------------------------------------
-PoissionSquare::PoissionSquare(double lx, double ly, double delta, double eps)
+PoissionRect::PoissionRect(double lx, double ly, double delta, double eps)
 {
     double J = lx/delta, L = ly/delta;
     if ( floor(J) != J || floor(L) != L )
@@ -56,13 +56,13 @@ PoissionSquare::PoissionSquare(double lx, double ly, double delta, double eps)
     ey = M::Zero(J, L);
 }
 
-void PoissionSquare::calc()
+void PoissionRect::calc()
 {
     calcP();
     calcE();
 }
 
-void PoissionSquare::setConstBC(double top, double bottom, double right, double left)
+void PoissionRect::setConstBC(double top, double bottom, double right, double left)
 {
     for ( int i = 0; i < phi.cols(); i++ )
         phi(0, i) = left;
@@ -74,12 +74,12 @@ void PoissionSquare::setConstBC(double top, double bottom, double right, double 
         phi(i, phi.cols() - 1) = top;
 }
 
-void PoissionSquare::addQ(double x, double y, double Q)
+void PoissionRect::addQ(double x, double y, double Q)
 {
     rho((int) ( x/delta ), (int) ( y/delta )) = Q;
 }
 
-void PoissionSquare::save(string name)
+void PoissionRect::save(string name)
 {
     ofstream fout;
     fout.open(name+"_phi.dat");
@@ -108,7 +108,7 @@ void PoissionSquare::save(string name)
     fout.close();
 }
 
-void PoissionSquare::reset()
+void PoissionRect::reset()
 {
     rho.setZero();
     phi.setZero();

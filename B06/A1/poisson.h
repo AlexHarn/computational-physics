@@ -5,7 +5,7 @@
 
 typedef Eigen::MatrixXd M;
 
-class PoissionSquare
+class PoissionRect
 /* Löst die Poissiongleichung auf einem Quadrat mit gegebenen Maßen,
  * Randbedingungen und gegebener Ladungsverteilung.
  */
@@ -23,7 +23,7 @@ class PoissionSquare
          */
 
     public:
-        PoissionSquare(double lx, double ly, double delta, double eps);
+        PoissionRect(double lx, double ly, double delta, double eps);
         /* Initiallisiert ein Quadrat [0, lx] x [0, ly] mit Diskretisierung delta
          * und Genauigkeit eps
          */
