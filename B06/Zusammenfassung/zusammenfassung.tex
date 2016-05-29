@@ -1,0 +1,149 @@
+\input{../../header.tex}
+\usepackage{verbatim}
+\newcommand\OverfullCenter[1]{\noindent\makebox[\linewidth]{#1}}
+\begin{document}
+\noindent
+\centerline{\small{\textsc{Technische Universität Dortmund}}} \\
+\large\textbf{Übungsblatt 06} \hfill \footnotesize\textbf{Sebastian Bange, Alexander Harnisch, Alexander Knodel} \\
+\normalsize Computational Physics \hfill \today \\
+Prof. Dr. Jan Kierfeld \hfill Abgabefrist: 03.06.2016\\
+\noindent\makebox[\linewidth]{\rule{\textwidth}{0.4pt}}
+\section*{Aufgabe 2 - Poisson-Gleichung}
+Die zweidimensionale Poisson-Gleichung ($\varepsilon_0 = 1$)
+\begin{equation*}
+\left( \partial_x^2 + \partial_y^2 \right)\,\phi(x,y) = -\rho(x,y)
+\end{equation*}
+wird mittels der Gauß-Seidel-Iteration nach (6.14) bei gegebener Genauigkeit $\epsilon$ gelöst. Zunächst sollte ein Quadrat $Q = [0,1]^2$, also Kantenlänge $L=1$, realisiert werden. Die Dirichlet Randbedingungen mit vorgegebenen Potential $\phi(x,y)$ auf den Rändern des Quadrates, sowie diskrete Ladungen $q_i$ im Inneren des Systems an den Orten $\vec{r_i}$ ($\rho(\vec{r}) = \sum_i\,q_i\delta (\vec{r}- \vec{r_i})$), wurden vorgegeben. Das System wurde über die Fixpunktgleichung mit $\Delta = 0.05$ diskretisiert.\\
+\begin{enumerate}
+\item[\textsc{calcP}] Wir berechnen das Potential mittels der Gauß-Seidel-Iteration, indem wir das Innere des Systems (also ohne Ränder) über die Fixpunktgleichung (6.18) bis zu einer Genauigkeit $\varepsilon = 10^{-5}$ iterieren. Dabei entspricht $i = j$ und $j = l$ (Programm $\Rightarrow$ Skript), also das Quadrat \enquote{von links nach rechts} rastern (und in jedem Schritt die y neu berechnen). Schließlich wird über den Absolutwert der Differenz zwischen aktueller und letztem Wert das jeweils aktuelle Maximum gesetzt.\\
+
+\item[\textsc{calcE}] Über das Potential $\phi(x,y)$ wird das E-Feld berechnet:\\
+\begin{equation*}
+\vec{E}(\vec{r}) = - \nabla\,\phi(x,y)
+\end{equation*}
+Die Komponenten des Feldes werden über den Differenzenquotienten mit 2 symmetrischen Punkten (nach Formel (3.2)) berechnet.\\
+
+\item[\textsc{PoissionRect}]
+Wir initialisieren ein Quadrat der Maßen $[0,lx]\times[0,ly]$ bis zu einer Genauigkeit von $\varepsilon$. Dabei diskretisieren wir die $x$-Achse ($J$) und die $y$-Achse ($L$) über die Gitterkonstante $\Delta$.\\
+
+\item[\textsc{setConstBC}]
+Hier werden die RB an den vier Rändern auf die jeweils gegebene Konstante gesetzt. Die Reihenfolge ist eine Prioritätenliste, die Ecken werden entsprechend der Reihenfolge \enquote{links, rechts, unten, oben} überschrieben.\\
+
+\item[\textsc{addQ}]
+Fügt eine Ladung am Ort (x,y) mit dem Betrag $Q$ hinzu. Dabei wird erneut die Diskretisierung beachtet. Dies ist die Ladungsdichte $\rho(x,y)$.\\
+
+\item[\textsc{save}]
+Speichert die aktuellen Ergebnisse in Dateien des Formats \textsf{[name]\_[postfix].dat}. Beispielsweise werden so alle Potentialwerte $\phi(x,y)$, aber auch die Komponenten des E-Feldes gespeichert.\\
+
+\item[\textsc{reset}]
+Über eine reset-Methode kann zudem alles zentral zurückgesetzt werden.\\
+
+\item[\textsc{main}]
+Hier werden die einzelnen Methoden nur noch aufgerufen und mit den in den Teilaufgaben gegebenen Bedingungen ausgeführt.\\
+\end{enumerate}
+
+Es ergaben sich folgende Plots:
+
+\subsection*{Aufgabenteil a}
+
+\begin{landscape}
+	\begin{figure}
+		\OverfullCenter{\includegraphics[width=\textwidth]{../Abgabe/a.pdf}}
+		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 1a: $\phi(x,y)$}
+		\label{fig:aPhi}
+	\end{figure}
+\end{landscape} 
+
+\begin{landscape}
+	\begin{figure}
+		\OverfullCenter{\includegraphics[width=\textwidth]{../Abgabe/a_absE.pdf}}
+		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 1a: $|E|(x,y)$}
+		\label{fig:aabsE}
+	\end{figure}
+\end{landscape} 
+
+
+\subsection*{Aufgabenteil b}
+In Aufgabenteil b mussten zusätzlich die Randbedingungen, bzw. praktisch nur die \enquote{neue} RB $\phi(x,1)=1$ auf dem Rand $y=1$, implementiert werden.
+
+\begin{landscape}
+	\begin{figure}
+		\OverfullCenter{\includegraphics[width=\textwidth]{../Abgabe/b.pdf}}
+		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 1b: $\phi(x,y)$}
+		\label{fig:bPhi}
+	\end{figure}
+\end{landscape} 
+
+\begin{landscape}
+	\begin{figure}
+		\OverfullCenter{\includegraphics[width=\textwidth]{../Abgabe/b_absE.pdf}}
+		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 1b: $|E|(x,y)$}
+		\label{fig:babsE}
+	\end{figure}
+\end{landscape} 
+
+\subsection*{Aufgabenteil c}
+Hier sollte nun eine Ladung $q_1 = +1$ in die Mitte von $Q$ ($x=0.5, y=0.5$) gesetzt werden. An den Rändern ist $\phi(x,y) = 0$, die Iteration soll bis $\varepsilon = 10^{-5}$ durchgeführt werden.
+
+\begin{landscape}
+	\begin{figure}
+		\OverfullCenter{\includegraphics[width=\textwidth]{../Abgabe/c.pdf}}
+		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 1c: $\phi(x,y)$}
+		\label{fig:cPhi}
+	\end{figure}
+\end{landscape} 
+
+\begin{landscape}
+	\begin{figure}
+		\OverfullCenter{\includegraphics[width=\textwidth]{../Abgabe/c_absE.pdf}}
+		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 1c: $|E|(x,y)$}
+		\label{fig:cabsE}
+	\end{figure}
+\end{landscape} 
+
+\subsection*{Aufgabenteil e}
+Nun sollte eine neutrale Ladungskonfiguration gewählt werden, mit mindestens zwei Ladungen (unter der RB $\phi = 0$ auf allen vier Rändern). Dazu bietet sich der Dipol oder der Quadrupol an. Beides haben wir implementiert.
+
+\subsubsection*{Dipol}
+Beim Dipol lässt sich eine neutrale Konfiguration über zwei entgegengerichtete Ladungen an den Punkten $q_1 = (0.25, 0.25)$ und $q_2 = (0.75,0.75)$ realisieren.
+
+\begin{landscape}
+	\begin{figure}
+		\OverfullCenter{\includegraphics[width=\textwidth]{../Abgabe/e-dipol.pdf}}
+		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 1e: Dipol}
+		\label{fig:edipol}
+	\end{figure}
+\end{landscape} 
+
+
+\begin{landscape}
+	\begin{figure}
+		\OverfullCenter{\includegraphics[width=\textwidth]{../Abgabe/e-dipol_absE.pdf}}
+		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 1e: Dipol: $|E|(x,y)$}
+		\label{fig:edipolabse}
+	\end{figure}
+\end{landscape} 
+
+\subsubsection*{Quadrupol}
+Analog zum Dipol lässt sich die neutrale Konfiguration über vier diskrete Ladungen realisieren, mit zwei zusätzlichen Punkten $q_3 = (0.25,0.75)$ und $q_4 = (0.75,0.25)$. Aus Neutralitätsgründen ändert sich das Vorzeichen bei Ladung $q_2$, während $q_3$ und $q_4$ negativ geladen sind.
+
+\begin{landscape}
+	\begin{figure}
+		\OverfullCenter{\includegraphics[width=\textwidth]{../Abgabe/e-quadrupol.pdf}}
+		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 1e: Quadrupol}
+		\label{fig:equad}
+	\end{figure}
+\end{landscape} 
+
+
+\begin{landscape}
+	\begin{figure}
+		\OverfullCenter{\includegraphics[width=\textwidth]{../Abgabe/e-quadrupol_absE.pdf}}
+		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 1e: Quadrupol: $|E|(x,y)$}
+		\label{fig:equadabse}
+	\end{figure}
+\end{landscape} 
+
+
+%\printbibliography
+\end{document}
