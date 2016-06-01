@@ -24,6 +24,7 @@ for file in os.listdir():
             # ax.quiver(scale, scale, ex, ey)
             ax.streamplot(scale, scale, ex, ey, color="Black")
             fig.savefig(pre+".pdf");
+            # plt.show()
 
             # Weil es explizit gefordert ist auch die Beträge:
             fig = plt.figure()

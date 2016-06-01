@@ -15,7 +15,7 @@ int main()
     square.calc();
     square.save("a");
 
-    // b)
+    //// b)
     square.setConstBC(1, 0, 0, 0);
     square.calc();
     square.save("b");

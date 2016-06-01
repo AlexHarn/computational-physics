@@ -12,7 +12,7 @@ class PoissionRect
 {
     private:
         M rho, phi, ex, ey;
-        double delta, eps;
+        double delta, eps, influ;
 
         void calcP();
         /* Berechnet das Potential mittels Gauß-Seidel-Iteration
@@ -20,6 +20,9 @@ class PoissionRect
          */
         void calcE();
         /* Berechnet das E-Feld aus dem Potential
+         */
+        void calcInflu();
+        /* Berechnet die influenzierte Ladung auf dem Rand
          */
 
     public:
