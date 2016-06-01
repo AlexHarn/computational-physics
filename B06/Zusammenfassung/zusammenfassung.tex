@@ -10,9 +10,10 @@ Prof. Dr. Jan Kierfeld \hfill Abgabefrist: 03.06.2016\\
 \noindent\makebox[\linewidth]{\rule{\textwidth}{0.4pt}}
 \section*{Aufgabe 2 - Poisson-Gleichung}
 Die zweidimensionale Poisson-Gleichung ($\varepsilon_0 = 1$)
-\begin{equation*}
+\begin{equation}
 \left( \partial_x^2 + \partial_y^2 \right)\,\phi(x,y) = -\rho(x,y)
-\end{equation*}
+\label{eq:Poisson-GL}
+\end{equation}
 wird mittels der Gauß-Seidel-Iteration nach (6.14) bei gegebener Genauigkeit $\epsilon$ gelöst. Zunächst sollte ein Quadrat $Q = [0,1]^2$, also Kantenlänge $L=1$, realisiert werden. Die Dirichlet Randbedingungen mit vorgegebenen Potential $\phi(x,y)$ auf den Rändern des Quadrates, sowie diskrete Ladungen $q_i$ im Inneren des Systems an den Orten $\vec{r_i}$ ($\rho(\vec{r}) = \sum_i\,q_i\delta (\vec{r}- \vec{r_i})$), wurden vorgegeben. Das System wurde über die Fixpunktgleichung mit $\Delta = 0.05$ diskretisiert.\\
 \begin{enumerate}
 \item[\textsc{calcP}] Wir berechnen das Potential mittels der Gauß-Seidel-Iteration, indem wir das Innere des Systems (also ohne Ränder) über die Fixpunktgleichung (6.18) bis zu einer Genauigkeit $\varepsilon = 10^{-5}$ iterieren. Dabei entspricht $i = j$ und $j = l$ (Programm $\Rightarrow$ Skript), also das Quadrat \enquote{von links nach rechts} rastern (und in jedem Schritt die y neu berechnen). Schließlich wird über den Absolutwert der Differenz zwischen aktueller und letztem Wert das jeweils aktuelle Maximum gesetzt.\\
@@ -82,6 +83,49 @@ In Aufgabenteil b mussten zusätzlich die Randbedingungen, bzw. praktisch nur di
 	\end{figure}
 \end{landscape} 
 
+Die Lösung der Poisson-Gleichung \ref{eq:Poisson-GL} $\phi(x,y)$ wird über einen Separationsansatz gelöst.\begin{equation*}
+	\begin{split}
+		\phi(x,y) &= X(x)\cdot Y(y)\\
+		\left( \partial_x^2 + \partial_y^2 \right)\,\phi(x,y) &= 0 \\
+		\left( Y(y) \cdot \frac{\partial^2 X(x)}{\partial x^2} + X(x) \cdot \frac{\partial^2 Y(y)}{\partial y^2} \right) &= 0 \qquad |\text{dividiere durch }\phi(x,y) = X(x)\cdot  Y(y)\\
+		\frac{1}{X(x)} \cdot X'' + \frac{1}{Y(y)} \cdot Y'' &= 0 \\
+		\frac{X''}{X} + \frac{Y''}{Y} &= 0 |\text{Da nur partielle Ableitungen in jedem Summand auftauchen,}\\ &\qquad\,\text{setze eine Seite konstant} \\
+		\frac{X''}{X} &= \lambda \\
+		\leftrightarrow X'' &= \lambda X \\
+	\end{split}
+\end{equation*}
+Dies ist eine lineare DGL 2. Ordnung mit konst. Koeffizienten.
+\begin{equation*}
+	\begin{split}
+		X(x) &= C_0 \exp(\mu\,x) \\
+		\mu^2 C_0 \exp(\mu\,x) - \lambda C_0 \exp(\mu\,x) &= 0\\
+		(\mu^2 - \lambda) C_0 \exp(\mu\,x) &= 0 \\
+		|\mu| &= \pm \sqrt{\lambda} \\
+	\end{split}
+\end{equation*}
+Für $Y(y)$ folgt dies analog. Damit ergibt sich:
+\begin{equation*}
+	\begin{split}
+		\phi(x,y) &= X(x) \cdot Y(y)\qquad\text{bzw.} \\
+		\phi(x,y) &= \sum_{\lambda} X(x)_{\lambda}\cdot Y(y)_{\lambda}\\
+	\end{split}
+\end{equation*}
+Mit den Randbedingungen
+\begin{equation*}
+	\begin{split}
+		\phi(0,y) &= 0 \\
+		\phi(1,y) &= 0 \\
+		\phi(x,0) &= 0 \\
+		\phi(x,1) &= 1 \\
+	\end{split}
+\end{equation*}
+ergibt sich
+\begin{equation*}
+	\begin{split}
+		\dots
+	\end{split}
+\end{equation*}
+
 \subsection*{Aufgabenteil c}
 Hier sollte nun eine Ladung $q_1 = +1$ in die Mitte von $Q$ ($x=0.5, y=0.5$) gesetzt werden. An den Rändern ist $\phi(x,y) = 0$, die Iteration soll bis $\varepsilon = 10^{-5}$ durchgeführt werden.
 
@@ -100,6 +144,11 @@ Hier sollte nun eine Ladung $q_1 = +1$ in die Mitte von $Q$ ($x=0.5, y=0.5$) ges
 		\label{fig:cabsE}
 	\end{figure}
 \end{landscape} 
+
+\subsection*{Aufgabenteil d}
+\begin{equation*}
+\int_{\partial Q} dl\,\sigma = \int_{\partial Q} -\vec{n}\cdot \,\nabla \Phi = \int_{\partial Q} \vec{n}\cdot \vec{E}\,dl \stackrel{\text{Satz v. Gauß}}{=} \int_{Q} \text{div}\,\vec{E}\, dA = \int_{Q} \left(\partial_x \,E_x+\partial_y\,E_y\right)\, dA
+\end{equation*}
 
 \subsection*{Aufgabenteil e}
 Nun sollte eine neutrale Ladungskonfiguration gewählt werden, mit mindestens zwei Ladungen (unter der RB $\phi = 0$ auf allen vier Rändern). Dazu bietet sich der Dipol oder der Quadrupol an. Beides haben wir implementiert.
