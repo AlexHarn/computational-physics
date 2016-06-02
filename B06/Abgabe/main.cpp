@@ -5,12 +5,12 @@
 //       Lösung der Poission Gleichung auf einem Quadrat mit konstanten
 //       Randbedingungen und verschiedenen Ladungsverteilungen.
 //-------------------------------------------------------------------------------
+
 #include <eigen3/Eigen/Core>
+#include <vector>
 #include <cmath>
 #include <fstream>
 #include <iostream>
-
-using namespace std;
 
 typedef Eigen::MatrixXd M;
 
@@ -21,7 +21,7 @@ class PoissionRect
 {
     private:
         M rho, phi, ex, ey;
-        double delta, eps;
+        double delta, eps, influ;
 
         void calcP();
         /* Berechnet das Potential mittels Gauß-Seidel-Iteration
@@ -29,6 +29,9 @@ class PoissionRect
          */
         void calcE();
         /* Berechnet das E-Feld aus dem Potential
+         */
+        void calcInflu();
+        /* Berechnet die influenzierte Ladung auf dem Rand
          */
 
     public:
@@ -55,6 +58,7 @@ class PoissionRect
          */
 };
 
+using namespace std;
 //-------------------------------------------------------------------------------
 //                             CLASS PoissionRect
 //                        PRIVATE IMPLEMENTATION SECTION
@@ -78,17 +82,75 @@ void PoissionRect::calcP()
         }
     } while ( max >= eps );
 }
+
 void PoissionRect::calcE()
 {
+    #pragma omp parallel
+
+    // Feld innerhalb des Gebietes mit zweiseitigem Differenzenqoutienten berechnen
+    #pragma omp for schedule(static, 1) collapse(2)
 	for ( int x = 1; x < phi.rows() - 1; x++ )
 	{
-		for (int y = 1; y < phi.cols() - 1; y++)
+		for ( int y = 1; y < phi.cols() - 1; y++ )
 		{
 			ex(x, y) = ( phi(x + 1, y) - phi(x - 1, y) )/( 2*delta );
 			ey(x, y) = ( phi(x, y + 1) - phi(x, y - 1) )/( 2*delta );
 		}
 	}
+
+    /*
+     * Auf dem Rand gehts nur mit dem einseitigen Differenzenqoutienten
+     * auf den Seiten ist nur die Normalkomponente von 0 verschieden
+     */
+    // Oben und Unten
+    #pragma omp for
+    for ( int x = 0; x < phi.rows(); x++ )
+    {
+        ey(x, phi.cols() - 1) = ( phi(x, phi.cols() - 1) - phi(x, phi.cols() - 2) )/delta;
+        ey(x, 0) = ( phi(x, 1) - phi(x, 0) )/delta;
+    }
+    // Links und rechts
+    #pragma omp for
+    for ( int y = 0; y < phi.cols(); y++ )
+    {
+        ex(0, y) = ( phi(1, y) - phi(0, y) )/delta;
+        ex(phi.cols() - 1, y) = ( phi(phi.cols() - 1,y) - phi(phi.cols() - 2, y) )/delta;
+    }
 }
+
+void PoissionRect::calcInflu()
+// Die Methode kann man mit Eigen bestimmt irgendwie eleganter implementieren
+{
+    influ = 0;
+    /*
+     * Da die Klasse nur quadratische Gebiete behandelt kann einfach über alle 4 Seiten summiert werden
+     * Vorgehensweise für sigma:
+     * Alle Seiten im mathematisch positivem sinn durchnummerieren, oben start. -E_n ist dann jeweils:
+     * Oben: -ey, Unten: +ey, Links: ex, Rechts: -ex
+     * Vorgehensweise für die Influenzladung:
+     * Integral wird zur Summe über sigma * delta, dabei vorzeichen für mathematisch positive
+     * Richtung beachten.
+     */
+
+    // Oben und unten
+    #pragma parallel for reduction(+:influ)
+    for ( unsigned x = 0; x<ex.rows(); x++ )
+    {
+        influ -= ey(x, ey.cols() - 1);
+        influ += ey(x, 0);
+    }
+    // Links und rechts
+    #pragma parallel for reduction(+:influ)
+    for ( unsigned y = 0; y<ex.cols(); y++ )
+    {
+        influ += ex(0, y);
+        influ -= ex(ex.rows() - 1, y);
+    }   
+
+    //Linienintegral
+    influ *= delta;
+}
+
 //-------------------------------------------------------------------------------
 //                             CLASS PoissionRect
 //                       PUBLIC IMPLEMENTATION SECTION
@@ -110,6 +172,7 @@ void PoissionRect::calc()
 {
     calcP();
     calcE();
+    calcInflu();
 }
 
 void PoissionRect::setConstBC(double top, double bottom, double right, double left)
@@ -156,6 +219,7 @@ void PoissionRect::save(string name)
         fout << endl;
     }
     fout.close();
+    cout << "Influenzierte Ladung für "+name+": " << influ << endl;
 }
 
 void PoissionRect::reset()
@@ -164,6 +228,7 @@ void PoissionRect::reset()
     phi.setZero();
     ex.setZero();
     ey.setZero();
+    influ = 0;
 }
 
 int main()
@@ -174,7 +239,7 @@ int main()
     square.calc();
     square.save("a");
 
-    // b)
+    //// b)
     square.setConstBC(1, 0, 0, 0);
     square.calc();
     square.save("b");

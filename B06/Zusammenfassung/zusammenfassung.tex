@@ -147,8 +147,14 @@ Hier sollte nun eine Ladung $q_1 = +1$ in die Mitte von $Q$ ($x=0.5, y=0.5$) ges
 
 \subsection*{Aufgabenteil d}
 \begin{equation*}
-\int_{\partial Q} dl\,\sigma = \int_{\partial Q} -\vec{n}\cdot \,\nabla \Phi = \int_{\partial Q} \vec{n}\cdot \vec{E}\,dl \stackrel{\text{Satz v. Gauß}}{=} \int_{Q} \text{div}\,\vec{E}\, dA = \int_{Q} \left(\partial_x \,E_x+\partial_y\,E_y\right)\, dA
+	\begin{split}
+		\int_{\partial Q} dl\,\sigma &= \int_{\partial Q} -\vec{n}\cdot \,\nabla \Phi = \int_{\partial Q} 	\vec{n}\cdot \vec{E}\,dl \stackrel{\text{Satz v. Gauß}}{=} \int_{Q} \text{div}\,\vec{E}\, dA \\
+		&= \int_{Q} \left(\partial_x \,E_x+\partial_y\,E_y\right)\, dA 
+	\end{split}
 \end{equation*}
+%= \int_{0}^1 \int_{0}^1 \left(\partial_x \,E_x+\partial_y\,E_y\right)\, dx\,dy\\
+Auf dem Rand des Quadrates wird das E-Feld mittels des einseitigen Differenzenquotienten berechnet. Dazu wird komponentenweise $E_x$ (linker und rechter Rand), sowie $E_y$ (obiger und untiger Rand) bestimmt. Die Gesamtinfluenz wird dabei über das Linienintegral (Ladungsdichte $\cdot$ Schrittweite) über die Ladungsdichte über den Rand bestimmt. Im quadratischen System wird über alle 4 Seiten summiert. Oben ($-E_y$) angefangen, wird im mathematisch positiven Sinn durchlaufen: $-E_y \rightarrow E_x \rightarrow E_y \rightarrow -E_x$.
+%TODO Vergleich, noch unfertig?
 
 \subsection*{Aufgabenteil e}
 Nun sollte eine neutrale Ladungskonfiguration gewählt werden, mit mindestens zwei Ladungen (unter der RB $\phi = 0$ auf allen vier Rändern). Dazu bietet sich der Dipol oder der Quadrupol an. Beides haben wir implementiert.

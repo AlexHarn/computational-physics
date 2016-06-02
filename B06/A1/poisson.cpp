@@ -51,17 +51,17 @@ void PoissionRect::calcE()
      */
     // Oben und Unten
     #pragma omp for
-    for ( int x = 0; x < phi.rows() - 1; x++ )
+    for ( int x = 0; x < phi.rows(); x++ )
     {
         ey(x, phi.cols() - 1) = ( phi(x, phi.cols() - 1) - phi(x, phi.cols() - 2) )/delta;
         ey(x, 0) = ( phi(x, 1) - phi(x, 0) )/delta;
     }
     // Links und rechts
     #pragma omp for
-    for ( int y = 0; y < phi.cols() - 1; y++ )
+    for ( int y = 0; y < phi.cols(); y++ )
     {
         ex(0, y) = ( phi(1, y) - phi(0, y) )/delta;
-        ex(phi.cols() - 1, y) = ( phi(phi.cols() - 1) - phi(phi.cols() - 2, y) )/delta;
+        ex(phi.cols() - 1, y) = ( phi(phi.cols() - 1,y) - phi(phi.cols() - 2, y) )/delta;
     }
 }
 
@@ -70,7 +70,7 @@ void PoissionRect::calcInflu()
 {
     influ = 0;
     /*
-     * Da die Klasse nur rechteckige Gebiete behandelt kann einfach über alle 4 Seiten summiert werden
+     * Da die Klasse nur quadratische Gebiete behandelt kann einfach über alle 4 Seiten summiert werden
      * Vorgehensweise für sigma:
      * Alle Seiten im mathematisch positivem sinn durchnummerieren, oben start. -E_n ist dann jeweils:
      * Oben: -ey, Unten: +ey, Links: ex, Rechts: -ex
@@ -80,20 +80,21 @@ void PoissionRect::calcInflu()
      */
 
     // Oben und unten
-    #pragma omp for reduction(+:influ)
+    #pragma parallel for reduction(+:influ)
     for ( unsigned x = 0; x<ex.rows(); x++ )
     {
         influ -= ey(x, ey.cols() - 1);
         influ += ey(x, 0);
     }
     // Links und rechts
-    #pragma omp for reduction(+:influ)
+    #pragma parallel for reduction(+:influ)
     for ( unsigned y = 0; y<ex.cols(); y++ )
     {
         influ += ex(0, y);
         influ -= ex(ex.rows() - 1, y);
-    }
+    }   
 
+    //Linienintegral
     influ *= delta;
 }
 
