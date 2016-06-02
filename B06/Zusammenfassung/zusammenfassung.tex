@@ -53,7 +53,7 @@ Es ergaben sich folgende Plots:
 		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 1a: $\phi(x,y)$}
 		\label{fig:aPhi}
 	\end{figure}
-\end{landscape} 
+\end{landscape}
 
 \begin{landscape}
 	\begin{figure}
@@ -61,19 +61,21 @@ Es ergaben sich folgende Plots:
 		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 1a: $|E|(x,y)$}
 		\label{fig:aabsE}
 	\end{figure}
-\end{landscape} 
+\end{landscape}
 
 
 \subsection*{Aufgabenteil b}
-In Aufgabenteil b mussten zusätzlich die Randbedingungen, bzw. praktisch nur die \enquote{neue} RB $\phi(x,1)=1$ auf dem Rand $y=1$, implementiert werden.
+In Aufgabenteil b mussten zusätzlich die Randbedingungen, bzw. praktisch nur die \enquote{neue} RB
+$\phi(x,1)=1$ auf dem Rand $y=1$, berechnet werden.
 
 \begin{landscape}
 	\begin{figure}
 		\OverfullCenter{\includegraphics[width=\textwidth]{../Abgabe/b.pdf}}
-		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 1b: $\phi(x,y)$\\links: Numerik, rechts: Analytik}
+		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 1b: $\phi(x,y)$\\links: Numerik
+        (zusammen mit dem Feld), rechts: Analytik}
 		\label{fig:bPhi}
 	\end{figure}
-\end{landscape} 
+\end{landscape}
 
 \begin{landscape}
 	\begin{figure}
@@ -81,7 +83,7 @@ In Aufgabenteil b mussten zusätzlich die Randbedingungen, bzw. praktisch nur di
 		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 1b: $|E|(x,y)$}
 		\label{fig:babsE}
 	\end{figure}
-\end{landscape} 
+\end{landscape}
 Die Lösung der Poisson-Gleichung \ref{eq:Poisson-GL} $\phi(x,y)$ wird über einen Separationsansatz gelöst.
 \begin{align}
 	\phi(x,y) &= X(x)\cdot Y(y)\\
@@ -133,10 +135,11 @@ Hier sollte nun eine Ladung $q_1 = +1$ in die Mitte von $Q$ ($x=0.5, y=0.5$) ges
 \begin{landscape}
 	\begin{figure}
 		\OverfullCenter{\includegraphics[width=\textwidth]{../Abgabe/c.pdf}}
-		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 1c: $\phi(x,y)$}
+		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 1c: $\phi(x,y)$ und $-\nabla
+        \phi(x,y)$}
 		\label{fig:cPhi}
 	\end{figure}
-\end{landscape} 
+\end{landscape}
 
 \begin{landscape}
 	\begin{figure}
@@ -144,16 +147,21 @@ Hier sollte nun eine Ladung $q_1 = +1$ in die Mitte von $Q$ ($x=0.5, y=0.5$) ges
 		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 1c: $|E|(x,y)$}
 		\label{fig:cabsE}
 	\end{figure}
-\end{landscape} 
+\end{landscape}
 
 \subsection*{Aufgabenteil d}
 \begin{align}		\int_{\partial Q} dl\,\sigma &= \int_{\partial Q} -\vec{n}\cdot \,\nabla \Phi = \int_{\partial Q} 	\vec{n}\cdot \vec{E}\,dl \stackrel{\text{Satz v. Gauß}}{=} \int_{Q} \text{div}\,\vec{E}\, dA \\
-		&= \int_{Q} \left(\partial_x \,E_x+\partial_y\,E_y\right)\, dA 
+		&= \int_{Q} \left(\partial_x \,E_x+\partial_y\,E_y\right)\, dA
 \end{align}%= \int_{0}^1 \int_{0}^1 \left(\partial_x \,E_x+\partial_y\,E_y\right)\, dx\,dy\\
-Auf dem Rand des Quadrates wird das E-Feld mittels des einseitigen Differenzenquotienten berechnet. Dazu wird komponentenweise $E_x$ (linker und rechter Rand), sowie $E_y$ (obiger und untiger Rand) bestimmt. Die Gesamtinfluenz wird dabei über das Linienintegral (Ladungsdichte $\cdot$ Schrittweite) über die Ladungsdichte über den Rand bestimmt. Im quadratischen System wird über alle 4 Seiten summiert. Oben ($-E_y$) angefangen, wird im mathematisch positiven Sinn durchlaufen: $-E_y \rightarrow E_x \rightarrow E_y \rightarrow -E_x$.
+Auf dem Rand des Quadrates wird das E-Feld mittels des einseitigen Differenzenquotienten berechnet.
+Dazu wird komponentenweise $E_x$ (linker und rechter Rand), sowie $E_y$ (obiger und untiger Rand)
+bestimmt. Die Gesamtinfluenz wird dabei über das Linienintegral (Ladungsdichte $\cdot$ Schrittweite)
+über die Ladungsdichte über den Rand bestimmt. Im quadratischen System wird über alle 4 Seiten
+summiert. Oben ($-E_y$) angefangen, wird im mathematisch positiven Sinn durchlaufen: $-E_y
+\rightarrow E_x \rightarrow E_y \rightarrow -E_x$.
 \begin{sloppypar}
 Der numerisch erhaltene Wert für die influenzierte Oberflächenladung lautet \mbox{$q = -0.000890111$} und ist praktisch gleich dem theoretisch erwarteten Wert von Null.
-Die doch unüblich große Abweichung von der Null folgt vermutlich aus der sehr kleinen Schrittweite.
+Die doch unüblich große Abweichung von der Null folgt vermutlich aus der sehr groben Diskretisierung.
 Der theoretische Wert von Null ergibt sich, weil die Ladung in der Mittel ein radialsymmetrisches Feld ausstrahlt.
 Die Beträge von $E_\text{n}$ jeweils oben und unten, beziehungsweise links und rechts sind also gleich.
 Da die Normalenvektoren immer in die gleiche Richtung wie $E_\text{n}$ stehen, sind die Integranden von jeweils oberer und unterer, beziehungsweise linker und rechter Wand gleich.
@@ -161,12 +169,22 @@ Es ergibt sich also:
 \begin{equation}
     \sigma = \int_0^1 A dx + \int_0^1 B dy + \int_1^0 A dx + \int_1^0 B dy = 0.
 \end{equation}
+Ehrlich gesagt sind wir uns bei diesem Aufgabenteil ziemlich unsicher, vor allem weil die Ergebnisse
+mit der schlechten Auflösung schwer zu überprüfen sind, viel bessere Auflösungen allerdings schon
+viel zu hohe Laufzeiten benötigen.
 \end{sloppypar}
 \subsection*{Aufgabenteil e}
-Nun sollte eine neutrale Ladungskonfiguration gewählt werden, mit mindestens zwei Ladungen (unter der RB $\phi = 0$ auf allen vier Rändern). Dazu bietet sich der Dipol oder der Quadrupol an. Beides haben wir implementiert.
+Nun sollte eine neutrale Ladungskonfiguration gewählt werden, mit mindestens zwei Ladungen (unter
+der RB $\phi = 0$ auf allen vier Rändern). Dazu bietet sich der Dipol oder der Quadrupol an. Beides
+haben wir implementiert. Für die speziellen von uns gewählten Verteilungen gilt wieder die selbe
+Argumentation wie vorher. Die Potentiale bzw. Felder weisen eine Symmetrieachse auf, sodass das
+Linienintegral verschwindet. Für asymmetrische Verteilungen gehen wir davon aus, dass überhaupt
+keine analytische Lösung angegeben werden kann.
 
 \subsubsection*{Dipol}
-Beim Dipol lässt sich eine neutrale Konfiguration über zwei entgegengerichtete Ladungen an den Punkten $q_1 = (0.25, 0.25)$ und $q_2 = (0.75,0.75)$ realisieren.
+Als zweite Verteilung wählen wir einen Dipol mit Ladungen an den Punkten $q_1 = (0.25, 0.25)$ und
+$q_2 = (0.75,0.75)$. Für die numerisch bestimmte influenzierte Ladung auf den Rändern erhalten wir
+wie erwartet praktisch 0 ($10^{-18}$).
 
 \begin{landscape}
 	\begin{figure}
@@ -174,7 +192,7 @@ Beim Dipol lässt sich eine neutrale Konfiguration über zwei entgegengerichtete
 		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 1e: Dipol}
 		\label{fig:edipol}
 	\end{figure}
-\end{landscape} 
+\end{landscape}
 
 
 \begin{landscape}
@@ -183,10 +201,12 @@ Beim Dipol lässt sich eine neutrale Konfiguration über zwei entgegengerichtete
 		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 1e: Dipol: $|E|(x,y)$}
 		\label{fig:edipolabse}
 	\end{figure}
-\end{landscape} 
+\end{landscape}
 
 \subsubsection*{Quadrupol}
-Analog zum Dipol lässt sich die neutrale Konfiguration über vier diskrete Ladungen realisieren, mit zwei zusätzlichen Punkten $q_3 = (0.25,0.75)$ und $q_4 = (0.75,0.25)$. Aus Neutralitätsgründen ändert sich das Vorzeichen bei Ladung $q_2$, während $q_3$ und $q_4$ negativ geladen sind.
+Als weitere Verteilung haben wir noch zwei zusätzlichen Ladungen $q_3 = (0.25,0.75)$ und $q_4 =
+(0.75,0.25)$ zum Dipol hinzugefügt. Da diese Verteilung ebenfalls symmetrisch ist erhalten wir
+wieder wie erwartet 0 für die induzierte Ladung.
 
 \begin{landscape}
 	\begin{figure}
@@ -194,8 +214,7 @@ Analog zum Dipol lässt sich die neutrale Konfiguration über vier diskrete Ladu
 		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 1e: Quadrupol}
 		\label{fig:equad}
 	\end{figure}
-\end{landscape} 
-
+\end{landscape}
 
 \begin{landscape}
 	\begin{figure}
@@ -203,8 +222,7 @@ Analog zum Dipol lässt sich die neutrale Konfiguration über vier diskrete Ladu
 		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 1e: Quadrupol: $|E|(x,y)$}
 		\label{fig:equadabse}
 	\end{figure}
-\end{landscape} 
-
+\end{landscape}
 
 %\printbibliography
 \end{document}

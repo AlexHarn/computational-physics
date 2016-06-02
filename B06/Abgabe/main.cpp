@@ -133,19 +133,19 @@ void PoissionRect::calcInflu()
      */
 
     // Oben und unten
-    #pragma parallel for reduction(+:influ)
+    #pragma omp parallel for reduction(+:influ)
     for ( unsigned x = 0; x<ex.rows(); x++ )
     {
         influ -= ey(x, ey.cols() - 1);
         influ += ey(x, 0);
     }
     // Links und rechts
-    #pragma parallel for reduction(+:influ)
+    #pragma omp parallel for reduction(+:influ)
     for ( unsigned y = 0; y<ex.cols(); y++ )
     {
         influ += ex(0, y);
         influ -= ex(ex.rows() - 1, y);
-    }   
+    }
 
     //Linienintegral
     influ *= delta;
