@@ -1,6 +1,6 @@
 CC=g++
 CXX=g++
-CXXFLAGS=-std=c++11 -fopenmp -g -Wno-ignored-attributes -Wno-deprecated-declarations
+CXXFLAGS=-std=c++11 -fopenmp -g -Wno-ignored-attributes -Wno-deprecated-declarations #-I "C:\Program Files\cpplibraries" # -I Teil nur für Sebastians Windows einkommentieren
 LDLIBS=-fopenmp
 
 all: run

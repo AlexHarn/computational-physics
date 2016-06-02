@@ -19,9 +19,9 @@ wird mittels der Gauß-Seidel-Iteration nach (6.14) bei gegebener Genauigkeit $\
 \item[\textsc{calcP}] Wir berechnen das Potential mittels der Gauß-Seidel-Iteration, indem wir das Innere des Systems (also ohne Ränder) über die Fixpunktgleichung (6.18) bis zu einer Genauigkeit $\varepsilon = 10^{-5}$ iterieren. Dabei entspricht $i = j$ und $j = l$ (Programm $\Rightarrow$ Skript), also das Quadrat \enquote{von links nach rechts} rastern (und in jedem Schritt die y neu berechnen). Schließlich wird über den Absolutwert der Differenz zwischen aktueller und letztem Wert das jeweils aktuelle Maximum gesetzt.\\
 
 \item[\textsc{calcE}] Über das Potential $\phi(x,y)$ wird das E-Feld berechnet:\\
-\begin{equation*}
+\begin{equation}
 \vec{E}(\vec{r}) = - \nabla\,\phi(x,y)
-\end{equation*}
+\end{equation}
 Die Komponenten des Feldes werden über den Differenzenquotienten mit 2 symmetrischen Punkten (nach Formel (3.2)) berechnet.\\
 
 \item[\textsc{PoissionRect}]
@@ -70,7 +70,7 @@ In Aufgabenteil b mussten zusätzlich die Randbedingungen, bzw. praktisch nur di
 \begin{landscape}
 	\begin{figure}
 		\OverfullCenter{\includegraphics[width=\textwidth]{../Abgabe/b.pdf}}
-		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 1b: $\phi(x,y)$}
+		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 1b: $\phi(x,y)$\\links: Numerik, rechts: Analytik}
 		\label{fig:bPhi}
 	\end{figure}
 \end{landscape} 
@@ -83,49 +83,51 @@ In Aufgabenteil b mussten zusätzlich die Randbedingungen, bzw. praktisch nur di
 	\end{figure}
 \end{landscape} 
 
-Die Lösung der Poisson-Gleichung \ref{eq:Poisson-GL} $\phi(x,y)$ wird über einen Separationsansatz gelöst.\begin{equation*}
-	\begin{split}
-		\phi(x,y) &= X(x)\cdot Y(y)\\
-		\left( \partial_x^2 + \partial_y^2 \right)\,\phi(x,y) &= 0 \\
-		\left( Y(y) \cdot \frac{\partial^2 X(x)}{\partial x^2} + X(x) \cdot \frac{\partial^2 Y(y)}{\partial y^2} \right) &= 0 \qquad |\text{dividiere durch }\phi(x,y) = X(x)\cdot  Y(y)\\
-		\frac{1}{X(x)} \cdot X'' + \frac{1}{Y(y)} \cdot Y'' &= 0 \\
-		\frac{X''}{X} + \frac{Y''}{Y} &= 0 |\text{Da nur partielle Ableitungen in jedem Summand auftauchen,}\\ &\qquad\,\text{setze eine Seite konstant} \\
-		\frac{X''}{X} &= \lambda \\
-		\leftrightarrow X'' &= \lambda X \\
-	\end{split}
-\end{equation*}
-Dies ist eine lineare DGL 2. Ordnung mit konst. Koeffizienten.
-\begin{equation*}
-	\begin{split}
-		X(x) &= C_0 \exp(\mu\,x) \\
-		\mu^2 C_0 \exp(\mu\,x) - \lambda C_0 \exp(\mu\,x) &= 0\\
-		(\mu^2 - \lambda) C_0 \exp(\mu\,x) &= 0 \\
-		|\mu| &= \pm \sqrt{\lambda} \\
-	\end{split}
-\end{equation*}
-Für $Y(y)$ folgt dies analog. Damit ergibt sich:
-\begin{equation*}
-	\begin{split}
-		\phi(x,y) &= X(x) \cdot Y(y)\qquad\text{bzw.} \\
-		\phi(x,y) &= \sum_{\lambda} X(x)_{\lambda}\cdot Y(y)_{\lambda}\\
-	\end{split}
-\end{equation*}
-Mit den Randbedingungen
-\begin{equation*}
-	\begin{split}
-		\phi(0,y) &= 0 \\
-		\phi(1,y) &= 0 \\
-		\phi(x,0) &= 0 \\
-		\phi(x,1) &= 1 \\
-	\end{split}
-\end{equation*}
-ergibt sich
-\begin{equation*}
-	\begin{split}
-		\dots
-	\end{split}
-\end{equation*}
-
+Die Lösung der Poisson-Gleichung \ref{eq:Poisson-GL} $\phi(x,y)$ wird über einen Separationsansatz gelöst.
+\begin{align}
+	\phi(x,y) &= X(x)\cdot Y(y)\\
+	\left( \partial_x^2 + \partial_y^2 \right)\,\phi(x,y) &= 0 \\
+	Y(y) \cdot \frac{\partial^2 X(x)}{\partial x^2} + X(x) \cdot \frac{\partial^2 Y(y)}{\partial y^2} &= 0 \qquad |\text{dividiere durch }\phi(x,y) = X(x)\cdot  Y(y)\\
+	\frac{1}{X(x)} \cdot X'' + \frac{1}{Y(y)} \cdot Y'' &= 0 \\
+	\frac{X''}{X} + \frac{Y''}{Y} &= 0 \\
+	\frac{X''}{X} &=: \lambda^2 \\
+    \Leftrightarrow X'' - \lambda^2 X &= 0 \qquad\text{(harmonischer Oszillator)} \\
+    \Rightarrow X &= A\cos(\lambda x) + B\sin(\lambda y) \\
+	\frac{Y''}{Y} &= -\lambda^2 \\
+    \Leftrightarrow Y'' - (i\lambda)^2 Y &= 0 \qquad\text{(harmonischer Oszillator)} \\
+    \Rightarrow Y &= C*\cosh(\lambda y) + D*\sinh(\lambda y) \\
+    \Rightarrow \phi(x,y) &= \left(A\cos(\lambda x) + B\sin(\lambda y)\right)\cdot\left(C\cosh(\lambda y) + D\sinh(\lambda y)\right) \\
+    \phi(0,y) &= A\cdot\left(C*\cosh(\lambda y) + D*\sinh(\lambda y)\right) = 0 \\
+    \Rightarrow A &= 0 \\
+    \phi(x,0) &= B\sin(\lambda x)\cdot C = 0 \\
+    \Rightarrow C &= 0 \\
+    \Rightarrow \phi(x,y) &= B\sin(\lambda x)\cdot D\sinh(\lambda y) \\
+    &=: E\sin(\lambda x)\sinh(\lambda y) \\
+    \phi(1,y) &= E\sin(\lambda)\sinh(\lambda y) = 0 \\
+    \Rightarrow \lambda &= n\cdot\mathup{\pi}, \qquad n\in\mathbb{Z}
+\end{align}
+An dieser Stelle wird für die letzte Randbedingung nicht $\phi(x,1) = 1$ gewählt, da sonst die Punkte $(0,1)$ und $(1,1)$ beide gleichzeitig die Werte 1 und 0 haben müssten.
+Außerdem müsste das Potential in diesen beiden Ecken springen, die Laplace-Gleichung liefert aber stetige Funktionen.
+Ausweichend wird die Bedingung $\phi(0.5,1) = 1$ gewählt (obere Kante in der Mitte).
+\begin{align}
+    \phi(0.5,1) &= E\sin(0.5\cdot\lambda)\sinh(\lambda) = 1 \\
+    \Rightarrow E &= \frac{1}{\sin(0.5\cdot\lambda)\sinh(\lambda)} \\
+    \Rightarrow \lambda &= (2n+1)\cdot\mathup{\pi}, \qquad n\in\mathbb{Z} \\
+    \Rightarrow \phi(x,y) &= \frac{\sin((2n+1)\cdot\mathup{\pi} x)\sinh((2n+1)\cdot\mathup{\pi} y)}{\sin(0.5\cdot(2n+1)\cdot\mathup{\pi})\sinh((2n+1)\cdot\mathup{\pi})}
+\end{align}
+Bei dem Vergleich von numerischer und analytischer Lösung (siehe Abbildung \ref{fig:bPhi}) fallen dabei direkt mehrere Dinge auf:
+\begin{enumerate}
+    \item Die obere Kante bei der analytischen Lösung ist nicht vollständig auf eins gesetzt.
+    Das macht allerdings auch Sinn, da wir die Randbedingungen ja genau so abgeändert haben.
+    \item Zum plotten der analytischen Funktion wurde $n = 0$ gewählt, da alle Plots mit anders gewähltem $n$ deutlich von der numerischen Lösung abweichen.
+    Auch dies macht Sinn, weil das Potential eigentlich an der kompletten oberen Kante den Wert 1 haben sollte.
+    $n = 0$ sorgt für ein maximal homogenes Potential in x-Richtung, da nur an den beiden Rändern Knoten liegen.
+    Bei einem (betragsmäßig) größeren $n$ wären noch Knoten an der oberen Kante entstanden.
+    Dadurch würde das Potential dort jedoch noch weiter von eins abweichen.
+    \item Abgesehen von der oberen Kante, ähneln sich die Potentiale stark, weswegen von einer grundsätzlich richtigen Implementation gesprochen werden kann.
+\end{enumerate}
+Unser Einwand zum Ändern der Randbedingung an der oberen Kante wird auch am Graphen in Abbildung \ref{fig:babsE} deutlich.
+Die Unstetigkeit in den beiden Ecken sorgt für einen extrem großen Gradienten, weswegen das E-Feld an diesen Punkten deutlich größer ist als anderswo.
 \subsection*{Aufgabenteil c}
 Hier sollte nun eine Ladung $q_1 = +1$ in die Mitte von $Q$ ($x=0.5, y=0.5$) gesetzt werden. An den Rändern ist $\phi(x,y) = 0$, die Iteration soll bis $\varepsilon = 10^{-5}$ durchgeführt werden.
 
@@ -146,16 +148,22 @@ Hier sollte nun eine Ladung $q_1 = +1$ in die Mitte von $Q$ ($x=0.5, y=0.5$) ges
 \end{landscape} 
 
 \subsection*{Aufgabenteil d}
-\begin{equation*}
-	\begin{split}
-		\int_{\partial Q} dl\,\sigma &= \int_{\partial Q} -\vec{n}\cdot \,\nabla \Phi = \int_{\partial Q} 	\vec{n}\cdot \vec{E}\,dl \stackrel{\text{Satz v. Gauß}}{=} \int_{Q} \text{div}\,\vec{E}\, dA \\
+\begin{align}		\int_{\partial Q} dl\,\sigma &= \int_{\partial Q} -\vec{n}\cdot \,\nabla \Phi = \int_{\partial Q} 	\vec{n}\cdot \vec{E}\,dl \stackrel{\text{Satz v. Gauß}}{=} \int_{Q} \text{div}\,\vec{E}\, dA \\
 		&= \int_{Q} \left(\partial_x \,E_x+\partial_y\,E_y\right)\, dA 
-	\end{split}
-\end{equation*}
-%= \int_{0}^1 \int_{0}^1 \left(\partial_x \,E_x+\partial_y\,E_y\right)\, dx\,dy\\
+\end{align}%= \int_{0}^1 \int_{0}^1 \left(\partial_x \,E_x+\partial_y\,E_y\right)\, dx\,dy\\
 Auf dem Rand des Quadrates wird das E-Feld mittels des einseitigen Differenzenquotienten berechnet. Dazu wird komponentenweise $E_x$ (linker und rechter Rand), sowie $E_y$ (obiger und untiger Rand) bestimmt. Die Gesamtinfluenz wird dabei über das Linienintegral (Ladungsdichte $\cdot$ Schrittweite) über die Ladungsdichte über den Rand bestimmt. Im quadratischen System wird über alle 4 Seiten summiert. Oben ($-E_y$) angefangen, wird im mathematisch positiven Sinn durchlaufen: $-E_y \rightarrow E_x \rightarrow E_y \rightarrow -E_x$.
-%TODO Vergleich, noch unfertig?
 
+\begin{sloppypar}
+Der numerisch erhaltene Wert für die influenzierte Oberflächenladung lautet $q = -0.000890111$ und ist praktisch gleich dem theoretisch erwarteten Wert von Null.
+Die doch unüblich große Abweichung von der Null folgt vermutlich aus der sehr kleinen Schrittweite.
+Der theoretische Wert von Null ergibt sich, weil die Ladung in der Mittel ein radialsymmetrisches Feld ausstrahlt.
+Die Beträge von $E_\text{n}$ jeweils oben und unten, beziehungsweise links und rechts sind also gleich.
+Da die Normalenvektoren immer in die gleiche Richtung wie $E_\text{n}$ stehen, sind die Integranden von jeweils oberer und unterer, beziehungsweise linker und rechter Wand gleich.
+Es ergibt sich also:
+\begin{equation}
+    \sigma = \int_0^1 A dx + \int_0^1 B dy + \int_1^0 A dx + \int_1^0 B dy = 0.
+\end{equation}
+\end{sloppypar}
 \subsection*{Aufgabenteil e}
 Nun sollte eine neutrale Ladungskonfiguration gewählt werden, mit mindestens zwei Ladungen (unter der RB $\phi = 0$ auf allen vier Rändern). Dazu bietet sich der Dipol oder der Quadrupol an. Beides haben wir implementiert.
 

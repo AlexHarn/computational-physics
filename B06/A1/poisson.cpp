@@ -70,7 +70,7 @@ void PoissionRect::calcInflu()
 {
     influ = 0;
     /*
-     * Da die Klasse nur quadratische Gebiete behandelt kann einfach über alle 4 Seiten summiert werden
+     * Da die Klasse nur rechteckige Gebiete behandelt kann einfach über alle 4 Seiten summiert werden
      * Vorgehensweise für sigma:
      * Alle Seiten im mathematisch positivem sinn durchnummerieren, oben start. -E_n ist dann jeweils:
      * Oben: -ey, Unten: +ey, Links: ex, Rechts: -ex
