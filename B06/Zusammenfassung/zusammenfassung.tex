@@ -83,7 +83,7 @@ In Aufgabenteil b mussten zusätzlich die Randbedingungen, bzw. praktisch nur di
 	\end{figure}
 \end{landscape} 
 Die Lösung der Poisson-Gleichung \ref{eq:Poisson-GL} $\phi(x,y)$ wird über einen Separationsansatz gelöst.
-\begin{align*}
+\begin{align}
 	\phi(x,y) &= X(x)\cdot Y(y)\\
 	\left( \partial_x^2 + \partial_y^2 \right)\,\phi(x,y) &= 0 \\
 	Y(y) \cdot \frac{\partial^2 X(x)}{\partial x^2} + X(x) \cdot \frac{\partial^2 Y(y)}{\partial y^2} &= 0 \qquad |\text{dividiere durch }\phi(x,y) = X(x)\cdot  Y(y)\\
@@ -104,16 +104,16 @@ Die Lösung der Poisson-Gleichung \ref{eq:Poisson-GL} $\phi(x,y)$ wird über ein
     &=: E\sin(\lambda x)\sinh(\lambda y) \\
     \phi(1,y) &= E\sin(\lambda)\sinh(\lambda y) = 0 \\
     \Rightarrow \lambda &= n\cdot\mathup{\pi}, \qquad n\in\mathbb{Z}
-\end{align*}
+\end{align}
 An dieser Stelle wird für die letzte Randbedingung nicht $\phi(x,1) = 1$ gewählt, da sonst die Punkte $(0,1)$ und $(1,1)$ beide gleichzeitig die Werte 1 und 0 haben müssten.
 Außerdem müsste das Potential in diesen beiden Ecken springen, die Laplace-Gleichung liefert aber stetige Funktionen.
 Ausweichend wird die Bedingung $\phi(0.5,1) = 1$ gewählt (obere Kante in der Mitte).
-\begin{align*}
+\begin{align}
     \phi(0.5,1) &= E\sin(0.5\cdot\lambda)\sinh(\lambda) = 1 \\
     \Rightarrow E &= \frac{1}{\sin(0.5\cdot\lambda)\sinh(\lambda)} \\
     \Rightarrow \lambda &= (2n+1)\cdot\mathup{\pi}, \qquad n\in\mathbb{Z} \\
     \Rightarrow \phi(x,y) &= \frac{\sin((2n+1)\cdot\mathup{\pi} x)\sinh((2n+1)\cdot\mathup{\pi} y)}{\sin(0.5\cdot(2n+1)\cdot\mathup{\pi})\sinh((2n+1)\cdot\mathup{\pi})}
-\end{align*}
+\end{align}
 Bei dem Vergleich von numerischer und analytischer Lösung (siehe Abbildung \ref{fig:bPhi}) fallen dabei direkt mehrere Dinge auf:
 \begin{enumerate}
     \item Die obere Kante bei der analytischen Lösung ist nicht vollständig auf eins gesetzt.
