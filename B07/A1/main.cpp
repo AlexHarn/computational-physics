@@ -12,8 +12,8 @@ int main()
 
     // b)
     //(i)
-    //gen.calc(1234,20,120,6075);
-    //gen.save("bi");
+    gen.calc(1234,20,120,6075);
+    gen.save("bi");
     gen.reset();
 
     //(ii)
