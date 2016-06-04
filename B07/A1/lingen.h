@@ -16,17 +16,18 @@ class LinConGen
         /* linear kongruenter Generator r_(n+1) = (a*r_n+c)%m
          */
 
-        //void sethistogram(int totalbins, double lengthpbin);
+        void sethistogram();
 
     public:
-        V saveVec, hist;
+        V saveVec, hist, x, y;
         int64_t a,c,r0,m, N, M;
-        int totalbins, lengthpbin;
         // M ist eine Hilfsvariable, die sich ausgehend von N dznamisch auf maximal 10^4 oder kleiner setzt.
 
-        LinConGen(int savedvalues, int bins, double lengthbins);
+        LinConGen(int savedvalues, int bins);
         /* 
          */
+        void boxmulleralg();
+
         void calc(int64_t r0, int64_t a, int64_t c, int64_t m);
         /* Wrapper Methode für alle Berechnungen
          */

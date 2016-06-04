@@ -8,12 +8,12 @@
 
 int main()
 {
-    LinConGen gen(100000, 10, 0.1);
+    LinConGen gen(100000, 10);
 
     // b)
     //(i)
-    gen.calc(1234,20,120,6075);
-    gen.save("bi");
+    //gen.calc(1234,20,120,6075);
+    //gen.save("bi");
     gen.reset();
 
     //(ii)
@@ -30,6 +30,12 @@ int main()
     //7^5 = 16807, 2^(31) -1 = 2147483647
     gen.calc(1234,16807,0,2147483647);
     gen.save("biv");
+    gen.reset();
+
+    //A2 - ist Generator b(iv)
+    gen.calc(1234,16807,0,2147483647);
+    gen.boxmulleralg();
+    gen.save("2a");
     gen.reset();
 
     return 0;
