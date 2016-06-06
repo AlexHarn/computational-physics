@@ -21,7 +21,7 @@ void PoissionRect::calcP()
         {
             for ( int j = 1; j < phi.cols() - 1;  j++ )
             {
-                temp = 0.25*( phi(i + 1, j) + phi(i - 1, j) + phi(i, j + 1) + phi(i, j - 1)) - 0.25*delta*delta*rho(i, j);
+                temp = 0.25*( phi(i + 1, j) + phi(i - 1, j) + phi(i, j + 1) + phi(i, j - 1)) + 0.25*delta*delta*rho(i, j);
                 if ( fabs(temp - phi(i, j)) > max )
                     max = fabs(temp);
                 phi(i, j) = temp;
@@ -36,11 +36,11 @@ void PoissionRect::calcE()
 
     // Feld innerhalb des Gebietes mit zweiseitigem Differenzenqoutienten berechnen
     #pragma omp for schedule(static, 1) collapse(2)
-	for ( int x = 1; x < phi.rows() - 1; x++ )
-	{
-		for ( int y = 1; y < phi.cols() - 1; y++ )
-		{
-			ex(x, y) = ( phi(x + 1, y) - phi(x - 1, y) )/( 2*delta );
+    for ( int x = 1; x < phi.rows() - 1; x++ )
+    {
+        for ( int y = 1; y < phi.cols() - 1; y++ )
+        {
+            ex(x, y) = ( phi(x + 1, y) - phi(x - 1, y) )/( 2*delta );
 			ey(x, y) = ( phi(x, y + 1) - phi(x, y - 1) )/( 2*delta );
 		}
 	}
@@ -61,7 +61,7 @@ void PoissionRect::calcE()
     for ( int y = 0; y < phi.cols(); y++ )
     {
         ex(0, y) = ( phi(1, y) - phi(0, y) )/delta;
-        ex(phi.cols() - 1, y) = ( phi(phi.cols() - 1,y) - phi(phi.cols() - 2, y) )/delta;
+        ex(phi.rows() - 1, y) = ( phi(phi.rows() - 1,y) - phi(phi.rows() - 2, y) )/delta;
     }
 }
 
@@ -136,7 +136,7 @@ void PoissionRect::setConstBC(double top, double bottom, double right, double le
 
 void PoissionRect::addQ(double x, double y, double Q)
 {
-    rho((int) ( x/delta ), (int) ( y/delta )) = Q;
+    rho((int) ( x/delta ), (int) ( y/delta )) = Q/( delta*delta );
 }
 
 void PoissionRect::save(string name)
