@@ -15,8 +15,10 @@ class LinConGen
     public:
         V r, x, y;
         // M ist eine Hilfsvariable, die sich ausgehend von N dznamisch auf maximal 10^4 oder kleiner setzt.
+        double Sn, Zn, mean, variance;
 
-        LinConGen(int bins);
+        LinConGen(int bins);//, bool a2);
+
         /* Konstruktor
          */
         void calcCongruent(int64_t r0, int64_t a, int64_t c, int64_t m, int64_t N);
@@ -27,6 +29,10 @@ class LinConGen
         void saveHist(std::string name);
         /* Speichert das Histogramm zum aktuellen r
          */
+
+        double prob(double i);
+
+        void clt();
 };
 
 #endif
