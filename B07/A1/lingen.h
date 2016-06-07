@@ -4,38 +4,28 @@
 #define LINGEN_H
 
 typedef Eigen::VectorXd V;
+typedef Eigen::Matrix<int64_t, Eigen::Dynamic, 1> V64;
 
 class LinConGen
-/* 
+/* linear kongruenter Generator r_(n+1) = (a*r_n+c)%m
  */
 {
     private:
-        int64_t rold,rnew;
-
-        void calccongruentgen(int64_t r0, int64_t a, int64_t c, int64_t m, int64_t M);
-        /* linear kongruenter Generator r_(n+1) = (a*r_n+c)%m
-         */
-
-        void sethistogram();
-
+        int bins;
     public:
-        V saveVec, hist, x, y;
-        int64_t a,c,r0,m, N, M;
+        V r, x, y;
         // M ist eine Hilfsvariable, die sich ausgehend von N dznamisch auf maximal 10^4 oder kleiner setzt.
 
-        LinConGen(int savedvalues, int bins);
-        /* 
+        LinConGen(int bins);
+        /* Konstruktor
+         */
+        void calcCongruent(int64_t r0, int64_t a, int64_t c, int64_t m, int64_t N);
+        /* Generiert N linear kongurente Zufallszahlen
          */
         void boxmulleralg();
 
-        void calc(int64_t r0, int64_t a, int64_t c, int64_t m);
-        /* Wrapper Methode für alle Berechnungen
-         */
-        void save(std::string name);
-        /* Speichert die aktuellen Ergebnisse in Dateien mit Namen "[name]_[postfix].dat"
-         */
-        void reset();
-        /* Setzt zurück
+        void saveHist(std::string name);
+        /* Speichert das Histogramm zum aktuellen r
          */
 };
 
