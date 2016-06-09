@@ -1,0 +1,176 @@
+\input{../../header.tex}
+\usepackage{verbatim}
+\newcommand\OverfullCenter[1]{\noindent\makebox[\linewidth]{#1}}
+\begin{document}
+\noindent
+\centerline{\small{\textsc{Technische Universität Dortmund}}} \\
+\large\textbf{Übungsblatt 07} \hfill \footnotesize\textbf{Sebastian Bange, Alexander Harnisch, Alexander Knodel} \\
+\normalsize Computational Physics \hfill \today \\
+Prof. Dr. Jan Kierfeld \hfill Abgabefrist: 10.06.2016\\
+\noindent\makebox[\linewidth]{\rule{\textwidth}{0.4pt}}
+\section*{Linear kongruente Generatoren}
+Mittels eines linear kongruenten Generators werden Pseudo-Zufallszahlen generiert. Die vorgegebenen Parameter erlauben die Nutzung des \textsc{unsigned int} anstelle des 64-Bit Integers.
+
+\begin{equation}
+r_{n+1} = (a\,r_n+c)\,\text{mod}\,m
+\label{linConGen}
+\end{equation}
+
+\subsection*{Aufgabenteil b: Testen des LKG}
+Die Zufallszahlen bei b(iii) und b(iv) wiederholen sich für das $n$ (wenn $n$ der Laufindex bis $N$ sei), das $m$ überschreitet. Der Fall $n=m$ wird ausgelassen, da durch den modulo der Wert 0 entsteht.\\
+Es zeigt sich eine gute Gleichverteilung für die ersten Parameter. Lediglich zwischen 0.2 und 0.3, sowie zwischen 0.9 und 1.0 ergibt sich keine schöne Gleichverteilung (obwohl die 1 nicht im Intervall liegt). 
+
+\begin{landscape}
+	\begin{figure}
+		\OverfullCenter{\includegraphics[width=\textwidth]{../Abgabe/1b1_hist.pdf}}
+		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 1b(i): Histogramm der Zufallszahlen}
+		\label{fig:1b1}
+	\end{figure}
+\end{landscape}
+
+Im zweiten Histogramm zeigen sich noch etwas größere Abweichungen, dafür aber in 6 der 10 Bins eine zufriedenstellende Gleichverteilung
+
+\begin{landscape}
+	\begin{figure}
+		\OverfullCenter{\includegraphics[width=\textwidth]{../Abgabe/1b2_hist.pdf}}
+		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 1b(ii): Histogramm der Zufallszahlen}
+		\label{fig:1b2}
+	\end{figure}
+\end{landscape}
+
+In Aufgabenteil b(iii) zeigt sich eine bessere Gleichverteilung. Linear kongruente Generatoren neigen zu Korrelationen in den niedrigen Bits; Wegen $a \ll m$ folgt auf eine kleine Zahl wieder eine kleine Zahl. Der hier genutzte Generator heißt multiplikativ linear kongruenter Generator.
+Durch die deutlich längere Periode ist auch die Gleichverteilung besser.
+
+\begin{landscape}
+	\begin{figure}
+		\OverfullCenter{\includegraphics[width=\textwidth]{../Abgabe/1b3_hist.pdf}}
+		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 1b(iii): Histogramm der Zufallszahlen (RANDU Generator von IBM)}
+		\label{fig:1b3}
+	\end{figure}
+\end{landscape}
+
+Eine ähnliche Gleichverteilung ergibt sich auch im vierten Histogramm
+\begin{landscape}
+	\begin{figure}
+		\OverfullCenter{\includegraphics[width=\textwidth]{../Abgabe/1b4_hist.pdf}}
+		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 1b(iv): Histogramm der Zufallszahlen (ran1() aus den NR, 2. Ausgabe)}
+		\label{fig:1b4}
+	\end{figure}
+\end{landscape}
+
+Insgesamt sind die Generatoren durch wenige Rechenoperationen sehr schnell, aber in der Periodenlänge etwas kurz. In höheren Dimensionen kommt es außerdem zu Korrelationen zwischen den Zufallszahlen.
+
+\subsection*{Aufgabenteil c: Korrelationen unter den Zufallszahlen}
+Nun sollen die Korrelationen untersucht werden. Während in den ersten beiden Teilaufgaben (i) und (ii) noch eindeutige Symmetrien erkennbar sind, findet man in den letzten beiden Teilaufgaben eher klumpenartige Ansammlungen von Zufallszahlen vor. Eine direkte Korrelationen ist in zwei Dimensionen nicht erkennbar, man beachte aber den Kommentar aus voriger Teilaufgabe.
+
+\begin{landscape}
+	\begin{figure}
+		\OverfullCenter{\includegraphics[width=\textwidth]{../Abgabe/1b1_korr.pdf}}
+		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 1b(i): Korrelation der Zufallszahlen}
+		\label{fig:1b1korr}
+	\end{figure}
+\end{landscape}
+
+\begin{landscape}
+	\begin{figure}
+		\OverfullCenter{\includegraphics[width=\textwidth]{../Abgabe/1b2_korr.pdf}}
+		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 1b(ii): Korrelation der Zufallszahlen}
+		\label{fig:1b2korr}
+	\end{figure}
+\end{landscape}
+
+
+\begin{landscape}
+	\begin{figure}
+		\OverfullCenter{\includegraphics[width=\textwidth]{../Abgabe/1b3_korr.pdf}}
+		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 1b(iii): Korrelation der Zufallszahlen}
+		\label{fig:1b3korr}
+	\end{figure}
+\end{landscape}
+
+
+\begin{landscape}
+	\begin{figure}
+		\OverfullCenter{\includegraphics[width=\textwidth]{../Abgabe/1b4_korr.pdf}}
+		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 1b(iv): Korrelation der Zufallszahlen}
+		\label{fig:1b4korr}
+	\end{figure}
+\end{landscape}
+
+\section*{Beliebige Verteilungen}
+In dieser Aufgabe sollen nun beliebige Verteilungen erzeugt werden.
+\subsection*{Aufgabenteil a: Box-Muller-Algorithmus}
+Zur Erzeugung der Gauß-Verteilung wurden die Gleichungen auf S. 176, (10.11) verwendet.
+
+\begin{landscape}
+	\begin{figure}
+		\OverfullCenter{\includegraphics[width=\textwidth]{../Abgabe/2a_hist.pdf}}
+		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 2a: Histogramm des Box-Muller-Algorithmus}
+		\label{fig:2a}
+	\end{figure}
+\end{landscape}
+
+\begin{landscape}
+	\begin{figure}
+		\OverfullCenter{\includegraphics[width=\textwidth]{../Abgabe/2a_vert.pdf}}
+		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 2a: analytische Verteilung des Box-Muller-Algorithmus}
+		\label{fig:2a_v}
+	\end{figure}
+\end{landscape}
+
+\subsection*{Aufgabenteil b: Zentraler Grenzwertsatz}
+
+\begin{landscape}
+	\begin{figure}
+		\OverfullCenter{\includegraphics[width=\textwidth]{../Abgabe/2b_hist.pdf}}
+		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 2b: Histogramm des ZGW}
+		\label{fig:2b}
+	\end{figure}
+\end{landscape}
+
+\begin{landscape}
+	\begin{figure}
+		\OverfullCenter{\includegraphics[width=\textwidth]{../Abgabe/2b_vert.pdf}}
+		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 2b: analytische Verteilung des ZGW}
+		\label{fig:2b_v}
+	\end{figure}
+\end{landscape}
+
+\subsection*{Aufgabenteil c: Neumann Rückweisungsverfahren}
+
+\begin{landscape}
+	\begin{figure}
+		\OverfullCenter{\includegraphics[width=\textwidth]{../Abgabe/2c_hist.pdf}}
+		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 2c: Histogramm des Neumannschen Rückweisungsverfahrens}
+		\label{fig:2c}
+	\end{figure}
+\end{landscape}
+
+\begin{landscape}
+	\begin{figure}
+		\OverfullCenter{\includegraphics[width=\textwidth]{../Abgabe/2c_vert.pdf}}
+		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 2c: analytische Verteilung des Neumannschen Rückweisungsverfahrens}
+		\label{fig:2c_v}
+	\end{figure}
+\end{landscape}
+
+\subsection*{Aufgabenteil d: Transformationsmethode}
+\begin{landscape}
+	\begin{figure}
+		\OverfullCenter{\includegraphics[width=\textwidth]{../Abgabe/2d_hist.pdf}}
+		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 2d: Histogramm der Transformationsmethode}
+		\label{fig:2d}
+	\end{figure}
+\end{landscape}
+
+\begin{landscape}
+	\begin{figure}
+		\OverfullCenter{\includegraphics[width=\textwidth]{../Abgabe/2d_vert.pdf}}
+		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 2d: analytische Verteilung der Transformationsmethode}
+		\label{fig:2d_v}
+	\end{figure}
+\end{landscape}
+
+
+%\printbibliography
+\end{document}
