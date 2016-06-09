@@ -139,6 +139,8 @@ Zur Erzeugung der Gauß-Verteilung wurden die Gleichungen auf S. 176, (10.11) ve
 Eine Verteilung mit der Standardabweichung 1 bekommt man, indem man $N = 12$ setzt. Der Mittelwert ist bei der Addition $N$ gleichverteilter Zufallsvariablen $x_i$ aus [0, 1[ und Subtraktion von $N/2$ etwa Null. Die Methode hat den Nachteil, dass die Extremwerte der Normalverteilung relativ schlecht berücksichtigt werden. Bei $N$ = 12 ist z.B. $-6 \leq y \leq 6$. Außerdem muss für jedes $n$ erneut die Summe der Einzelsegmente gebildet werden. 
 
 \subsection*{Aufgabenteil c: Neumann Rückweisungsverfahren}
+Die rechte Flanke scheint eine gute Annäherung an die analytische Kurve darzustellen. Der Peak liegt etwas unter den Bins und die Diskrepanzen zwischen Bin und analytischer Kurve heben sich im Mittel bei den beiden Flanken etwa auf.
+Außerdem mussten die Gaußverteilung auf die Sinuskurve verschoben werden. Damit jederzeit alle Werte der Sinuskurve unter der Gaußglocke sind, wurde mit dem 1,5-fachen multipliziert.
 
 \begin{landscape}
 	\begin{figure}
@@ -148,28 +150,12 @@ Eine Verteilung mit der Standardabweichung 1 bekommt man, indem man $N = 12$ set
 	\end{figure}
 \end{landscape}
 
-\begin{landscape}
-	\begin{figure}
-		\OverfullCenter{\includegraphics[width=\textwidth]{../Abgabe/2c_vert.pdf}}
-		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 2c: analytische Verteilung des Neumannschen Rückweisungsverfahrens}
-		\label{fig:2c_v}
-	\end{figure}
-\end{landscape}
-
 \subsection*{Aufgabenteil d: Transformationsmethode}
 \begin{landscape}
 	\begin{figure}
 		\OverfullCenter{\includegraphics[width=\textwidth]{../Abgabe/2d_hist.pdf}}
 		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 2d: Histogramm der Transformationsmethode}
 		\label{fig:2d}
-	\end{figure}
-\end{landscape}
-
-\begin{landscape}
-	\begin{figure}
-		\OverfullCenter{\includegraphics[width=\textwidth]{../Abgabe/2d_vert.pdf}}
-		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 2d: analytische Verteilung der Transformationsmethode}
-		\label{fig:2d_v}
 	\end{figure}
 \end{landscape}
 
