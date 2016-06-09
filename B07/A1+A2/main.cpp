@@ -1,8 +1,9 @@
 //-------------------------------------------------------------------------------
 //                         Computational Physics 2016
-//                         Übungsblatt 7 - Aufgabe 1
+//                               Übungsblatt 7
 //-------------------------------------------------------------------------------
-//            Implementierung eines linearen kongruenten Generators.
+//            Implementierung eines linearen kongruenten Generators
+//            und einiger Verteilunge.
 //-------------------------------------------------------------------------------
 #include "lingen.h"
 
