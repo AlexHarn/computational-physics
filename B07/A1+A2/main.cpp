@@ -11,27 +11,27 @@ int main()
 {
     LinConGen gen;
 
-    //// Aufgabe 1
-    //  b)
-    //  (i)
+    // Aufgabe 1
+    // b)
+    // (i)
     gen.congruent(1234, 20, 120, 6075, 1e5);
     gen.save("1b1");
 
-    //  (ii)
+    // (ii)
     gen.congruent(1234, 137, 187, 256, 1e5);
     gen.save("1b2");
 
-    //  (iii)
+    // (iii)
     gen.congruent(123456789, 65539, 0, 2147483648, 1e5);
     gen.save("1b3");
 
-    ////  (iv)
+    //  (iv)
     gen.congruent(1234, 16807, 0, 2147483647, 1e5);
     gen.save("1b4");
 
 
     // Aufgabe 2
-    //  a)
+    // a)
     gen.boxMuller();
     gen.saveDist("2a");
 
@@ -39,6 +39,14 @@ int main()
     gen.congruent(1234, 16807, 0, 2147483647, 12e5);
     gen.centralLimit();
     gen.saveDist("2b");
+    
+    // c)
+    gen.neumann(1e5);
+    gen.saveDist("2c");
 
+    // d)
+    gen.transform(1e5);
+    gen.saveDist("2d");
+        
     return 0;
 }

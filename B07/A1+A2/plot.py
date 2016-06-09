@@ -23,9 +23,11 @@ for name, N in zip(names, Ns):
     plt.clf()
 
 # A2
-names = [ "2a", "2b" ]
+names = [ "2a", "2b", "2c", "2d" ]
 ps = [ lambda x: np.exp(-x**2/2)/( np.sqrt(2*np.pi) ),
-       lambda x: np.exp(-x**2/2)/( np.sqrt(2*np.pi) )]
+       lambda x: np.exp(-x**2/2)/( np.sqrt(2*np.pi) ),
+       lambda x: np.sin(x)/2,
+       lambda x: 3*x**2]
 
 for name, p in zip(names, ps):
     n = np.loadtxt(name+".dat", unpack=True)
@@ -37,3 +39,14 @@ for name, p in zip(names, ps):
     plt.ylabel(r"$p(x)$")
     plt.savefig(name+".pdf")
     plt.clf()
+
+# def f(x):
+    # return np.exp(-x**2/2)/( np.sqrt(2*np.pi) )
+    
+# def g(x):
+    # return np.sin(x)/2
+    
+# x = np.linspace(0, np.pi)
+# plt.plot(x, 1.5*f(x-np.pi/2))
+# plt.plot(x, g(x))
+# plt.show()

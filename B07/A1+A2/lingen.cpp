@@ -3,6 +3,9 @@
 #include <fstream>
 #include <iostream>
 #include "lingen.h"
+#ifndef M_PI
+#define M_PI 3.14159265359
+#endif
 
 using namespace std;
 
@@ -20,7 +23,7 @@ void LinConGen::congruent(int64_t r0, unsigned int a, unsigned int c, unsigned i
         for ( unsigned int n = 0; n < N; n++ )
             r(n+1) = ( a*r(n) + c )%m;
     }
-    else // Zahlen wiederholen sich für n >= m, n = m wird ausgelassen (weil 0)
+    else // Zahlen wiederholen sich für n >= m, n = m (also r(0)) wird ausgelassen, der Seed gehört nicht zu den Zufallszahlen
     {
         for ( unsigned int n = 0; n < m - 2; n++ )
             r(n+1) = ( a*r(n) + c )%m;
@@ -51,6 +54,54 @@ void LinConGen::centralLimit(int N)
     dist.resize((int) r.size()/N);
     for ( unsigned int n = 0; n < dist.size(); n++ )
         dist(n) = r.segment(n*N, N).sum() - N/2;
+}
+
+void LinConGen::neumann(unsigned int N)
+{
+    boxMuller();        // dist groß genug machen (dist.size = 12e5), weil später nicht alle Daten verwendet werden können
+    unsigned int n = 0;
+    unsigned int zaehler = 0;
+    double x;
+    double y;
+    tempdist.resize(N);
+    while ( zaehler < N )       // dist soll am Ende N Einträge haben
+    {
+        x = dist(n)+M_PI/2;     // x = Zufallszahl aus verschobener Gaußverteilung (g(x-M_PI/2))
+        y = r(n+1)*1.5*exp(-pow((x-M_PI/2), 2)/2)/( sqrt(2*M_PI) );     // y = gleichverteilte Zahl mal 1.5 mal g(x-M_PI/2)
+        if ( y < sin(x)/2 )     // test ob y < p(x)
+        {
+            if ( x >= 0 && x <= M_PI)     // test ob x aus [0, 2*M_PI]
+            {
+                tempdist(zaehler) = x;
+                zaehler++;
+            }
+        }
+        n++;
+        assert(n < dist.size());
+    }
+    dist.resize(N);
+    dist = tempdist;
+}
+
+void LinConGen::transform(unsigned int N)
+{
+    tempdist.resize(N);
+    double temp;
+    unsigned int n = 0;
+    unsigned int zaehler = 0;
+    while ( zaehler < N )
+    {
+        temp = pow(6*sqrt(r(n+1)/3), -1);
+        if ( temp < 1 )
+        {
+            tempdist(zaehler) = temp;
+            zaehler++;
+        }
+        n++;
+        assert(n < dist.size());
+    }
+    dist.resize(N);
+    dist = tempdist;
 }
 
 void LinConGen::save(string name)

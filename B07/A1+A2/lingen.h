@@ -11,7 +11,7 @@ class LinConGen
  */
 {
     public:
-        V r, dist;
+        V r, dist, tempdist;
         /* r: Zuletzt mit boxMuller() generierte Zufallszahlen
          * dist: Zuletzt generierte Verteilung
          */
@@ -27,6 +27,12 @@ class LinConGen
         /* Berechnet eine Gaußverteilung mittels zentralem Grenzwertsatz
          * Erwartungswert 0
          * Mit N = 12: Standardabweichung 1
+         */
+        void neumann(unsigned int N);
+        /*
+         */
+        void transform(unsigned int N);
+        /*
          */
         void save(std::string name);
         /* Speichert die zuletzt generierten Zufallszahlen
