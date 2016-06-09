@@ -13,7 +13,7 @@ main: main.o lingen.o
 
 run: main
 	./main
-	#python plot.py
+	python plot.py
 
 clean:
 	rm -f  main *.o *.dat *.pdf out.txt
