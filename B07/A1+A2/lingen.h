@@ -12,12 +12,21 @@ class LinConGen
 {
     public:
         V r, dist;
+        /* r: Zuletzt mit boxMuller() generierte Zufallszahlen
+         * dist: Zuletzt generierte Verteilung
+         */
 
         void congruent(int64_t r0, unsigned int a, unsigned int c, unsigned int m, unsigned int N);
         /* Generiert N linear kongurente Zufallszahlen
          */
         void boxMuller();
         /* Berechnet eine Gaußverteilung mittels Box-Muller-Algorithmus
+         * Erwartungswert 0, Standardabweichung 1
+         */
+        void centralLimit(int N=12);
+        /* Berechnet eine Gaußverteilung mittels zentralem Grenzwertsatz
+         * Erwartungswert 0
+         * Mit N = 12: Standardabweichung 1
          */
         void save(std::string name);
         /* Speichert die zuletzt generierten Zufallszahlen

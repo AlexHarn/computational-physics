@@ -32,12 +32,26 @@ void LinConGen::congruent(int64_t r0, unsigned int a, unsigned int c, unsigned i
     this->r = r.cast<double>()/m;
 }
 
-//void LinConGen::boxMuller()
-//{
-    //assert(r.size() > 2);
-    //double v1, v2;
-    
-//}
+void LinConGen::boxMuller()
+{
+    assert(r.size() > 2);
+    dist.resize(r.size()-1);
+    double tmp;
+    for ( unsigned int n = 0; n < dist.size(); n+=2 )
+    {
+        tmp = sqrt(-2*log(r(n)));
+        dist(n) = tmp*cos(2*M_PI*r(n+1));
+        dist(n+1) = tmp*sin(2*M_PI*r(n+1));
+    }
+}
+
+void LinConGen::centralLimit(int N)
+{
+    assert(r.size() > N);
+    dist.resize((int) r.size()/N);
+    for ( unsigned int n = 0; n < dist.size(); n++ )
+        dist(n) = r.segment(n*N, N).sum() - N/2;
+}
 
 void LinConGen::save(string name)
 {
