@@ -17,7 +17,7 @@ r_{n+1} = (a\,r_n+c)\,\text{mod}\,m
 \end{equation}
 
 \subsection*{Aufgabenteil b: Testen des LKG}
-Die Zufallszahlen bei b(iii) und b(iv) wiederholen sich für das $n$ (wenn $n$ der Laufindex bis $N$ sei), das $m$ überschreitet. Der Fall $n=m$ wird ausgelassen, da durch den modulo der Wert 0 entsteht.\\
+Die Zufallszahlen bei b(iii) und b(iv) wiederholen sich für das $n$ (wenn $n$ der Laufindex bis $N$ sei), das $m$ überschreitet. Der Fall $n=m$ wird ausgelassen, da bei der Wiederholung der Seed $r_0$ in die Daten käme. Faktisch fällt der Seed sogar komplett raus.\\
 Es zeigt sich eine gute Gleichverteilung für die ersten Parameter. Lediglich zwischen 0.2 und 0.3, sowie zwischen 0.9 und 1.0 ergibt sich keine schöne Gleichverteilung (obwohl die 1 nicht im Intervall liegt). 
 
 \begin{landscape}
@@ -135,6 +135,8 @@ Zur Erzeugung der Gauß-Verteilung wurden die Gleichungen auf S. 176, (10.11) ve
 		\label{fig:2b_v}
 	\end{figure}
 \end{landscape}
+
+Eine Verteilung mit der Standardabweichung 1 bekommt man, indem man $N = 12$ setzt. Der Mittelwert ist bei der Addition $N$ gleichverteilter Zufallsvariablen $x_i$ aus [0, 1[ und Subtraktion von $N/2$ etwa Null. Die Methode hat den Nachteil, dass die Extremwerte der Normalverteilung relativ schlecht berücksichtigt werden. Bei $N$ = 12 ist z.B. $-6 \leq y \leq 6$. Außerdem muss für jedes $n$ erneut die Summe der Einzelsegmente gebildet werden. 
 
 \subsection*{Aufgabenteil c: Neumann Rückweisungsverfahren}
 
