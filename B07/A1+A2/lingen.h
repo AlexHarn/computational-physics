@@ -29,10 +29,12 @@ class LinConGen
          * Mit N = 12: Standardabweichung 1
          */
         void neumann(unsigned int N);
-        /*
+        /* Berechnet eine sin(x)/2 - Verteilung nach dem von
+         * von Neumannschen Rückweisungsverfahren
          */
         void transform(unsigned int N);
-        /*
+        /* Berechnet eine 3x^2 - Verteilung aus gleichverteilten
+         * Zufallszahlen
          */
         void save(std::string name);
         /* Speichert die zuletzt generierten Zufallszahlen

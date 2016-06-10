@@ -41,6 +41,7 @@ int main()
     gen.saveDist("2b");
     
     // c)
+    gen.boxMuller();        // dist groß genug machen (dist.size = 12e5), weil später nicht alle Daten verwendet werden können
     gen.neumann(1e5);
     gen.saveDist("2c");
 

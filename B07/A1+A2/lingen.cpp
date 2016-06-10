@@ -27,7 +27,7 @@ void LinConGen::congruent(int64_t r0, unsigned int a, unsigned int c, unsigned i
     {
         for ( unsigned int n = 0; n < m - 2; n++ )
             r(n+1) = ( a*r(n) + c )%m;
-        for ( unsigned int n = m - 1; n < N; n++ )
+        for ( unsigned int n = m - 1; n < N+1; n++ )
             r(n) = r(( (n+1) % m ) + 1);
     }
 
@@ -58,7 +58,6 @@ void LinConGen::centralLimit(int N)
 
 void LinConGen::neumann(unsigned int N)
 {
-    boxMuller();        // dist groß genug machen (dist.size = 12e5), weil später nicht alle Daten verwendet werden können
     unsigned int n = 0;
     unsigned int zaehler = 0;
     double x;
@@ -70,7 +69,7 @@ void LinConGen::neumann(unsigned int N)
         y = r(n+1)*1.5*exp(-pow((x-M_PI/2), 2)/2)/( sqrt(2*M_PI) );     // y = gleichverteilte Zahl mal 1.5 mal g(x-M_PI/2)
         if ( y < sin(x)/2 )     // test ob y < p(x)
         {
-            if ( x >= 0 && x <= M_PI)     // test ob x aus [0, 2*M_PI]
+            if ( x >= 0 && x <= M_PI )     // test ob x aus [0, M_PI]
             {
                 tempdist(zaehler) = x;
                 zaehler++;
@@ -85,23 +84,21 @@ void LinConGen::neumann(unsigned int N)
 
 void LinConGen::transform(unsigned int N)
 {
-    tempdist.resize(N);
+    dist.resize(N);
     double temp;
     unsigned int n = 0;
     unsigned int zaehler = 0;
     while ( zaehler < N )
     {
-        temp = pow(6*sqrt(r(n+1)/3), -1);
+        temp = pow(r(n+1), 1./3);
         if ( temp < 1 )
         {
-            tempdist(zaehler) = temp;
+            dist(zaehler) = temp;
             zaehler++;
         }
         n++;
-        assert(n < dist.size());
+        assert(n < r.size()-1);
     }
-    dist.resize(N);
-    dist = tempdist;
 }
 
 void LinConGen::save(string name)

@@ -31,7 +31,7 @@ ps = [ lambda x: np.exp(-x**2/2)/( np.sqrt(2*np.pi) ),
 
 for name, p in zip(names, ps):
     n = np.loadtxt(name+".dat", unpack=True)
-    plt.hist(n, normed=True, alpha=0.5, label="Generierte Zahlen") # 10 Bins sind default
+    plt.hist(n, 100, normed=True, alpha=0.5, label="Generierte Zahlen") # 10 Bins sind default
     x = np.linspace(min(n), max(n), 1e3)
     plt.plot(x, p(x), linewidth=2, label="Analytisch")
     plt.legend()
@@ -40,13 +40,13 @@ for name, p in zip(names, ps):
     plt.savefig(name+".pdf")
     plt.clf()
 
-# def f(x):
-    # return np.exp(-x**2/2)/( np.sqrt(2*np.pi) )
+def f(x):
+    return np.exp(-x**2/2)/( np.sqrt(2*np.pi) )
     
-# def g(x):
-    # return np.sin(x)/2
+def g(x):
+    return np.sin(x)/2
     
-# x = np.linspace(0, np.pi)
-# plt.plot(x, 1.5*f(x-np.pi/2))
-# plt.plot(x, g(x))
-# plt.show()
+x = np.linspace(0, np.pi)
+plt.plot(x, 1.5*f(x-np.pi/2))
+plt.plot(x, g(x))
+plt.savefig("2c_test.pdf")
