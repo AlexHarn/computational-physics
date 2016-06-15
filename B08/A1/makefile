@@ -5,11 +5,9 @@ LDLIBS=-fopenmp
 
 all: run
 
-lingen.o: lingen.cpp lingen.h
+main.o: main.cpp
 
-main.o: main.cpp lingen.h
-
-main: main.o lingen.o
+main: main.o
 
 run: main
 	./main
