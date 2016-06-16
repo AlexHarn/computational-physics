@@ -73,10 +73,22 @@ int main()
         fout.close();
     }
 
-    // b
-    vector<double> r(3);
+    // Schranken
     vector<double> x = { 3., 3.4, 3.554 };
     vector<double> y = { 3.5, 3.6, 3.556 };
+    
+    // a nur in den Schranken plotten
+    for ( int n = 1; n < 4; n++ )
+    {
+        fout.open("2a_n="+to_string(n)+"_schranken.dat");
+        fout << "#r g(r)" << endl;
+        for ( double r = x[n-1]; r <= y[n-1]; r+= 1e-5 )
+            fout << r << "\t" << g(r, n) << endl;
+        fout.close();
+    }
+
+    // b
+    vector<double> r(3);
     for ( unsigned i = 0; i < 3; i++ )
     {
         r[i] = regulaFalsi(bind(g, placeholders::_1, i+1), x[i], y[i], 1e-6);

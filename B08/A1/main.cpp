@@ -17,7 +17,7 @@ void iterate(function<double (double, double)> f, double x0, double rmax, double
     for ( double r = 0; r <= rmax; r+=rstep )
     {
         x = x0;
-        for ( int i = 0; i < icali; i++ )
+        for ( int i = 0; i < icali; i++ )            // erst sicherstellen, dass sich ein Orbit einstellt. icali = 1000 reicht sicherlich und dauert nicht zu lange.
         {
             x = f(r, x);
         }
