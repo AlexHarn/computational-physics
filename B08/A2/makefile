@@ -14,4 +14,4 @@ run: main
 	python plot.py
 
 clean:
-	rm -f  main *.o *.dat *.pdf 
+	rm -f  main *.o *.dat *.pdf *.dat1
