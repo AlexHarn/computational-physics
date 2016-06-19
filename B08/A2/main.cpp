@@ -41,7 +41,7 @@ double regulaFalsi(function<double (double)> f, double x, double y, double eps)
             x = z;
         else
             y = z;
-    } while ( f(z) > eps );
+    } while ( abs(f(z)) > eps );
     return z;
 }
 
@@ -52,7 +52,7 @@ double newton(function<double (double)> f, function<double (double)> df, double 
     {
         fx = f(x);
         x = x - fx/df(x);
-    } while ( fx > eps );
+    } while ( abs(fx) > eps );
     return x;
 }
 
@@ -99,7 +99,7 @@ int main()
     cout << "[Regula Falsi] genäherte Feigenbaumkonstante: " << ( r[1] - r[0] )/( r[2] - r[1] ) << endl;
 
     // d
-    r.resize(15);
+    r.resize(16);
     r[0] = 2;
     r[1] = 1 + sqrt(5);
     fout.open("d.dat1");
