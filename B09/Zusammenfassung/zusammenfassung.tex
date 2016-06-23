@@ -1,0 +1,87 @@
+\input{../../header.tex}
+\usepackage{verbatim}
+\usepackage{ulem}
+\usepackage{braket}
+\newcommand\OverfullCenter[1]{\noindent\makebox[\linewidth]{#1}}
+\begin{document}
+\noindent
+\centerline{\small{\textsc{Technische Universität Dortmund}}} \\
+\large\textbf{Übungsblatt 09} \hfill \footnotesize\textbf{Sebastian Bange, Alexander Harnisch, Alexander Knodel} \\
+\normalsize Computational Physics \hfill \today \\
+Prof. Dr. Jan Kierfeld \hfill Abgabefrist: 24.06.2016\\
+\noindent\makebox[\linewidth]{\rule{\textwidth}{0.4pt}}
+\section*{Matrixdiagonalisierung}
+In der nachfolgenden Tabelle \ref{table:1aeigenvalues} finden sich die Eigenwerte der symmetrischen Matrix, bestimmt durch die in Eigen integrierte Methode \textsc{eigenvalues()} (linke Spalte) und die über die Potenzmethode bestimmten Eigenwerte (rechte Spalte).
+\begin{table}[]
+\centering
+\caption{Matrixeigenwerte mittels der \textsc{eigenvalues()}-Methode von Eigen (li) und über die Potenzmethode (re)}
+\label{table:1aeigenvalues}
+\begin{tabular}{cc}
+10.699327328977576101  & 10.699327297942717863   \\
+3.3594432002196952247  & 3.3594394894725887468   \\
+3.0000000000000026645  & 3.0000035517627194892    \\
+-2.0587705291972708821 & -2.0587715700091009374 \\
+\end{tabular}
+\end{table}
+Es zeigt sich eine Übereinstimmung bis mindestens in die fünfte geltende Ziffer. Beide Varianten sind also sehr genau. Die Genauigkeit haben wir bei $\epsilon = 10^{-6}$ gewählt. Im Gegensatz zum Skript haben wir nicht zwei verschiedene Vektoren $\vec{\omega}$ und $\vec{v_{n-a}}$ (normierter $\omega$-Vektor, S. 149) gewählt, sondern die Iteration über eine Variable durchgeführt und diese direkt normiert. Da wir keine Imaginäranteile haben, können wir $\braket{\vec{v}_n | \uuline{A}\vec{v}_n}$ direkt über das transponierte $\omega$ ($\omega^T \uuline{A}\,\,\omega$) berechnen.
+
+\section*{Anharmonischer Oszillator}
+In dieser Aufgabe wird die numerische Lösung der stationären Schrödingergleichung auf die Diagonalisierung einer endlich-dimensionalen Matrix zurückgeführt, indem das qm. System in einem endlich-dimensionalen Unterraum des Hilbertsraumes betrachtet wird. Damit sollen die Energieeigenwerte des anharmonischen Oszillators berechnet werden.
+Mit $x = \alpha \xi \left( \frac{\partial \xi}{\partial x} = \frac{1}{\alpha}\right)$ folgt:
+
+\begin{equation}
+	\begin{split}
+		\frac{\partial}{\partial x} \left( \frac{\partial \psi}{\partial x} \right) &= \frac{\partial}{\partial x} \left( \frac{\partial \xi}{\partial x} \frac{\partial \psi}{\partial \xi} \right) = \frac{\partial}{\partial x} \left( \frac{1}{\alpha} \frac{\partial \psi}{\partial \xi} \right) \\
+		&= \frac{1}{\alpha} \frac{\partial}{\partial \xi} \left( \frac{\partial \psi}{\partial x} \right) = \frac{1}{\alpha} \frac{\partial}{\partial \xi} \left( \frac{1}{\alpha} \frac{\partial \psi}{\partial \xi} \right) = \frac{1}{\alpha^2} \frac{\partial^2 \psi}{\partial \xi^2}
+	\end{split}
+	\label{eq:Ableitung umformen}
+\end{equation}
+Diese Ersetzung mit $x = \alpha \xi$ fügen wir nun in die Schrödinger-Gleichung für den anharmonischen Oszillator ein.
+Mit $E = \beta \epsilon$ folgt
+\begin{equation}
+		\left( - \frac{\hbar}{2m\alpha^2} \partial_{\xi}^2 + \frac{1}{2} m\omega^2\alpha^2\xi^2 + \lambda \alpha^4 \xi^4 \right) \psi = \beta \epsilon \psi
+\end{equation}
+Um die Form der S-Gl aus Gleichung 4 (vgl. Zettel) zu erhalten, muss gelten:
+\begin{align}
+	\rightarrow \frac{\hbar^2}{2m\alpha^2\beta}&\stackrel{!}{=} 1 \label{eq:erstersummandvonHamiltonian} \\
+	\frac{m\omega^2\alpha^2}{2 \beta} &\stackrel{!}{=} 1 \label{eq:zweitersummandvonHamiltonian}\\
+	\tilde{\lambda} &= \frac{\alpha^4}{\beta} \lambda
+\end{align}
+Aus den Gleichungen \ref{eq:erstersummandvonHamiltonian} und \ref{eq:zweitersummandvonHamiltonian} entsteht ein Gleichungssystem mit 2 Gleichungen und 2 Variablen:
+\begin{align}
+	\ref{eq:erstersummandvonHamiltonian} \Leftrightarrow \beta &= \frac{\hbar^2}{2m\alpha^2} \qquad \beta \text{ in Gl.}\ref{eq:zweitersummandvonHamiltonian} \\
+	\rightarrow \frac{\omega^2 \alpha^4 m^2}{\hbar^2} &= 1 \\
+	\leftrightarrow \alpha &= \sqrt{\frac{\hbar}{m\omega}} \\
+	\rightarrow \beta &= \frac{\hbar \omega}{2}
+\end{align}
+Damit ergibt sich nun die dimensionslose Form der S-Gl.
+\begin{align}
+	\left( - \partial_{\xi}^2+\xi^2+\lambda \frac{\hbar^2}{m\omega^2}\frac{2}{\hbar \omega} \xi^4 \right) \psi &= \epsilon \psi \\
+	\rightarrow \tilde{\lambda} &= \lambda \frac{ 2 \hbar }{m^2 \omega^3} \\
+	\left(\text{Probe}\right)[\tilde{\lambda}] &= \frac{\mathup{J}}{\mathup{m^4}} \frac{\mathup{Js}}{\mathup{kg^2} \left(\frac{1}{\mathup{s}}\right)^3} \\
+	&= \mathup{J^2} \frac{\mathup{s^4}}{\mathup{m^4kg^2}} \\
+	&= \left( \frac{\mathup{kg m^2}}{\mathup{s^2}}\right)^2 \frac{\mathup{s^4}}{\mathup{m^4kg^2}}\\
+	&= 1
+\end{align}
+
+Nun wird der Ortsraum mittels $\xi_n = \mathup{n} \Delta \xi$ diskretisiert und $\xi$ auf dem Intervall $\xi \in [-L,L]$ betrachtet.
+\begin{table}[]
+\centering
+\caption{Matrixeigenwerte des Hamiltonians für $\lambda$ = 0}
+\label{table:2b0eigenvalues}
+\begin{tabular}{c}
+0.99937460864049720843 \\
+2.9968714733399832717 \\
+4.9918612669583364294 \\
+6.9843392427045509763 \\
+8.9743006237199232089 \\
+10.961740602763113017 \\
+12.9466543418897988 \\
+14.929036972127596172 \\
+16.908883593146576629 \\
+18.886189272925243188 \\
+\end{tabular}
+\end{table}
+
+%\printbibliography
+\end{document}
