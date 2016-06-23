@@ -27,7 +27,7 @@ Es zeigt sich eine Übereinstimmung bis mindestens in die fünfte geltende Ziffe
 
 \section*{Anharmonischer Oszillator}
 In dieser Aufgabe wird die numerische Lösung der stationären Schrödingergleichung auf die Diagonalisierung einer endlich-dimensionalen Matrix zurückgeführt, indem das qm. System in einem endlich-dimensionalen Unterraum des Hilbertsraumes betrachtet wird. Damit sollen die Energieeigenwerte des anharmonischen Oszillators berechnet werden.
-Mit $x = \alpha \xi \left( \frac{\partial \xi}{\partial x} = \frac{1}{\alpha}\right)$ folgt:
+Mit $x = \alpha \xi \left( \frac{\partial \xi}{\partial x} = \frac{1}{\alpha}\right)$ mit der Anharmonizität $\xi$  folgt:
 
 \begin{equation}
 	\begin{split}
@@ -64,7 +64,7 @@ Damit ergibt sich nun die dimensionslose Form der S-Gl.
 	&= 1
 \end{align}
 
-Nun wird der Ortsraum mittels $\xi_n = \mathup{n} \Delta \xi$ diskretisiert und $\xi$ auf dem Intervall $\xi \in [-L,L]$ betrachtet.
+Nun wird der Ortsraum mittels $\xi_n = \mathup{n} \Delta \xi$ diskretisiert und $\xi$ auf dem Intervall $\xi \in [-L,L]$ betrachtet. Für $\lambda = 0$ ergeben sich folgende Eigenwerte.
 \begin{table}[]
 \centering
 \caption{Matrixeigenwerte des Hamiltonians für $\lambda$ = 0}
@@ -82,6 +82,54 @@ Nun wird der Ortsraum mittels $\xi_n = \mathup{n} \Delta \xi$ diskretisiert und 
 18.886189272925243188 \\
 \end{tabular}
 \end{table}
+Die Eigenwerte liefern (mit numerischer Unsicherheit) das Resultat $\epsilon_n = 2n+1$.
+
+Nun wird derselbe Hamiltonian in der Besetzungszahldarstellung betrachtet.
+Die in Gleichung (7) auf dem Blatt gegebene Matrix soll auf Symmetrie untersucht werden. Dabei wird der Faktor 1/4 hier nicht extra aufgeführt. Für den ersten Summanden ergibt sich:
+
+\begin{align}
+& \left[m(m-1)(m-2)(m-3)\right]^{1/2} \delta_{n\,m-4} \\
+= &\left[(n+4)(n+3)(n+2)(n+1)\right]^{1/2} \delta_{n+4\,m}\\
+= &\left[(n+4)(n+3)(n+2)(n+1)\right]^{1/2} \delta_{m\,n+4}\\
+&\text{Benenne } m\leftrightarrow n \text{ um}\\
+= & \left[(m+4)(m+3)(m+2)(m+1)\right]^{1/2} \delta_{n\,m+4} \label{eq:zweiterSummandXiHoch4inBraketMatrix}
+\end{align}
+Gleichung \ref{eq:zweiterSummandXiHoch4inBraketMatrix} entspricht dem zweiten Summanden aus Formel 7. Der Beweis für die anderen Summanden ergeben sich analog.
+
+Mit $\xi = (a+a^+)/\sqrt{2}$ ergibt sich
+
+\begin{align}
+	a^+ &= \frac{1}{\sqrt{2}} \left( \xi - \partial_{\xi} \right) \qquad a = \frac{1}{\sqrt{2}} \left( \xi +  \partial_{\xi} \right)\\
+	a^{+^2} &= \frac{1}{2} \left( \xi^2 + \partial_{\xi}^2 - \xi \partial_{\xi} - \partial_{\xi} \xi \right) \\
+	a^2 &= \frac{1}{2} \left( \xi^2 + \partial_{\xi}^2 + \xi \partial_{\xi} + \partial_{\xi} \xi \right) \\	
+	a^+a &= \frac{1}{2} \left( \xi^2 + \xi \partial_{\xi} - \partial_{\xi} \xi - \partial_{\xi}^2 \right) \\
+	aa^+ &= \frac{1}{2} \left( \xi^2 - \xi \partial_{\xi} + \partial_{\xi} \xi - \partial_{\xi}^2 \right) \\
+	\xi^2 &= \frac{1}{2} \left( a^{+^2} + a^2 + a^+a+aa^+\right) \\
+	\partial_{\xi}^2 &= \frac{1}{2} \left( a^{+^2} + a^2 - a^+a-aa^+\right)
+\end{align}
+Wir betrachten und erhalten
+\begin{align}
+	 2 \braket{n|\partial_{\xi}^2|m} &= \braket{n|a^{+^2}|m} + \braket{n|a^2|m} - \braket{n|a^+a|m}-\braket{n|aa^+|m} \\
+	&= \sqrt{(m+1)(m+2)} \delta_{n\,m-2} + \sqrt{m(m-1)} \delta_{n\,m+2} - m \delta_{n\,m} - (m+1) \delta_{n\,m} \\
+	 2 \braket{n|\xi^2|m} &= \sqrt{(m+1)(m+2)} \delta_{n\,m-2} + \sqrt{m(m-1)} \delta_{n\,m+2} + m \delta_{n\,m} + (m+1) \delta_{n\,m}
+\end{align}
+
+\begin{align}
+	H_{n\,m} &= \braket{n|H|m}\\
+			 &= m \delta_{n\,m} + (m+1)\delta_{n\,m}+\tilde{\lambda}\braket{n|\xi^4|m}	
+\end{align}
+
+Es ergaben sich folgende Eigenwerte.
+\begin{table}[]
+\centering
+\caption{Matrixeigenwerte des Hamiltonians für $\tilde{\lambda}$ = 0.2}
+\label{table:2blambeigenvalues}
+\begin{tabular}{c}
+
+\end{tabular}
+\end{table}
+
+Wir halten die Ergebnisse aus Aufgabenteil c für genauer, weil die Diskretisierung einen größeren Fehler als eine (entsprechend genügend große) Anzahl an Dimensionen $N$ des Unterraums generiert. Je größer der Unterraum, desto besser werden die gefundenen EW an die echten EW approximiert.
 
 %\printbibliography
 \end{document}
