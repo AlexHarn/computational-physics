@@ -13,7 +13,7 @@ VectorXd powerIteration(Ref<MatrixXd> A, const Ref<const VectorXd> v0, const dou
     for ( int i = 0; i < r.size(); i++ )
     {
         VectorXd w(v0);
-j       double ev;
+        double ev;
         do
         {
             ev = r(i);

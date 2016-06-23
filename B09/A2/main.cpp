@@ -28,16 +28,35 @@ MatrixXd Hb(const double L, const double delta, const double lam)
     return H;
 }
 
-void work(const Ref<const MatrixXd> H, string save)
+MatrixXd Hc(const double lam, const int N=50)
+{
+    MatrixXd H(N, N);
+    for ( int i = 4; i < N; i++ )
+    {
+        H(i, i-4) = lam*sqrt(i*( i - 1 )*( i - 2 )*( i - 3 ));
+        H(i-4, i) = H(i, i-4);
+    }
+    for ( int i = 2; i < N; i++ )
+    {
+        H(i, i-2) = lam*sqrt(i*( i - 1 ))*( 4*i - 2 );
+        H(i-2, i) = H(i, i-2);
+    }
+    for ( int i = 0; i < N; i++ )
+    {
+        H(i, i) = 8*i + 4 + lam*( 6*i*i + 6*i + 3 );
+    }
+    return H/4;
+}
+
+void work(MatrixXd H, string save, int saveNum=10)
 {
     VectorXd evs = H.eigenvalues().real();
     sort(evs.data(), evs.data()+evs.size());
-    evs = evs.head(10);
 
     ofstream fout(save);
     fout.precision(20);
     fout << "# Eigenvalues" << endl;
-    for ( int i = 0; i < evs.size(); i++ )
+    for ( int i = 0; i < saveNum; i++ )
         fout << evs(i) << endl;
     fout.close();
 }
@@ -45,13 +64,12 @@ void work(const Ref<const MatrixXd> H, string save)
 int main()
 {
     // 2b)
-    //  lam = 0
     work(Hb(10, 0.1, 0), "2b0.dat");
-
-    cout << "superstrange" << endl;
-
-    //  lam = 0.2
     work(Hb(10, 0.1, 0.2), "2b0.2.dat");
+
+    // 2c)
+    work(Hc(0), "2c0.dat");
+    work(Hc(0.2), "2c0.2.dat");
 
     return 0;
 }
