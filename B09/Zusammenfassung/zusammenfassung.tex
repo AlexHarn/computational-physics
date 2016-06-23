@@ -67,21 +67,22 @@ Damit ergibt sich nun die dimensionslose Form der S-Gl.
 Nun wird der Ortsraum mittels $\xi_n = \mathup{n} \Delta \xi$ diskretisiert und $\xi$ auf dem Intervall $\xi \in [-L,L]$ betrachtet. Für $\lambda = 0$ ergeben sich folgende Eigenwerte.
 \begin{table}[]
 \centering
-\caption{Matrixeigenwerte des Hamiltonians für $\lambda$ = 0}
-\label{table:2b0eigenvalues}
-\begin{tabular}{c}
-0.99937460864049720843 \\
-2.9968714733399832717 \\
-4.9918612669583364294 \\
-6.9843392427045509763 \\
-8.9743006237199232089 \\
-10.961740602763113017 \\
-12.9466543418897988 \\
-14.929036972127596172 \\
-16.908883593146576629 \\
-18.886189272925243188 \\
+\caption{Matrixeigenwerte des Hamiltonians für $\lambda$ = 0 (li) \& $\lambda$ = 0.2 (re)}
+\label{table:2beigenvalues}
+\begin{tabular}{cc}
+0.99937460864049720843 &1.1174045034461186354 \\
+2.9968714733399832717 &3.5337314250633076185 \\
+4.9918612669583364294 &6.2613612395444366854\\
+6.9843392427045509763 &9.2231726878474251663\\
+8.9743006237199232089 &12.377588942929616422\\
+10.961740602763113017 &15.696911800624263833\\
+12.9466543418897988 &19.160883761865818542\\
+14.929036972127596172&22.753799801339766873 \\
+16.908883593146576629 &26.462983534445481126\\
+18.886189272925243188 &30.27789417679656836\\
 \end{tabular}
 \end{table}
+
 Die Eigenwerte liefern (mit numerischer Unsicherheit) das Resultat $\epsilon_n = 2n+1$.
 
 Nun wird derselbe Hamiltonian in der Besetzungszahldarstellung betrachtet.
@@ -122,14 +123,32 @@ Wir betrachten und erhalten
 Es ergaben sich folgende Eigenwerte.
 \begin{table}[]
 \centering
-\caption{Matrixeigenwerte des Hamiltonians für $\tilde{\lambda}$ = 0.2}
-\label{table:2blambeigenvalues}
-\begin{tabular}{c}
-
+\caption{Matrixeigenwerte des Hamiltonians für $\tilde{\lambda}$ = 0 (li) und $\tilde{\lambda}$ = 0.2 (re)}
+\label{table:2beigenvalues}
+\begin{tabular}{cc}
+1 &1.1182926543668978425 \\
+3 &3.539005287898045804 \\
+5 &6.2772486169964256675 \\
+7 &9.2577656177762825962 \\
+9 &12.440601800013054046 \\
+11 &15.799534455742886507 \\
+13 & 19.315679984322173368 \\
+15 &22.974631158894339933 \\
+17 &26.764949614917465937 \\
+19 &30.677284079370163994 \\
 \end{tabular}
 \end{table}
 
-Wir halten die Ergebnisse aus Aufgabenteil c für genauer, weil die Diskretisierung einen größeren Fehler als eine (entsprechend genügend große) Anzahl an Dimensionen $N$ des Unterraums generiert. Je größer der Unterraum, desto besser werden die gefundenen EW an die echten EW approximiert.
+\begin{landscape}
+	\begin{figure}
+		\OverfullCenter{\includegraphics[width=\textwidth]{../A2/d.pdf}}
+		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 2d: Änderung der Eigenwerte gegen die Größe der Matrix. Erkennbar ist die schnellere Konvergenz der EW in Besetzungszahldarstellung.}
+		\label{fig:1a}
+	\end{figure}
+\end{landscape}
+
+Wir halten die Ergebnisse aus Aufgabenteil c für genauer, weil die Eigenwerte in Besetzungszahldarstellung schneller konvergieren, da der Hamiltonian in Energie Eigenbasis gegeben ist (was natürlich bei Berechnung der Energie-EW sinnvoller ist). Bei der Ortsdarstellung ist die Konvergenz aufgrund einer langsameren Änderung deutlich langsamer, was auch in den entsprechenden Fenstern deutlich wird. In den 2d\_x.dat (Ortsdarstellung), bzw 2d\_e.dat-files (Besetzungszahldarstellung) finden sich die ersten 10 Eigenwerte (aufsteigend sortiert), da sie mit allen angegebenen Ziffern in keiner Weise in die PDF-Datei passen.
+
 
 %\printbibliography
 \end{document}
