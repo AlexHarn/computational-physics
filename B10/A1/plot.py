@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from pylab import rcParams
 rcParams['figure.figsize'] = 15, 15
-
+"""
 # a
 r = np.loadtxt("a.dat", unpack=True)
 x = np.linspace(0, np.pi, 1e4)
@@ -20,3 +20,10 @@ plt.xlabel("Zufallszahl")
 plt.ylabel("normierte Häufigkeit")
 plt.savefig("b_hist.pdf")
 plt.clf()
+"""
+#test
+tp, m = np.loadtxt("c.dat", unpack=True)
+plt.axhline(y = 0, xmin = 0, xmax = 1, color = 'k', ls = '--')
+plt.plot(tp, m, 'rx')
+plt.xscale("log")
+plt.savefig("c.pdf")
