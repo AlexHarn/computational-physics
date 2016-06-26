@@ -1,0 +1,73 @@
+\input{../../header.tex}
+\usepackage{verbatim}
+\usepackage{ulem}
+\usepackage{braket}
+\newcommand\OverfullCenter[1]{\noindent\makebox[\linewidth]{#1}}
+\begin{document}
+\noindent
+\centerline{\small{\textsc{Technische Universität Dortmund}}} \\
+\large\textbf{Übungsblatt 10} \hfill \footnotesize\textbf{Sebastian Bange, Alexander Harnisch, Alexander Knodel} \\
+\normalsize Computational Physics \hfill \today \\
+Prof. Dr. Jan Kierfeld \hfill Abgabefrist: 01.07.2016\\
+\noindent\makebox[\linewidth]{\rule{\textwidth}{0.4pt}}
+\section*{Random-Walk in der NMR}
+Die Störungen hängen der Einfachheit halber nicht vom Winkel $\varphi$ ab. In einer Kugel, bzw. Kugelkoordinaten sei $r$ ebenfalls konstant. Betrachtet man nun eine Kreisfläche (Kugelschnitte) mit variablen $r'$ (in der Horizontalen), ergibt sich folgendes.
+
+\begin{align}
+	l_{\text{Breitengrad}} &= 2\pi r' \\
+	\sin(\theta) &= \frac{r'}{r} \\
+	\rightarrow l_{\text{Breitengrad}} &= 2\pi r \sin(\theta) \\
+	\rightarrow p(\theta) &= A \sin(\theta)\\
+	\int_0^{\pi} p(\theta) \mathup{d\theta} &= \left[-A\cos(\theta)\right]_0^{\pi} = 2A \stackrel{!}{=} 1 \\
+	\rightarrow p(\theta) &= \frac{1}{2} \sin(\theta)
+\end{align}
+
+\begin{landscape}
+	\begin{figure}
+		\OverfullCenter{\includegraphics[width=\textwidth]{../A1/a_hist.pdf}}
+		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 1a: Gleichverteilung der Funktion $p(\theta)$.}
+		\label{fig:1a}
+	\end{figure}
+\end{landscape}
+Das Legendre-Polynom zweiter Ordnung ($\delta = 1$) lautet
+\begin{equation}
+	\omega(\theta) = \frac{\delta}{2} (3\cos^2(\theta)-1) = \frac{1}{2} (3\cos^2(\theta)-1)
+\end{equation}
+Die numerisch bestimmte Verteilung ergibt sich zu
+\begin{landscape}
+	\begin{figure}
+		\OverfullCenter{\includegraphics[width=\textwidth]{../A1/b_hist.pdf}}
+		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 1b: Gleichverteilung der Funktion $\omega(\theta)$.}
+		\label{fig:1b}
+	\end{figure}
+\end{landscape}
+Der Mittelwert von $\omega$ lautet: $\braket{\omega}$ = 0.000408532.
+In Aufgabenteil c sollen nun die berechneten Erwartungswerte $M(t_p)$ angegeben werden.
+%TODO
+\section*{Monte-Carlo Integration}
+Der berechnete Wert von $\pi$ lautet: $\pi = 3,1415$.
+%TODO
+
+\begin{landscape}
+	\begin{figure}
+		\OverfullCenter{\includegraphics[width=\textwidth]{../A2/b_hist.pdf}}
+		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 2b: Plot und Histogramm.}
+		\label{fig:2b}
+	\end{figure}
+\end{landscape}
+%TODO
+
+Für den Flächeninhalt der Ellipse erhalten wir als Plot.
+\begin{landscape}
+	\begin{figure}
+		\OverfullCenter{\includegraphics[width=\textwidth]{../A2/c.pdf}}
+		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 2c: Zur Berechnung des Flächeninhalts der Ellipse.}
+		\label{fig:1b}
+	\end{figure}
+\end{landscape}
+
+Zum Schluss soll nun das Ergebnis des Integrals angegeben werden. Wir erhielten 2.993.
+%TODO
+
+%\printbibliography
+\end{document}
