@@ -54,6 +54,7 @@ void simulate(vector<double> tp, double tau, double alpha, int N)
     uniform_real_distribution<double> dist(0, 2*M_PI);
     // gleichverteilte Zufallszahl für die Berechnung von dem neuen Theta
     
+    #pragma omp parallel for
     for ( int i = 0; i < N; i++) // alle Teilchen durchgehen
     {
         count = 0; // alles auf Null setzen
@@ -64,31 +65,32 @@ void simulate(vector<double> tp, double tau, double alpha, int N)
         
         do
         {
-            intSize = tLife(tau);
             omega = 0.5*( 3 * pow(cos(theta[i]), 2) - 1 );
-            
-            if ( t > tp[count] ) // True --> ins nächste Interval gehen
+            if (t < tp.back()-intSize)
             {
-                phi1[count] += omega*(intSize - ( t - tp[count] )); // Restteil berechnen
-                while ( (t > tp[count]) && (count < tp.size()-1) )
+                if ( t > tp[count] ) // True --> ins nächste Interval gehen
                 {
-                    phi1[count+1] = phi1[count];
-                    if ( t > tp[count+1] )
+                    phi1[count] += omega*(intSize - ( t - tp[count] )); // Restteil berechnen
+                    while ( (t > tp[count]) && (count < tp.size()-1) )
                     {
-                        phi1[count+1] += omega*(intSize - ( t - tp[count+1] ));
+                        phi1[count+1] = phi1[count];
+                        if ( t > tp[count+1] )
+                        {
+                            phi1[count+1] += omega*(tp[count+1] - tp[count] );
+                        }
+                        else
+                        {
+                            phi1[count+1] += omega*(t - tp[count+1] );
+                        }
+                        count++;
                     }
-                    else
-                    {
-                        phi1[count+1] += omega*(t - tp[count+1] );
-                    }
-                    count++;
+                }
+                else
+                {
+                    phi1[count] += omega*intSize;
                 }
             }
-            else
-            {
-                phi1[count] += omega*intSize;
-            }
-            
+                
             if ( (t > tp[count2]) && (t < 2*tp[count2]) )
             {
                 if ( t - intSize > tp[count2] )
@@ -102,25 +104,23 @@ void simulate(vector<double> tp, double tau, double alpha, int N)
             }
             else if ( t > tp[count2] )
             {
-                phi2[count2] += omega*(intSize - ( t - tp[count2] ));
-                if ( count2 < tp.size()-1 )
+                phi2[count2] += omega*(intSize - ( t - 2*tp[count2] ));
+                while ( t > tp[count2] && (count2 < tp.size()-1) )
                 {
                     count2++;
+                    phi2[count2] = phi2[count2-1]+phi1[count2-1]-phi1[count2];
                     if ( t > tp[count2] )
                     {
-                        phi2[count2] = phi2[count2-1]+phi1[count2-1]-phi1[count2];
-                        phi2[count2] += omega*( t - tp[count2] );
+                        phi2[count2] += omega*( 2*tp[count2] - 2*tp[count2-1] );
                     }
-                    while ( t > tp[count2] && (count2 < tp.size()-1) )
+                    else
                     {
-                        count2++;
-                        phi2[count2] = phi2[count2-1]+phi1[count2-1]-phi1[count2];
-                        phi2[count2] += omega*( t - tp[count2] );
+                        phi2[count2] += omega*( t - 2*tp[count2] );
                     }
                 }
             }
 
-            
+            intSize = tLife(tau);
             t += intSize;
             theta[i] = acos( cos(alpha)*cos(theta[i]) - sin(alpha)*sin(theta[i])*cos(dist(mt)) );
             
@@ -140,7 +140,7 @@ void simulate(vector<double> tp, double tau, double alpha, int N)
 }
 
 int main()
-{/*
+{
     // a)
     vector<double> theta = ransin(1e6);
     ofstream fout("a.dat");
@@ -160,7 +160,7 @@ int main()
     }
     cout << "Omega gemittelt: "<< s/omega.size() << endl;
     fout.close();
-   */ 
+
     // c)
     vector<double> tp(30);
     for ( int i = 0; i < tp.size(); i++)
