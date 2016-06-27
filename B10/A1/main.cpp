@@ -66,20 +66,22 @@ void simulate(vector<double> tp, double tau, double alpha, int N)
         {
             intSize = tLife(tau);
             omega = 0.5*( 3 * pow(cos(theta[i]), 2) - 1 );
+            
             if ( t > tp[count] ) // True --> ins nächste Interval gehen
             {
                 phi1[count] += omega*(intSize - ( t - tp[count] )); // Restteil berechnen
-                phi2[count] += omega*( t - tp[count] ); // phi2 bekommt die andere Hälfte vom neuen Interval
-                if ( count < tp.size()-1 )
+                while ( (t > tp[count]) && (count < tp.size()-1) )
                 {
-                    phi1[count+1] = phi1[count]; // Interval [0, tp_n+1] ist Teilinterval von [0, tp]
-                    phi1[count+1] += omega*( t - tp[count] );
-                    count++;
-                    while ( (t > tp[count]) && (count < tp.size()-1) )
+                    phi1[count+1] = phi1[count];
+                    if ( t > tp[count+1] )
                     {
-                        phi1[count+1] = phi1[count];
-                        count++;
+                        phi1[count+1] += omega*(intSize - ( t - tp[count+1] ));
                     }
+                    else
+                    {
+                        phi1[count+1] += omega*(t - tp[count+1] );
+                    }
+                    count++;
                 }
             }
             else
@@ -89,7 +91,14 @@ void simulate(vector<double> tp, double tau, double alpha, int N)
             
             if ( (t > tp[count2]) && (t < 2*tp[count2]) )
             {
-                phi2[count2] += omega*intSize;
+                if ( t - intSize > tp[count2] )
+                {
+                    phi2[count2] += omega*intSize;
+                }
+                else
+                {
+                    phi2[count2] = omega*( t - tp[count2] );
+                }
             }
             else if ( t > tp[count2] )
             {
@@ -100,12 +109,13 @@ void simulate(vector<double> tp, double tau, double alpha, int N)
                     if ( t > tp[count2] )
                     {
                         phi2[count2] = phi2[count2-1]+phi1[count2-1]-phi1[count2];
-                        phi2[count2] += omega*( t - tp[count2-1] );
+                        phi2[count2] += omega*( t - tp[count2] );
                     }
                     while ( t > tp[count2] && (count2 < tp.size()-1) )
                     {
-                        phi2[count2+1] = phi2[count2];
                         count2++;
+                        phi2[count2] = phi2[count2-1]+phi1[count2-1]-phi1[count2];
+                        phi2[count2] += omega*( t - tp[count2] );
                     }
                 }
             }
@@ -118,14 +128,14 @@ void simulate(vector<double> tp, double tau, double alpha, int N)
         } while ( t <= 2*tp.back() );
         for ( int j = 0; j < tp.size(); j++)
         {
-            magnetization[j] += cos(phi1[j] - phi2[j])/N;
+            magnetization[j] += cos(phi1[j] - phi2[j]);
         }
     }
     
     ofstream fout("c.dat");
     fout << "#tp\tM" << endl;
     for ( int i = 0; i < tp.size(); i++)
-        fout << tp[i] << "\t" << magnetization[i] << endl;
+        fout << tp[i] << "\t" << magnetization[i]/N << endl;
     fout.close();
 }
 
@@ -155,6 +165,7 @@ int main()
     vector<double> tp(30);
     for ( int i = 0; i < tp.size(); i++)
         tp[i] = pow(10, 3.0*i/(tp.size() - 1) - 1);
+    // vector<double> tp(1, 1.0);
     simulate(tp, 0.75, 10*M_PI/180, 1e3);
     // simulate(tp, 0.05, 10*M_PI/180, 1e3); // das sieht super aus, also scheint der Fehler in einer der nervigen verschachtelten if Abfragen zu liegen.. irgendwo überlappen sich noch die Intervalle..
     return 0;
