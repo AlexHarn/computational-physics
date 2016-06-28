@@ -1,6 +1,6 @@
 CC=g++
 CXX=g++
-CXXFLAGS=-std=c++11 -fopenmp -g -Wno-ignored-attributes -Wno-deprecated-declarations $(shell pkg-config eigen3 --cflags) -I "C:\Program Files\cpplibraries\eigen3"
+CXXFLAGS=-std=c++11 -fopenmp -o3 -Wno-ignored-attributes -Wno-deprecated-declarations $(shell pkg-config eigen3 --cflags) -I "C:\Program Files\cpplibraries\eigen3"
 LDLIBS=-fopenmp
 
 all: plot 
