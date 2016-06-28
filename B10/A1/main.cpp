@@ -54,8 +54,7 @@ void simulate(vector<double> tp, double tau, double alpha, int N)
     uniform_real_distribution<double> dist(0, 2*M_PI);
     // gleichverteilte Zufallszahl für die Berechnung von dem neuen Theta
     
-    
-    #pragma omp parallel for
+    // #pragma omp parallel for  <-- Das macht noch Probleme, nochmal angucken!
     for ( int i = 0; i < N; i++) // alle Teilchen durchgehen
     {
         count = 0; // alles auf Null setzen
@@ -134,7 +133,6 @@ void simulate(vector<double> tp, double tau, double alpha, int N)
             magnetization[j] += cos(phi1[j] - phi2[j]); // Mittelung der Magnetisierung über alle Teilchen (1/N kommt bei der Ausgabe)
         }
     }
-    
     ofstream fout("c.dat");
     fout << "#tp\tM" << endl;
     for ( int i = 0; i < tp.size(); i++)
@@ -168,7 +166,7 @@ int main()
     vector<double> tp(30);
     for ( int i = 0; i < tp.size(); i++)
         tp[i] = pow(10, 3.0*i/(tp.size() - 1) - 1); // logarithmische Skalierung der Messpunkte von 10^-1 bis 10^2
-    simulate(tp, 0.75, 10*M_PI/180, 1e3);
+    simulate(tp, 0.75, 10*M_PI/180, 1e4);
 
     return 0;
 }
