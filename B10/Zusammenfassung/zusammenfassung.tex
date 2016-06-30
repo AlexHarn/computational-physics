@@ -10,6 +10,7 @@
 \normalsize Computational Physics \hfill \today \\
 Prof. Dr. Jan Kierfeld \hfill Abgabefrist: 01.07.2016\\
 \noindent\makebox[\linewidth]{\rule{\textwidth}{0.4pt}}
+Im Allgemeinen sind die hier aufgeführten, numerisch bestimmten Werte Momentaufnahmen, da diese mittels Zufallszahlen bestimmt werden.
 \section*{Random-Walk in der NMR}
 Die Störungen hängen der Einfachheit halber nicht vom Winkel $\varphi$ ab. In einer Kugel, bzw. Kugelkoordinaten sei $r$ ebenfalls konstant. Betrachtet man nun eine Kreisfläche (Kugelschnitte) mit variablen $r'$ (in der Horizontalen), ergibt sich folgendes.
 
@@ -41,7 +42,7 @@ Die numerisch bestimmte Verteilung ergibt sich zu
 		\label{fig:1b}
 	\end{figure}
 \end{landscape}
-Der Mittelwert von $\omega$ lautet: $\braket{\omega}$ = -0.000238155. Theoretisch war hier der Mittelwert $\braket{\omega} = 0$ (vgl. Musterlösung mit der Herleitung der Verteilung $p(\omega$) ) zu erwarten, was im Rahmen numerischen Rauschens erfüllt wurde.
+Der Mittelwert von $\omega$ lautet: $\braket{\omega}$ = 0.000154499. Theoretisch war hier der Mittelwert $\braket{\omega} = 0$ zu erwarten, was im Rahmen numerischen Rauschens erfüllt wurde.
 In Aufgabenteil c sollen nun die berechneten Erwartungswerte $M(t_p)$ angegeben werden.
 \begin{landscape}
 	\begin{figure}
@@ -53,7 +54,7 @@ In Aufgabenteil c sollen nun die berechneten Erwartungswerte $M(t_p)$ angegeben 
 (vgl. Aufgabenblatt) Für sehr kleine Zeiten $t_p$ finden keine Sprünge statt, entsprechend ist zu erwarten,
 dass für kleine $t_p$ die beiden Phasen gleich sind und daher der Erwarungswert der Magnetisierung 1 ist. Für zunehmendes $t_p$ finden Sprünge statt und werden die Korrelation zerstören, die Magnetisierung wird abnehmen und für sehr große $t_p$ gegen 0 gehen. Wie in Abb. \ref{fig:1c} erkennbar, beginnt die Magnetisierung nicht wie erwartet bei $M(t_p) = 1$, sondern etwas darunter und nimmt nicht den Verlauf einer gespiegelten Sigmoid-Kurve, sondern schwingt bei etwa $t_p \approx 10$ etwas unter 0, um dann in einer Art Rauschen gegen Null zu konvergieren.
 \section*{Monte-Carlo Integration}
-Der berechnete Wert von $\pi$ lautet: $\pi = 3.14109$. Das Integral
+Der berechnete Wert von $\pi$ lautet: $\pi = 3.141$. Das Integral
 \begin{equation}
 \int_{|\vec{r}|<1} \mathup{d^2\,\textbf{r}}
 \end{equation}
@@ -96,11 +97,11 @@ Für den Flächeninhalt der Ellipse erhalten wir als Plot.
 	\begin{figure}
 		\OverfullCenter{\includegraphics[width=\textwidth]{../A2/c.pdf}}
 		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 2c: Zur Berechnung des Flächeninhalts der Ellipse.}
-		\label{fig:1b}
+		\label{fig:2c}
 	\end{figure}
 \end{landscape}
 
-Zum Schluss soll nun das Ergebnis des Integrals angegeben werden. Wir erhielten \\$I$ = 2.99554.
+Zum Schluss soll nun das Ergebnis des Integrals angegeben werden. Wir erhielten \\$I$ = 2.99326.
 
 %\printbibliography
 \end{document}
