@@ -1,0 +1,38 @@
+\input{../../header.tex}
+\usepackage{verbatim}
+\usepackage{ulem}
+\usepackage{braket}
+\newcommand\OverfullCenter[1]{\noindent\makebox[\linewidth]{#1}}
+\begin{document}
+\noindent
+\centerline{\small{\textsc{Technische Universität Dortmund}}} \\
+\large\textbf{Übungsblatt 11} \hfill \footnotesize\textbf{Sebastian Bange, Alexander Harnisch, Alexander Knodel} \\
+\normalsize Computational Physics \hfill \today \\
+Prof. Dr. Jan Kierfeld \hfill Abgabefrist: 08.07.2016\\
+\noindent\makebox[\linewidth]{\rule{\textwidth}{0.4pt}}
+
+\section*{Monte-Carlo-Simulation eines einzelnen Spins}
+Mittels des Metropolis-Algorithmus (mit Spin-Flip) soll ein einzelner Spin mit der Energie $\mathbb{H} = -sH$ im Magnetfeld $H$ simuliert werden.
+Über die Definition des Erwartungswertes über die Zustandssumme und die Spur (\textit{engl.} Trace) ergibt sich:
+\begin{align}
+m &= \braket{s} = \frac{1}{Z} \text{Tr} (s\,\exp(-\beta \mathcal{H})) \\
+&= \frac{1}{Z} \text{Tr} (s \exp(\beta H s)) \\
+&= \frac{1}{Z} \sum_{s = \pm 1} (s \exp(\beta H s)) \\
+&= \frac{1}{Z} (\exp(\beta H) - \exp(-\beta H)) \\
+&= \frac{2}{Z} \sinh(\beta H)\\
+Z &= \text{Tr}(\exp(-\beta \mathcal{H})) = \sum_{s = \pm 1} \exp(\beta H s) = \exp(\beta H) + \exp(-\beta H) = 2 \cosh(\beta H) \\
+&\rightarrow m = \frac{\sinh(\beta H)}{\cosh(\beta H)} = \tanh(\beta H)
+\end{align}
+
+
+\begin{landscape}
+	\begin{figure}
+		\OverfullCenter{\includegraphics[width=\textwidth]{../A1/b.pdf}}
+		\caption{Graphische Darstellung der Ergebnisse von Aufgabe 1b: Magnetisierung $m$ bei $k_B T = 1$.}
+		\label{fig:1a}
+	\end{figure}
+\end{landscape}
+Es zeigt sich eine nahezu perfekte Übereinstimmung mit der analytischen Rechnung.
+
+%\printbibliography
+\end{document}
