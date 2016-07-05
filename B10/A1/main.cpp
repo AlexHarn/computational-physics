@@ -5,7 +5,7 @@
 #include <iostream>
 
 #ifndef M_PI
-#define M_PI 3.1415
+#define M_PI 4*atan(1)
 #endif
 
 using namespace std;
@@ -45,7 +45,7 @@ void simulate(vector<double> tp, double tau, double alpha, int N)
 {
     vector<double> theta = ransin(N), magnetization(tp.size(), 0.0), phi1(tp.size(), 0.0), phi2(tp.size(), 0.0);
     // theta: startwerte, magnetization: naja.. formel 6, phi1: phi(0, tp) für alle tp's speichern, phi2: siehe phi1
-    double t, intSize = tLife(tau), omega;
+    double intSize = tLife(tau), t = intSize, omega;
     // t: Zeit, intSize: Größe des Intervalls bzw Lebensdauer, omega: Formel 1
     int count, count2;
     // count: Zählt für phi1 in welchem Interval man sich befindet, count2: Zählt für phi2
@@ -114,19 +114,19 @@ void simulate(vector<double> tp, double tau, double alpha, int N)
                     phi2[count2] = phi2[count2-1]+phi1[count2-1]-phi1[count2];
                     if ( t > tp[count2] )
                     {
-                        phi2[count2] += omega*( 2*tp[count2] - 2*tp[count2-1] );
+                        phi2[count2] += omega*( tp[count2] - tp[count2-1] );
                     }
                     else
                     {
-                        phi2[count2] += omega*( t - 2*tp[count2] );
+                        phi2[count2] += omega*( t - tp[count2] );
                     }
                 }
             }
 
             // theta springt
             theta[i] = acos( cos(alpha)*cos(theta[i]) - sin(alpha)*sin(theta[i])*cos(dist(mt)) );
-            t += intSize; // Zeit erhöhen
             intSize = tLife(tau); // nächstes intSize (Intervall Größe) berechnen
+            t += intSize; // Zeit erhöhen
         } while ( t <= 2*tp.back() ); // <= 2tp.back(), da für phi2 auch bis 2tp integriert werden muss
         for ( int j = 0; j < tp.size(); j++)
         {
@@ -166,7 +166,7 @@ int main()
     vector<double> tp(30);
     for ( int i = 0; i < tp.size(); i++)
         tp[i] = pow(10, 3.0*i/(tp.size() - 1) - 1); // logarithmische Skalierung der Messpunkte von 10^-1 bis 10^2
-    simulate(tp, 0.75, 10*M_PI/180, 1e4);
+    simulate(tp, 0.75, 10*M_PI/180, 1e3);
 
     return 0;
 }

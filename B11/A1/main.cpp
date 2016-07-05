@@ -1,7 +1,7 @@
 #include <random>
 #include <cmath>
 #include <fstream>
-#include <iostream>
+#include <vector>
 
 using namespace std;
 
@@ -16,7 +16,6 @@ double simulate(unsigned N, double H)
     else
         s = 1;
 
-    // #pragma omp parallel for
     for ( int i = 0; i < N; i++)
     {
         if ( s*H > 0 ) // --> Delta E > 0
@@ -42,8 +41,12 @@ int main()
     fout << "#H\tm" << endl;
     int N = 1e4;
     double HMIN = -5, HMAX = 5;
+    vector<double> savedata(N);
+    #pragma omp parallel for
     for ( int i = 0; i < N; i++)
-        fout << (1.0*i)/N*(HMAX-HMIN)+HMIN << "\t" << simulate(1e5, (1.0*i)/N*(HMAX-HMIN)+HMIN) << endl;
+        savedata[i] = simulate(1e5, (1.0*i)/N*(HMAX-HMIN)+HMIN);
+    for ( int i = 0; i < N; i++)
+        fout << (1.0*i)/N*(HMAX-HMIN)+HMIN << "\t" << savedata[i] << endl;
 
     return 0;
 }
